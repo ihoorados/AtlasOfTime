@@ -1,20 +1,25 @@
 import Foundation
 
 actor BorderRepositoryImpl: BorderRepository {
-    typealias YearIndexProvider = @Sendable () async throws -> YearIndex
-
     private let dataSource: BundleDataSource
     private let cache: LRUCache<Int, YearSnapshot>
-    private let yearIndexProvider: YearIndexProvider
+    private let yearIndexRepository: any YearIndexRepository
+    private let gzipDecoder: any GzipDecoding
+    private let borderDecoder: any BorderDecoding
+    private var cachedYearIndex: YearIndex?
 
     init(
         dataSource: BundleDataSource,
         cache: LRUCache<Int, YearSnapshot>,
-        yearIndexProvider: @escaping YearIndexProvider
+        yearIndexRepository: any YearIndexRepository,
+        gzipDecoder: any GzipDecoding,
+        borderDecoder: any BorderDecoding
     ) {
         self.dataSource = dataSource
         self.cache = cache
-        self.yearIndexProvider = yearIndexProvider
+        self.yearIndexRepository = yearIndexRepository
+        self.gzipDecoder = gzipDecoder
+        self.borderDecoder = borderDecoder
     }
 
     func snapshot(for year: Int) async throws -> YearSnapshot {
@@ -22,17 +27,27 @@ actor BorderRepositoryImpl: BorderRepository {
             return cached
         }
 
-        let index = try await yearIndexProvider()
+        let index = try await currentYearIndex()
         guard let relativePath = index.path(for: year) else {
             throw AppError.yearUnavailable(year)
         }
 
         let compressedData = try dataSource.readYearFile(relativePath: relativePath)
-        let geoJSONData = try GzipDecoder.gunzip(compressedData)
-        let polygons = try GeoJSONBorderDecoder.decode(data: geoJSONData)
+        let geoJSONData = try gzipDecoder.gunzip(compressedData)
+        let polygons = try borderDecoder.decodeBorders(from: geoJSONData)
 
         let snapshot = YearSnapshot(year: year, polygons: polygons)
         await cache.setValue(snapshot, for: year)
         return snapshot
+    }
+
+    private func currentYearIndex() async throws -> YearIndex {
+        if let cachedYearIndex {
+            return cachedYearIndex
+        }
+
+        let loaded = try await yearIndexRepository.load()
+        cachedYearIndex = loaded
+        return loaded
     }
 }
