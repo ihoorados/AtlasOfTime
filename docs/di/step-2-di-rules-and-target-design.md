@@ -27,8 +27,8 @@ Define a minimal, typed DI container architecture per module/feature, without ch
   - `BundleDataSource`
   - `LRUCache<Int, YearSnapshot>`
   - `DIYearIndexStore`
-  - `YearIndexRepositoryImpl`
-  - `BorderRepositoryImpl`
+  - `DefaultYearIndexRepository`
+  - `DefaultBorderRepository`
 
 ### Domain Container
 - File: `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/DI/DomainDIContainer.swift`
@@ -53,4 +53,3 @@ Define a minimal, typed DI container architecture per module/feature, without ch
 ## Notes
 - This step introduces container structure only.
 - Existing app wiring and behavior remain unchanged until Step 3 (composition root switch-over).
-

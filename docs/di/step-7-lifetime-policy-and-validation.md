@@ -4,8 +4,8 @@
 - App-scoped (single instance per app container):
   - `BundleDataSource`
   - `LRUCache<Int, YearSnapshot>`
-  - `YearIndexRepositoryImpl`
-  - `BorderRepositoryImpl`
+  - `DefaultYearIndexRepository`
+  - `DefaultBorderRepository`
   - Data decoder adapters
 - Feature-scoped:
   - `AtlasFeatureDIContainer` assembly object
@@ -28,4 +28,3 @@
 ## API Surface Cleanup
 - Removed unused `makeAtlasScreen(viewModel:)` from:
   - `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/Presentation/DI/AtlasFeatureDIContainer.swift`
-

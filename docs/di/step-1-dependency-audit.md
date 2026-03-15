@@ -10,19 +10,19 @@
 - Composition root is `AtlasOfTimeApp.init()`.
 - Concrete dependency creation currently happens directly in app entry:
   - `BundleDataSource`
-  - `YearIndexRepositoryImpl`
+  - `DefaultYearIndexRepository`
   - `LRUCache<Int, YearSnapshot>`
-  - `BorderRepositoryImpl`
+  - `DefaultBorderRepository`
   - `LoadYearIndex`
   - `LoadBordersForYear`
   - `AtlasViewModel`
 
 ## Dependency Graph (Current)
 1. `AtlasOfTimeApp` creates `BundleDataSource`.
-2. `AtlasOfTimeApp` creates `YearIndexRepositoryImpl(dataSource:)`.
+2. `AtlasOfTimeApp` creates `DefaultYearIndexRepository(dataSource:)`.
 3. `AtlasOfTimeApp` creates `YearIndexStore` actor.
 4. `AtlasOfTimeApp` creates `LRUCache<Int, YearSnapshot>(capacity: 4)`.
-5. `AtlasOfTimeApp` creates `BorderRepositoryImpl(dataSource:cache:yearIndexProvider:)`.
+5. `AtlasOfTimeApp` creates `DefaultBorderRepository(dataSource:cache:yearIndexProvider:)`.
 6. `AtlasOfTimeApp` creates use cases from repository protocols:
    - `LoadYearIndex(repository:)`
    - `LoadBordersForYear(repository:)`
@@ -32,8 +32,8 @@
 ## Lifecycle Classification
 - App-scoped:
   - `BundleDataSource`
-  - `YearIndexRepositoryImpl`
-  - `BorderRepositoryImpl`
+  - `DefaultYearIndexRepository`
+  - `DefaultBorderRepository`
   - `LRUCache`
   - `YearIndexStore`
   - Use cases
@@ -50,10 +50,9 @@
 - Refactor targets:
   - App composition logic is monolithic in `AtlasOfTimeApp`.
   - `YearIndexStore` closure bridging (`setYearIndex`, `yearIndexProvider`) is orchestration logic embedded in root.
-  - `BorderRepositoryImpl` hard-codes decoder implementations (`GzipDecoder`, `GeoJSONBorderDecoder`) instead of injectable collaborators.
+  - `DefaultBorderRepository` hard-codes decoder implementations (`GzipDecoder`, `GeoJSONBorderDecoder`) instead of injectable collaborators.
   - `AtlasViewModel` provides default `Debouncer()`, reducing strict DI consistency.
 
 ## Step 1 Output
 - Baseline dependency graph and lifecycle map documented.
 - No behavior or runtime wiring changes introduced in this step.
-

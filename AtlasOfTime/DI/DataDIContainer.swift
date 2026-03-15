@@ -8,11 +8,11 @@ final class DataDIContainer {
     private let borderDecoder: any BorderDecoding
 
     private lazy var yearIndexRepository: any YearIndexRepository = {
-        YearIndexRepositoryImpl(dataSource: dataSource)
+        DefaultYearIndexRepository(dataSource: dataSource)
     }()
 
     private lazy var borderRepository: any BorderRepository = {
-        return BorderRepositoryImpl(
+        return DefaultBorderRepository(
             dataSource: dataSource,
             cache: borderCache,
             yearIndexRepository: yearIndexRepository,

@@ -7,7 +7,7 @@
 - Updated app/feature/preview/test DI assembly to new signatures.
 
 ## Files Updated
-- `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/Data/Repositories/BorderRepositoryImpl.swift`
+- `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/Data/Repositories/DefaultBorderRepository.swift`
 - `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/DI/DataDIContainer.swift`
 - `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/Presentation/AtlasViewModel.swift`
 - `/Users/hoorad/Documents/AtlasOfTime/AtlasOfTime/Presentation/DI/AtlasFeatureDIContainer.swift`
@@ -19,4 +19,3 @@
 - Cleaner dependency direction.
 - Lower orchestration leakage from Presentation into Data internals.
 - Runtime behavior preserved.
-
