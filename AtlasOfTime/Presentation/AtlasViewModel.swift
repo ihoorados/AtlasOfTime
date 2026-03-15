@@ -11,7 +11,6 @@ final class AtlasViewModel: ObservableObject {
 
     private let loadYearIndex: LoadYearIndex
     private let loadBordersForYear: LoadBordersForYear
-    private let setYearIndex: @Sendable (YearIndex) async -> Void
     private let debouncer: Debouncer
     private let debounceNanoseconds: UInt64
 
@@ -23,13 +22,11 @@ final class AtlasViewModel: ObservableObject {
     init(
         loadYearIndex: LoadYearIndex,
         loadBordersForYear: LoadBordersForYear,
-        setYearIndex: @escaping @Sendable (YearIndex) async -> Void,
-        debouncer: Debouncer = Debouncer(),
+        debouncer: Debouncer,
         debounceNanoseconds: UInt64 = 150_000_000
     ) {
         self.loadYearIndex = loadYearIndex
         self.loadBordersForYear = loadBordersForYear
-        self.setYearIndex = setYearIndex
         self.debouncer = debouncer
         self.debounceNanoseconds = debounceNanoseconds
     }
@@ -56,7 +53,6 @@ final class AtlasViewModel: ObservableObject {
 
         do {
             let index = try await loadYearIndex.execute()
-            await setYearIndex(index)
 
             let years = index.availableYears.sorted()
             guard let initialYear = years.first else {

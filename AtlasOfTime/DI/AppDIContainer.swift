@@ -1,0 +1,42 @@
+import Foundation
+
+// App composition root container. Keeps assembly logic out of App entry file.
+@MainActor
+final class AppDIContainer: AtlasDIProviding {
+    private let dataContainer: DataDIContainer
+    private let domainContainer: DomainDIContainer
+    private let atlasFeatureContainer: AtlasFeatureDIContainer
+
+    init() {
+        let dataContainer = Self.makeDataContainer()
+        self.dataContainer = dataContainer
+
+        let domainContainer = Self.makeDomainContainer(dataContainer: dataContainer)
+        self.domainContainer = domainContainer
+
+        self.atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
+    }
+
+    func makeAtlasViewModel() -> AtlasViewModel {
+        atlasFeatureContainer.makeAtlasViewModel()
+    }
+
+    // Extension points for additional features follow the same pattern.
+    private static func makeDataContainer() -> DataDIContainer {
+        DataDIContainer()
+    }
+
+    private static func makeDomainContainer(dataContainer: DataDIContainer) -> DomainDIContainer {
+        DomainDIContainer(
+            yearIndexRepository: dataContainer.makeYearIndexRepository(),
+            borderRepository: dataContainer.makeBorderRepository()
+        )
+    }
+
+    private static func makeAtlasFeatureContainer(domainContainer: DomainDIContainer) -> AtlasFeatureDIContainer {
+        AtlasFeatureDIContainer(
+            loadYearIndex: domainContainer.makeLoadYearIndex(),
+            loadBordersForYear: domainContainer.makeLoadBordersForYear()
+        )
+    }
+}

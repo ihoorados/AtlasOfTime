@@ -49,3 +49,12 @@ struct AtlasScreen: View {
         }
     }
 }
+
+#if DEBUG
+struct AtlasScreen_Previews: PreviewProvider {
+    @MainActor
+    static var previews: some View {
+        AtlasScreen(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+    }
+}
+#endif
