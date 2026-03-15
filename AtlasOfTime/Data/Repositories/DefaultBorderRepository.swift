@@ -1,6 +1,6 @@
 import Foundation
 
-actor BorderRepositoryImpl: BorderRepository {
+actor DefaultBorderRepository: BorderRepository {
     private let dataSource: BundleDataSource
     private let cache: LRUCache<Int, YearSnapshot>
     private let yearIndexRepository: any YearIndexRepository

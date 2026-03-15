@@ -1,6 +1,6 @@
 import Foundation
 
-actor YearIndexRepositoryImpl: YearIndexRepository {
+actor DefaultYearIndexRepository: YearIndexRepository {
     private struct IndexDTO: Decodable {
         let minYear: Int
         let maxYear: Int
