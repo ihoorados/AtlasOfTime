@@ -43,6 +43,30 @@ struct BorderRepositoryConcurrencyTests {
         #expect(await loader.loadedYears == years)
     }
 
+    @Test
+    func concurrentRequestsForSameYearShareSingleLoaderExecution() async throws {
+        let year = 1900
+        let snapshot = makeSnapshot(year: year)
+        let loader = CountingBorderSnapshotLoader(
+            snapshots: [year: snapshot],
+            delays: [year: 100_000_000]
+        )
+        let repository = DefaultBorderRepository(
+            cache: LRUCache<Int, YearSnapshot>(capacity: 4),
+            yearIndexRepository: BorderRepositoryMockYearIndexRepository(index: makeIndex(years: [year])),
+            loader: loader
+        )
+
+        async let first = repository.snapshot(for: year)
+        async let second = repository.snapshot(for: year)
+
+        let resolved = try await [first, second]
+
+        #expect(resolved.allSatisfy { $0.year == year })
+        #expect(await loader.loadCount == 1)
+        #expect(await loader.loadedYears == [year])
+    }
+
     private func makeIndex(years: [Int]) -> YearIndex {
         YearIndex(
             minYear: years.min() ?? 0,
@@ -82,16 +106,22 @@ private actor BorderRepositoryMockYearIndexRepository: YearIndexRepository {
 
 private actor CountingBorderSnapshotLoader: BorderSnapshotLoading {
     private let snapshots: [Int: YearSnapshot]
+    private let delays: [Int: UInt64]
     private(set) var loadCount = 0
     private(set) var loadedYears: [Int] = []
 
-    init(snapshots: [Int: YearSnapshot]) {
+    init(snapshots: [Int: YearSnapshot], delays: [Int: UInt64] = [:]) {
         self.snapshots = snapshots
+        self.delays = delays
     }
 
     func loadSnapshot(year: Int, relativePath: String) async throws -> YearSnapshot {
         loadCount += 1
         loadedYears.append(year)
+
+        if let delay = delays[year] {
+            try await Task.sleep(nanoseconds: delay)
+        }
 
         guard let snapshot = snapshots[year] else {
             throw AppError.yearUnavailable(year)

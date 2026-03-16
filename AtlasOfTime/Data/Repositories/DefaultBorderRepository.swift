@@ -5,6 +5,7 @@ actor DefaultBorderRepository: BorderRepository {
     private let yearIndexRepository: any YearIndexRepository
     private let loader: any BorderSnapshotLoading
     private var cachedYearIndex: YearIndex?
+    private var inFlightSnapshots: [Int: Task<YearSnapshot, Error>] = [:]
 
     init(
         cache: LRUCache<Int, YearSnapshot>,
@@ -21,12 +22,22 @@ actor DefaultBorderRepository: BorderRepository {
             return cached
         }
 
+        if let inFlightTask = inFlightSnapshots[year] {
+            return try await inFlightTask.value
+        }
+
         let index = try await currentYearIndex()
         guard let relativePath = index.path(for: year) else {
             throw AppError.yearUnavailable(year)
         }
 
-        let snapshot = try await loader.loadSnapshot(year: year, relativePath: relativePath)
+        let task = Task<YearSnapshot, Error> { [loader] in
+            try await loader.loadSnapshot(year: year, relativePath: relativePath)
+        }
+        inFlightSnapshots[year] = task
+        defer { inFlightSnapshots[year] = nil }
+
+        let snapshot = try await task.value
         await cache.setValue(snapshot, for: year)
         return snapshot
     }
