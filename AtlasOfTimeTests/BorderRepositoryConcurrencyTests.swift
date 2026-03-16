@@ -67,6 +67,41 @@ struct BorderRepositoryConcurrencyTests {
         #expect(await loader.loadedYears == [year])
     }
 
+    @Test
+    func cancelledRequestDoesNotPopulateCache() async throws {
+        let year = 1900
+        let snapshot = makeSnapshot(year: year)
+        let loader = CountingBorderSnapshotLoader(
+            snapshots: [year: snapshot],
+            delays: [year: 200_000_000]
+        )
+        let repository = DefaultBorderRepository(
+            cache: LRUCache<Int, YearSnapshot>(capacity: 4),
+            yearIndexRepository: BorderRepositoryMockYearIndexRepository(index: makeIndex(years: [year])),
+            loader: loader
+        )
+
+        let firstTask = Task {
+            try await repository.snapshot(for: year)
+        }
+
+        try await Task.sleep(nanoseconds: 20_000_000)
+        firstTask.cancel()
+
+        do {
+            _ = try await firstTask.value
+            Issue.record("Expected cancellation")
+        } catch is CancellationError {
+            // Expected.
+        }
+
+        let second = try await repository.snapshot(for: year)
+
+        #expect(second.year == year)
+        #expect(await loader.loadCount == 2)
+        #expect(await loader.loadedYears == [year, year])
+    }
+
     private func makeIndex(years: [Int]) -> YearIndex {
         YearIndex(
             minYear: years.min() ?? 0,

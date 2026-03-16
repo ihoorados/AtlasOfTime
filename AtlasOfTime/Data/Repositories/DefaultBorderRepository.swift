@@ -38,6 +38,7 @@ actor DefaultBorderRepository: BorderRepository {
         defer { inFlightSnapshots[year] = nil }
 
         let snapshot = try await task.value
+        try Task.checkCancellation()
         await cache.setValue(snapshot, for: year)
         return snapshot
     }

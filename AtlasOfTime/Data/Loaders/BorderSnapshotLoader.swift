@@ -20,9 +20,17 @@ struct DefaultBorderSnapshotLoader: BorderSnapshotLoading {
     }
 
     func loadSnapshot(year: Int, relativePath: String) async throws -> YearSnapshot {
+        try Task.checkCancellation()
+
         let compressedData = try dataSource.readYearFile(relativePath: relativePath)
+        try Task.checkCancellation()
+
         let geoJSONData = try gzipDecoder.gunzip(compressedData)
+        try Task.checkCancellation()
+
         let polygons = try borderDecoder.decodeBorders(from: geoJSONData)
+        try Task.checkCancellation()
+
         return YearSnapshot(year: year, polygons: polygons)
     }
 }
