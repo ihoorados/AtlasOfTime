@@ -15,7 +15,7 @@ struct AtlasOfTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AtlasScreen(viewModel: viewModel)
+            RootTabScreen(viewModel: viewModel)
         }
     }
 }
