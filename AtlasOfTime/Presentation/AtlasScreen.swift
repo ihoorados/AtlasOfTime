@@ -37,10 +37,7 @@ struct AtlasScreen: View {
                 }
             }
             .padding(16)
-            .background(
-                .ultraThinMaterial,
-                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-            )
+            .atlasCardSurface(cornerRadius: 16)
             .padding(.horizontal, 16)
             .padding(.bottom, 20)
         }

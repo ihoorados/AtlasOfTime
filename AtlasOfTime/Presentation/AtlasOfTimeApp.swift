@@ -4,6 +4,7 @@ import SwiftUI
 struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
     @StateObject private var viewModel: AtlasViewModel
+    @StateObject private var appearanceController = AppearanceController()
 
     init() {
         let appContainer = AppDIContainer()
@@ -15,7 +16,13 @@ struct AtlasOfTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabScreen(viewModel: viewModel)
+            RootTabScreen(
+                viewModel: viewModel,
+                appearanceController: appearanceController
+            )
+            .preferredColorScheme(appearanceController.preferredColorScheme)
+            .environment(\.atlasAppearance, appearanceController.selectedAppearance)
+            .environment(\.atlasGlassEnabled, appearanceController.glassEnabled)
         }
     }
 }

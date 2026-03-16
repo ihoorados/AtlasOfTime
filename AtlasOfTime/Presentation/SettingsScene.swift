@@ -1,104 +1,107 @@
 import SwiftUI
 
 struct SettingsScene: View {
+    @ObservedObject var appearanceController: AppearanceController
+
     var body: some View {
         NavigationStack {
-            ZStack {
-                LinearGradient(
-                    colors: [
-                        Color(.systemBackground),
-                        Color(.secondarySystemBackground)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-
-                Group {
-                    if #available(iOS 26, *) {
-                        GlassEffectContainer(spacing: 20) {
-                            settingsContent
-                        }
-                    } else {
-                        settingsContent
-                    }
-                }
+            Form {
+                appearanceSection
+                liquidGlassSection
+                previewSection
+                resetSection
             }
             .navigationTitle("Settings")
         }
     }
 
-    private var settingsContent: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                settingsSection(
-                    title: "Appearance",
-                    items: [
-                        "The app uses the native Liquid Glass tab bar on supported systems.",
-                        "Theme controls can be added here later."
-                    ]
-                )
-
-                settingsSection(
-                    title: "Data",
-                    items: [
-                        "Historical dataset configuration can live here.",
-                        "Cache and loading preferences can be added later."
-                    ]
-                )
-
-                settingsSection(
-                    title: "About",
-                    items: [
-                        "Atlas of Time",
-                        "Version and app details can be added here."
-                    ]
-                )
-            }
-            .padding(20)
-        }
-    }
-
-    @ViewBuilder
-    private func settingsSection(title: String, items: [String]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
-
-            VStack(alignment: .leading, spacing: 12) {
-                ForEach(items, id: \.self) { item in
-                    Text(item)
-                        .font(.body)
-                        .foregroundStyle(.primary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+    private var appearanceSection: some View {
+        Section {
+            Picker("App Appearance", selection: $appearanceController.selectedAppearance) {
+                ForEach(AppAppearanceOption.allCases) { option in
+                    Label(option.title, systemImage: option.systemImage)
+                        .tag(option)
                 }
             }
-            .padding(16)
-            .modifier(SettingsCardGlassSurface())
+        } header: {
+            Text("Appearance")
+        } footer: {
+            Text(appearanceController.selectedAppearance.summary)
         }
     }
-}
 
-private struct SettingsCardGlassSurface: ViewModifier {
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
-            content
-                .glassEffect(.regular, in: .rect(cornerRadius: 20))
-        } else {
-            content
-                .background(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(Color(.secondarySystemGroupedBackground))
-                )
+    private var liquidGlassSection: some View {
+        Section {
+            Toggle(isOn: $appearanceController.glassEnabled) {
+                Label("Glass Surfaces", systemImage: "sparkles")
+            }
+        } header: {
+            Text("Liquid Glass")
+        } footer: {
+            Text("The native tab bar uses the system Liquid Glass style automatically. This setting controls custom glass panels inside the app.")
         }
+    }
+
+    private var previewSection: some View {
+        Section("Preview") {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Theme Preview")
+                    .font(.headline)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Atlas of Time")
+                        .font(.title3.weight(.semibold))
+
+                    Text(previewSummary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 10) {
+                        previewPill(title: "Light", isSelected: appearanceController.selectedAppearance == .light)
+                        previewPill(title: "Dark", isSelected: appearanceController.selectedAppearance == .dark)
+                        previewPill(title: "Glass", isSelected: appearanceController.glassEnabled)
+                    }
+                }
+                .padding(16)
+                .atlasCardSurface(cornerRadius: 18)
+            }
+            .padding(.vertical, 4)
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowBackground(Color.clear)
+        }
+    }
+
+    private var resetSection: some View {
+        Section {
+            Button("Reset Appearance Settings", role: .destructive) {
+                appearanceController.resetToDefaults()
+            }
+        }
+    }
+
+    private var previewSummary: String {
+        let appearance = appearanceController.selectedAppearance.title
+        let glass = appearanceController.glassEnabled ? "glass surfaces on" : "glass surfaces reduced"
+        return "\(appearance) mode with \(glass)."
+    }
+
+    private func previewPill(title: String, isSelected: Bool) -> some View {
+        Text(title)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(isSelected ? .primary : .secondary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.secondary.opacity(0.08))
+            )
     }
 }
 
 #if DEBUG
 struct SettingsScene_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsScene()
+        SettingsScene(appearanceController: AppearanceController())
     }
 }
 #endif

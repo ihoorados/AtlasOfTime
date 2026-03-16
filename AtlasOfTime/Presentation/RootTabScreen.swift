@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootTabScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
+    @ObservedObject var appearanceController: AppearanceController
 
     var body: some View {
         TabView {
@@ -10,7 +11,7 @@ struct RootTabScreen: View {
             }
 
             Tab("Settings", systemImage: "gearshape") {
-                SettingsScene()
+                SettingsScene(appearanceController: appearanceController)
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
@@ -21,7 +22,10 @@ struct RootTabScreen: View {
 struct RootTabScreen_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
-        RootTabScreen(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+        RootTabScreen(
+            viewModel: PreviewAppDIContainer().makeAtlasViewModel(),
+            appearanceController: AppearanceController()
+        )
     }
 }
 #endif
