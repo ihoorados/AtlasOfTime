@@ -46,24 +46,34 @@ struct AtlasViewModelDITests {
         let years = [1900, 1914, 1920]
         let index = makeIndex(years: years)
         let snapshots = makeSnapshots(years: years)
-        let delays: [Int: UInt64] = [
-            1914: 250_000_000,
-            1920: 10_000_000
-        ]
+        let firstLoadStarted = AsyncSignal()
+        let firstLoadReleased = AsyncGate()
+        let firstLoadFinished = AsyncSignal()
+        let borderRepository = SignalingBorderRepository(
+            snapshots: snapshots,
+            startedSignals: [1914: firstLoadStarted],
+            finishSignals: [1914: firstLoadFinished],
+            gates: [1914: firstLoadReleased]
+        )
 
-        let container = TestAppDIContainer(index: index, snapshots: snapshots, delays: delays)
+        let container = TestAppDIContainer(
+            index: index,
+            borderRepository: borderRepository
+        )
         let viewModel = container.makeAtlasViewModel()
 
         viewModel.onAppear()
         try await waitUntil { viewModel.renderSnapshot?.year == 1900 }
 
         viewModel.onYearChanged(year: 1914)
+        await firstLoadStarted.wait()
         viewModel.onYearChanged(year: 1920)
 
         try await waitUntil { viewModel.renderSnapshot?.year == 1920 }
         #expect(viewModel.renderSnapshot?.year == 1920)
 
-        try await Task.sleep(nanoseconds: 350_000_000)
+        await firstLoadReleased.open()
+        await firstLoadFinished.wait()
         #expect(viewModel.renderSnapshot?.year == 1920)
     }
 
@@ -134,6 +144,24 @@ private struct TestAppDIContainer: AtlasDIProviding {
         )
     }
 
+    init(
+        index: YearIndex,
+        borderRepository: any BorderRepository
+    ) {
+        let yearIndexRepository = MockYearIndexRepository(index: index)
+
+        let domainContainer = DomainDIContainer(
+            yearIndexRepository: yearIndexRepository,
+            borderRepository: borderRepository
+        )
+
+        self.featureContainer = AtlasFeatureDIContainer(
+            loadYearIndex: domainContainer.makeLoadYearIndex(),
+            loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            debounceNanoseconds: 0
+        )
+    }
+
     func makeAtlasViewModel() -> AtlasViewModel {
         featureContainer.makeAtlasViewModel()
     }
@@ -169,5 +197,109 @@ private actor MockBorderRepository: BorderRepository {
             throw AppError.yearUnavailable(year)
         }
         return snapshot
+    }
+}
+
+private actor SignalingBorderRepository: BorderRepository {
+    private let snapshots: [Int: YearSnapshot]
+    private let startedSignals: [Int: AsyncSignal]
+    private let finishSignals: [Int: AsyncSignal]
+    private let gates: [Int: AsyncGate]
+
+    init(
+        snapshots: [Int: YearSnapshot],
+        startedSignals: [Int: AsyncSignal] = [:],
+        finishSignals: [Int: AsyncSignal] = [:],
+        gates: [Int: AsyncGate] = [:]
+    ) {
+        self.snapshots = snapshots
+        self.startedSignals = startedSignals
+        self.finishSignals = finishSignals
+        self.gates = gates
+    }
+
+    func snapshot(for year: Int) async throws -> YearSnapshot {
+        if let startedSignal = startedSignals[year] {
+            await startedSignal.signal()
+        }
+
+        do {
+            if let gate = gates[year] {
+                await gate.wait()
+            }
+
+            try Task.checkCancellation()
+
+            guard let snapshot = snapshots[year] else {
+                throw AppError.yearUnavailable(year)
+            }
+
+            if let finishSignal = finishSignals[year] {
+                await finishSignal.signal()
+            }
+
+            return snapshot
+        } catch {
+            if let finishSignal = finishSignals[year] {
+                await finishSignal.signal()
+            }
+            throw error
+        }
+    }
+}
+
+private actor AsyncSignal {
+    private var isSignaled = false
+    private var continuations: [CheckedContinuation<Void, Never>] = []
+
+    func wait() async {
+        if isSignaled {
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            continuations.append(continuation)
+        }
+    }
+
+    func signal() {
+        guard !isSignaled else {
+            return
+        }
+
+        isSignaled = true
+        let pendingContinuations = continuations
+        continuations.removeAll()
+        for continuation in pendingContinuations {
+            continuation.resume()
+        }
+    }
+}
+
+private actor AsyncGate {
+    private var isOpen = false
+    private var continuations: [CheckedContinuation<Void, Never>] = []
+
+    func wait() async {
+        if isOpen {
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            continuations.append(continuation)
+        }
+    }
+
+    func open() {
+        guard !isOpen else {
+            return
+        }
+
+        isOpen = true
+        let pendingContinuations = continuations
+        continuations.removeAll()
+        for continuation in pendingContinuations {
+            continuation.resume()
+        }
     }
 }
