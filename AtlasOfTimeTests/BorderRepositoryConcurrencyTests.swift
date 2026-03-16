@@ -71,9 +71,10 @@ struct BorderRepositoryConcurrencyTests {
     func cancelledRequestDoesNotPopulateCache() async throws {
         let year = 1900
         let snapshot = makeSnapshot(year: year)
-        let loader = CountingBorderSnapshotLoader(
+        let gate = AsyncGate()
+        let loader = GatedBorderSnapshotLoader(
             snapshots: [year: snapshot],
-            delays: [year: 200_000_000]
+            gate: gate
         )
         let repository = DefaultBorderRepository(
             cache: LRUCache<Int, YearSnapshot>(capacity: 4),
@@ -85,8 +86,9 @@ struct BorderRepositoryConcurrencyTests {
             try await repository.snapshot(for: year)
         }
 
-        try await Task.sleep(nanoseconds: 20_000_000)
+        await loader.waitForLoadToStart()
         firstTask.cancel()
+        await gate.open()
 
         do {
             _ = try await firstTask.value
@@ -163,5 +165,69 @@ private actor CountingBorderSnapshotLoader: BorderSnapshotLoading {
         }
 
         return snapshot
+    }
+}
+
+private actor GatedBorderSnapshotLoader: BorderSnapshotLoading {
+    private let snapshots: [Int: YearSnapshot]
+    private let gate: AsyncGate
+    private(set) var loadCount = 0
+    private(set) var loadedYears: [Int] = []
+    private var startedContinuation: CheckedContinuation<Void, Never>?
+
+    init(snapshots: [Int: YearSnapshot], gate: AsyncGate) {
+        self.snapshots = snapshots
+        self.gate = gate
+    }
+
+    func waitForLoadToStart() async {
+        if loadCount > 0 {
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            startedContinuation = continuation
+        }
+    }
+
+    func loadSnapshot(year: Int, relativePath: String) async throws -> YearSnapshot {
+        loadCount += 1
+        loadedYears.append(year)
+        startedContinuation?.resume()
+        startedContinuation = nil
+
+        await gate.wait()
+        try Task.checkCancellation()
+
+        guard let snapshot = snapshots[year] else {
+            throw AppError.yearUnavailable(year)
+        }
+
+        return snapshot
+    }
+}
+
+private actor AsyncGate {
+    private var isOpen = false
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    func wait() async {
+        if isOpen {
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            self.continuation = continuation
+        }
+    }
+
+    func open() {
+        guard !isOpen else {
+            return
+        }
+
+        isOpen = true
+        continuation?.resume()
+        continuation = nil
     }
 }
