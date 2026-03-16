@@ -5,7 +5,7 @@ struct RootTabScreen: View {
 
     var body: some View {
         TabView {
-            AtlasScreen(viewModel: viewModel)
+            HomeScene(viewModel: viewModel)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
