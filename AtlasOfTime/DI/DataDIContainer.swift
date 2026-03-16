@@ -6,6 +6,7 @@ final class DataDIContainer {
     private let borderCache: LRUCache<Int, YearSnapshot>
     private let gzipDecoder: any GzipDecoding
     private let borderDecoder: any BorderDecoding
+    private let borderSnapshotLoader: any BorderSnapshotLoading
 
     private lazy var yearIndexRepository: any YearIndexRepository = {
         DefaultYearIndexRepository(dataSource: dataSource)
@@ -13,11 +14,9 @@ final class DataDIContainer {
 
     private lazy var borderRepository: any BorderRepository = {
         return DefaultBorderRepository(
-            dataSource: dataSource,
             cache: borderCache,
             yearIndexRepository: yearIndexRepository,
-            gzipDecoder: gzipDecoder,
-            borderDecoder: borderDecoder
+            loader: borderSnapshotLoader
         )
     }()
 
@@ -31,6 +30,11 @@ final class DataDIContainer {
         self.borderCache = borderCache
         self.gzipDecoder = gzipDecoder
         self.borderDecoder = borderDecoder
+        self.borderSnapshotLoader = DefaultBorderSnapshotLoader(
+            dataSource: dataSource,
+            gzipDecoder: gzipDecoder,
+            borderDecoder: borderDecoder
+        )
     }
 
     func makeYearIndexRepository() -> any YearIndexRepository {
