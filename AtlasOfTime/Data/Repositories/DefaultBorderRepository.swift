@@ -1,25 +1,20 @@
 import Foundation
 
 actor DefaultBorderRepository: BorderRepository {
-    private let dataSource: BundleDataSource
     private let cache: LRUCache<Int, YearSnapshot>
     private let yearIndexRepository: any YearIndexRepository
-    private let gzipDecoder: any GzipDecoding
-    private let borderDecoder: any BorderDecoding
+    private let loader: any BorderSnapshotLoading
     private var cachedYearIndex: YearIndex?
+    private var inFlightSnapshots: [Int: Task<YearSnapshot, Error>] = [:]
 
     init(
-        dataSource: BundleDataSource,
         cache: LRUCache<Int, YearSnapshot>,
         yearIndexRepository: any YearIndexRepository,
-        gzipDecoder: any GzipDecoding,
-        borderDecoder: any BorderDecoding
+        loader: any BorderSnapshotLoading
     ) {
-        self.dataSource = dataSource
         self.cache = cache
         self.yearIndexRepository = yearIndexRepository
-        self.gzipDecoder = gzipDecoder
-        self.borderDecoder = borderDecoder
+        self.loader = loader
     }
 
     func snapshot(for year: Int) async throws -> YearSnapshot {
@@ -27,16 +22,23 @@ actor DefaultBorderRepository: BorderRepository {
             return cached
         }
 
+        if let inFlightTask = inFlightSnapshots[year] {
+            return try await inFlightTask.value
+        }
+
         let index = try await currentYearIndex()
         guard let relativePath = index.path(for: year) else {
             throw AppError.yearUnavailable(year)
         }
 
-        let compressedData = try dataSource.readYearFile(relativePath: relativePath)
-        let geoJSONData = try gzipDecoder.gunzip(compressedData)
-        let polygons = try borderDecoder.decodeBorders(from: geoJSONData)
+        let task = Task<YearSnapshot, Error> { [loader] in
+            try await loader.loadSnapshot(year: year, relativePath: relativePath)
+        }
+        inFlightSnapshots[year] = task
+        defer { inFlightSnapshots[year] = nil }
 
-        let snapshot = YearSnapshot(year: year, polygons: polygons)
+        let snapshot = try await task.value
+        try Task.checkCancellation()
         await cache.setValue(snapshot, for: year)
         return snapshot
     }

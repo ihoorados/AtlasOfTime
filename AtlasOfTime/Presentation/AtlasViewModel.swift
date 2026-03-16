@@ -17,6 +17,7 @@ final class AtlasViewModel: ObservableObject {
     private var didAppear = false
     private var latestRequestToken: UInt64 = 0
     private var requestCounter: UInt64 = 0
+    private var bootstrapTask: Task<Void, Never>?
     private var loadTask: Task<Void, Never>?
 
     init(
@@ -35,8 +36,9 @@ final class AtlasViewModel: ObservableObject {
         guard !didAppear else { return }
         didAppear = true
 
-        Task {
-            await bootstrap()
+        bootstrapTask?.cancel()
+        bootstrapTask = Task { [weak self] in
+            await self?.bootstrap()
         }
     }
 
@@ -76,20 +78,17 @@ final class AtlasViewModel: ObservableObject {
 
         Task { [debouncer, debounceNanoseconds] in
             await debouncer.schedule(token: token, delayNanoseconds: debounceNanoseconds) { [weak self] in
-                await self?.startLoad(for: year, token: token)
+                await self?.replaceLoadTask(for: year, token: token)
             }
         }
     }
 
     private func loadImmediately(for year: Int) {
         let token = nextRequestToken()
-
-        Task { [weak self] in
-            await self?.startLoad(for: year, token: token)
-        }
+        replaceLoadTask(for: year, token: token)
     }
 
-    private func startLoad(for year: Int, token: UInt64) async {
+    private func replaceLoadTask(for year: Int, token: UInt64) {
         guard token == latestRequestToken else { return }
 
         loadTask?.cancel()
@@ -145,6 +144,10 @@ final class AtlasViewModel: ObservableObject {
     }
 
     deinit {
+        bootstrapTask?.cancel()
         loadTask?.cancel()
+        Task { [debouncer] in
+            await debouncer.cancelAll()
+        }
     }
 }
