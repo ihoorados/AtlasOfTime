@@ -146,5 +146,8 @@ final class AtlasViewModel: ObservableObject {
     deinit {
         bootstrapTask?.cancel()
         loadTask?.cancel()
+        Task { [debouncer] in
+            await debouncer.cancelAll()
+        }
     }
 }
