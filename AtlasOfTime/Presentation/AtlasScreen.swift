@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
+    @Environment(\.atlasTheme) private var theme
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -13,6 +14,7 @@ struct AtlasScreen: View {
                     Text(viewModel.displayYear == 0 ? "--" : "\(viewModel.displayYear)")
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .monospacedDigit()
+                        .foregroundStyle(theme.primaryText)
 
                     Spacer()
 
@@ -33,7 +35,7 @@ struct AtlasScreen: View {
                 if let message = viewModel.errorMessage, !message.isEmpty {
                     Text(message)
                         .font(.footnote)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             .padding(16)

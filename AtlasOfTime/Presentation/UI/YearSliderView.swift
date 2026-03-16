@@ -3,6 +3,7 @@ import SwiftUI
 struct YearSliderView: View {
     @Binding var selectedYear: Int
     let availableYears: [Int]
+    @Environment(\.atlasTheme) private var theme
 
     private var years: [Int] {
         availableYears.sorted()
@@ -11,6 +12,7 @@ struct YearSliderView: View {
     var body: some View {
         VStack(spacing: 8) {
             Slider(value: sliderIndexBinding, in: sliderRange, step: 1)
+                .tint(theme.primaryText)
                 .disabled(years.count < 2)
 
             HStack {
@@ -19,8 +21,13 @@ struct YearSliderView: View {
                 Text(years.last.map(String.init) ?? "--")
             }
             .font(.caption)
-            .foregroundColor(.secondary)
+            .foregroundStyle(theme.secondaryText)
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(theme.groupedBackground)
+        )
     }
 
     private var sliderRange: ClosedRange<Double> {
