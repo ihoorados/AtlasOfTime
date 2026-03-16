@@ -3,6 +3,7 @@ import SwiftUI
 struct RootTabScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
     @ObservedObject var appearanceController: AppearanceController
+    @ObservedObject var preferencesController: AppPreferencesController
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
@@ -12,7 +13,10 @@ struct RootTabScreen: View {
             }
 
             Tab("Settings", systemImage: "gearshape") {
-                SettingsScene(appearanceController: appearanceController)
+                SettingsScene(
+                    appearanceController: appearanceController,
+                    preferencesController: preferencesController
+                )
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
@@ -32,7 +36,8 @@ struct RootTabScreen_Previews: PreviewProvider {
     static var previews: some View {
         RootTabScreen(
             viewModel: PreviewAppDIContainer().makeAtlasViewModel(),
-            appearanceController: AppearanceController()
+            appearanceController: AppearanceController(),
+            preferencesController: AppPreferencesController()
         )
     }
 }

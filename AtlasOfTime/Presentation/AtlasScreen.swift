@@ -3,6 +3,7 @@ import SwiftUI
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
     @Environment(\.atlasTheme) private var theme
+    @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -18,7 +19,7 @@ struct AtlasScreen: View {
 
                     Spacer()
 
-                    if viewModel.isLoading {
+                    if viewModel.isLoading && showLoadingIndicator {
                         ProgressView()
                             .controlSize(.small)
                     }

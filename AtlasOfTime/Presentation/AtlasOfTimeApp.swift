@@ -5,6 +5,7 @@ struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
     @StateObject private var viewModel: AtlasViewModel
     @StateObject private var appearanceController = AppearanceController()
+    @StateObject private var preferencesController = AppPreferencesController()
 
     init() {
         let appContainer = AppDIContainer()
@@ -18,11 +19,14 @@ struct AtlasOfTimeApp: App {
         WindowGroup {
             RootTabScreen(
                 viewModel: viewModel,
-                appearanceController: appearanceController
+                appearanceController: appearanceController,
+                preferencesController: preferencesController
             )
             .preferredColorScheme(appearanceController.preferredColorScheme)
             .environment(\.atlasAppearance, appearanceController.selectedAppearance)
             .environment(\.atlasGlassEnabled, appearanceController.glassEnabled)
+            .environment(\.atlasShowYearRangeLabels, preferencesController.showYearRangeLabels)
+            .environment(\.atlasShowLoadingIndicator, preferencesController.showLoadingIndicator)
         }
     }
 }
