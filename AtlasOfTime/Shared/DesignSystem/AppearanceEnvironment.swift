@@ -10,6 +10,11 @@ extension EnvironmentValues {
         get { self[AtlasGlassEnabledKey.self] }
         set { self[AtlasGlassEnabledKey.self] = newValue }
     }
+
+    var atlasTheme: AtlasTheme {
+        get { self[AtlasThemeKey.self] }
+        set { self[AtlasThemeKey.self] = newValue }
+    }
 }
 
 private struct AtlasAppearanceKey: EnvironmentKey {
@@ -20,8 +25,13 @@ private struct AtlasGlassEnabledKey: EnvironmentKey {
     static let defaultValue = true
 }
 
+private struct AtlasThemeKey: EnvironmentKey {
+    static let defaultValue = AtlasTheme.resolve(colorScheme: .light, glassEnabled: true)
+}
+
 struct AtlasCardSurfaceModifier: ViewModifier {
     @Environment(\.atlasGlassEnabled) private var atlasGlassEnabled
+    @Environment(\.atlasTheme) private var theme
 
     let cornerRadius: CGFloat
 
@@ -30,13 +40,21 @@ struct AtlasCardSurfaceModifier: ViewModifier {
         if #available(iOS 26, *), atlasGlassEnabled {
             content
                 .compositingGroup()
-                .glassEffect(.regular.tint(.white.opacity(0.08)), in: .rect(cornerRadius: cornerRadius))
+                .glassEffect(.regular.tint(theme.glassTint), in: .rect(cornerRadius: cornerRadius))
+                .overlay {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .stroke(theme.panelStroke, lineWidth: 1)
+                }
         } else {
             content
                 .background(
-                    .thinMaterial,
+                    theme.panelFallbackFill,
                     in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                 )
+                .overlay {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .stroke(theme.panelStroke, lineWidth: 1)
+                }
         }
     }
 }

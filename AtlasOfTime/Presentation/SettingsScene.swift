@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsScene: View {
     @ObservedObject var appearanceController: AppearanceController
+    @Environment(\.atlasTheme) private var theme
 
     var body: some View {
         NavigationStack {
@@ -88,12 +89,12 @@ struct SettingsScene: View {
     private func previewPill(title: String, isSelected: Bool) -> some View {
         Text(title)
             .font(.caption.weight(.semibold))
-            .foregroundStyle(isSelected ? .primary : .secondary)
+            .foregroundStyle(isSelected ? theme.primaryText : theme.secondaryText)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(
                 Capsule(style: .continuous)
-                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.secondary.opacity(0.08))
+                    .fill(isSelected ? theme.selectionFill : theme.subtleFill)
             )
     }
 }

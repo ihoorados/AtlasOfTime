@@ -3,6 +3,7 @@ import SwiftUI
 struct RootTabScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
     @ObservedObject var appearanceController: AppearanceController
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         TabView {
@@ -15,6 +16,13 @@ struct RootTabScreen: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+        .environment(
+            \.atlasTheme,
+            AtlasTheme.resolve(
+                colorScheme: colorScheme,
+                glassEnabled: appearanceController.glassEnabled
+            )
+        )
     }
 }
 
