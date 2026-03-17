@@ -18,9 +18,10 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
         #elseif canImport(AppKit)
         strokeColor = isSelected ? selectedStrokeColor : atlasStrokeColor
         #endif
-        lineWidth = isSelected ? 2.0 : 1.4
+        lineWidth = isSelected ? 2.6 : 1.15
         lineJoin = .round
         lineCap = .round
+        alpha = isSelected ? 1.0 : 0.88
     }
 
     @available(*, unavailable)
@@ -34,36 +35,36 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
     private var atlasStrokeColor: PlatformColor {
         PlatformColor { traits in
             if traits.userInterfaceStyle == .dark {
-                return PlatformColor(red: 0.96, green: 0.90, blue: 0.78, alpha: 0.78)
+                return PlatformColor(red: 0.90, green: 0.84, blue: 0.72, alpha: 0.54)
             }
-            return PlatformColor(red: 0.28, green: 0.22, blue: 0.14, alpha: 0.82)
+            return PlatformColor(red: 0.26, green: 0.20, blue: 0.12, alpha: 0.58)
         }
     }
 
     private var atlasFillColor: PlatformColor {
         PlatformColor { traits in
             if traits.userInterfaceStyle == .dark {
-                return PlatformColor(red: 0.88, green: 0.76, blue: 0.56, alpha: 0.05)
+                return PlatformColor(red: 0.82, green: 0.70, blue: 0.50, alpha: 0.025)
             }
-            return PlatformColor(red: 0.56, green: 0.42, blue: 0.20, alpha: 0.06)
+            return PlatformColor(red: 0.54, green: 0.40, blue: 0.18, alpha: 0.03)
         }
     }
 
     private var selectedStrokeColor: PlatformColor {
         PlatformColor { traits in
             if traits.userInterfaceStyle == .dark {
-                return PlatformColor(red: 0.98, green: 0.93, blue: 0.82, alpha: 0.96)
+                return PlatformColor(red: 0.99, green: 0.94, blue: 0.82, alpha: 1.0)
             }
-            return PlatformColor(red: 0.42, green: 0.28, blue: 0.12, alpha: 0.96)
+            return PlatformColor(red: 0.48, green: 0.31, blue: 0.11, alpha: 1.0)
         }
     }
 
     private var selectedFillColor: PlatformColor {
         PlatformColor { traits in
             if traits.userInterfaceStyle == .dark {
-                return PlatformColor(red: 0.90, green: 0.76, blue: 0.48, alpha: 0.18)
+                return PlatformColor(red: 0.92, green: 0.78, blue: 0.50, alpha: 0.24)
             }
-            return PlatformColor(red: 0.76, green: 0.58, blue: 0.24, alpha: 0.18)
+            return PlatformColor(red: 0.80, green: 0.60, blue: 0.22, alpha: 0.22)
         }
     }
     #elseif canImport(AppKit)
@@ -72,13 +73,13 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
             return PlatformColor(name: nil) { appearance in
                 let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
                 if isDark {
-                    return PlatformColor(calibratedRed: 0.96, green: 0.90, blue: 0.78, alpha: 0.78)
+                    return PlatformColor(calibratedRed: 0.90, green: 0.84, blue: 0.72, alpha: 0.54)
                 }
-                return PlatformColor(calibratedRed: 0.28, green: 0.22, blue: 0.14, alpha: 0.82)
+                return PlatformColor(calibratedRed: 0.26, green: 0.20, blue: 0.12, alpha: 0.58)
             }
         }
 
-        return PlatformColor(calibratedRed: 0.28, green: 0.22, blue: 0.14, alpha: 0.82)
+        return PlatformColor(calibratedRed: 0.26, green: 0.20, blue: 0.12, alpha: 0.58)
     }
 
     private var atlasFillColor: PlatformColor {
@@ -86,13 +87,13 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
             return PlatformColor(name: nil) { appearance in
                 let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
                 if isDark {
-                    return PlatformColor(calibratedRed: 0.88, green: 0.76, blue: 0.56, alpha: 0.05)
+                    return PlatformColor(calibratedRed: 0.82, green: 0.70, blue: 0.50, alpha: 0.025)
                 }
-                return PlatformColor(calibratedRed: 0.56, green: 0.42, blue: 0.20, alpha: 0.06)
+                return PlatformColor(calibratedRed: 0.54, green: 0.40, blue: 0.18, alpha: 0.03)
             }
         }
 
-        return PlatformColor(calibratedRed: 0.56, green: 0.42, blue: 0.20, alpha: 0.06)
+        return PlatformColor(calibratedRed: 0.54, green: 0.40, blue: 0.18, alpha: 0.03)
     }
 
     private var selectedStrokeColor: PlatformColor {
@@ -100,13 +101,13 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
             return PlatformColor(name: nil) { appearance in
                 let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
                 if isDark {
-                    return PlatformColor(calibratedRed: 0.98, green: 0.93, blue: 0.82, alpha: 0.96)
+                    return PlatformColor(calibratedRed: 0.99, green: 0.94, blue: 0.82, alpha: 1.0)
                 }
-                return PlatformColor(calibratedRed: 0.42, green: 0.28, blue: 0.12, alpha: 0.96)
+                return PlatformColor(calibratedRed: 0.48, green: 0.31, blue: 0.11, alpha: 1.0)
             }
         }
 
-        return PlatformColor(calibratedRed: 0.42, green: 0.28, blue: 0.12, alpha: 0.96)
+        return PlatformColor(calibratedRed: 0.48, green: 0.31, blue: 0.11, alpha: 1.0)
     }
 
     private var selectedFillColor: PlatformColor {
@@ -114,13 +115,13 @@ final class BorderOverlayRenderer: MKPolygonRenderer {
             return PlatformColor(name: nil) { appearance in
                 let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
                 if isDark {
-                    return PlatformColor(calibratedRed: 0.90, green: 0.76, blue: 0.48, alpha: 0.18)
+                    return PlatformColor(calibratedRed: 0.92, green: 0.78, blue: 0.50, alpha: 0.24)
                 }
-                return PlatformColor(calibratedRed: 0.76, green: 0.58, blue: 0.24, alpha: 0.18)
+                return PlatformColor(calibratedRed: 0.80, green: 0.60, blue: 0.22, alpha: 0.22)
             }
         }
 
-        return PlatformColor(calibratedRed: 0.76, green: 0.58, blue: 0.24, alpha: 0.18)
+        return PlatformColor(calibratedRed: 0.80, green: 0.60, blue: 0.22, alpha: 0.22)
     }
     #endif
 }
