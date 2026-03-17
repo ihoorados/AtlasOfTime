@@ -7,7 +7,11 @@ struct AtlasScreen: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AtlasMapView(snapshot: viewModel.renderSnapshot)
+            AtlasMapView(
+                snapshot: viewModel.renderSnapshot,
+                selectedCountryID: viewModel.selectedCountryID,
+                onCountrySelectionChanged: viewModel.selectCountry(id:)
+            )
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 12) {

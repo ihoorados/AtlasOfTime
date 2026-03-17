@@ -3,9 +3,11 @@ import SwiftUI
 
 struct AtlasMapView: UIViewRepresentable {
     let snapshot: YearSnapshot?
+    let selectedCountryID: String?
+    let onCountrySelectionChanged: (String?) -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(onCountrySelectionChanged: onCountrySelectionChanged)
     }
 
     func makeUIView(context: Context) -> MKMapView {
@@ -27,6 +29,10 @@ struct AtlasMapView: UIViewRepresentable {
             span: MKCoordinateSpan(latitudeDelta: 150, longitudeDelta: 360)
         )
         mapView.setRegion(initialRegion, animated: false)
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleMapTap(_:)))
+        tapGesture.cancelsTouchesInView = false
+        mapView.addGestureRecognizer(tapGesture)
+        context.coordinator.mapView = mapView
 
         return mapView
     }
@@ -47,48 +53,68 @@ struct AtlasMapView: UIViewRepresentable {
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        context.coordinator.render(snapshot: snapshot, on: mapView)
+        context.coordinator.render(
+            snapshot: snapshot,
+            selectedCountryID: selectedCountryID,
+            on: mapView
+        )
     }
 
     final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastSnapshotIdentifier: String?
+        private var selectedCountryID: String?
+        weak var mapView: MKMapView?
+        private let onCountrySelectionChanged: (String?) -> Void
 
-        func render(snapshot: YearSnapshot?, on mapView: MKMapView) {
-            let identifier = snapshot.map { "\($0.year)-\($0.polygons.count)" } ?? "nil"
+        init(onCountrySelectionChanged: @escaping (String?) -> Void) {
+            self.onCountrySelectionChanged = onCountrySelectionChanged
+        }
+
+        func render(snapshot: YearSnapshot?, selectedCountryID: String?, on mapView: MKMapView) {
+            self.selectedCountryID = selectedCountryID
+            let identifier = snapshot.map { "\($0.year)-\($0.polygons.count)-\(selectedCountryID ?? "none")" } ?? "nil"
             guard identifier != lastSnapshotIdentifier else { return }
 
             mapView.removeOverlays(mapView.overlays)
 
             let overlays = BorderOverlayAdapter.makeOverlays(from: snapshot)
             mapView.addOverlays(overlays)
-
-            fitIfNeeded(overlays: overlays, mapView: mapView)
             lastSnapshotIdentifier = identifier
+        }
+
+        @objc
+        func handleMapTap(_ recognizer: UITapGestureRecognizer) {
+            guard let mapView else { return }
+
+            let point = recognizer.location(in: mapView)
+            let mapCoordinate = mapView.convert(point, toCoordinateFrom: mapView)
+            let mapPoint = MKMapPoint(mapCoordinate)
+
+            for overlay in mapView.overlays.reversed() {
+                guard let polygon = overlay as? MKPolygon,
+                      let countryID = polygon.atlasCountryID,
+                      let renderer = mapView.renderer(for: polygon) as? MKPolygonRenderer,
+                      let path = renderer.path else {
+                    continue
+                }
+
+                let rendererPoint = renderer.point(for: mapPoint)
+                if path.contains(rendererPoint) {
+                    onCountrySelectionChanged(countryID == selectedCountryID ? nil : countryID)
+                    return
+                }
+            }
+
+            onCountrySelectionChanged(nil)
         }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             guard let polygon = overlay as? MKPolygon else {
                 return MKOverlayRenderer(overlay: overlay)
             }
-            return BorderOverlayRenderer(polygon: polygon)
-        }
 
-        private func fitIfNeeded(overlays: [MKPolygon], mapView: MKMapView) {
-            guard !overlays.isEmpty else { return }
-
-            let unionRect = overlays
-                .map(\.boundingMapRect)
-                .reduce(MKMapRect.null) { current, next in
-                    current.isNull ? next : current.union(next)
-                }
-
-            guard !unionRect.isNull, !unionRect.isEmpty else { return }
-
-            mapView.setVisibleMapRect(
-                unionRect,
-                edgePadding: UIEdgeInsets(top: 24, left: 16, bottom: 180, right: 16),
-                animated: false
-            )
+            let isSelected = polygon.atlasCountryID == selectedCountryID
+            return BorderOverlayRenderer(polygon: polygon, isSelected: isSelected)
         }
     }
 }

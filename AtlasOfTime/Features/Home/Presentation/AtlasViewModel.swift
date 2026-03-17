@@ -7,6 +7,7 @@ final class AtlasViewModel: ObservableObject {
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
     @Published private(set) var visibleCountries: [HistoricalCountry] = []
+    @Published private(set) var selectedCountryID: String?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
@@ -48,7 +49,22 @@ final class AtlasViewModel: ObservableObject {
 
         let snappedYear = nearestAvailableYear(to: year)
         displayYear = snappedYear
+        selectedCountryID = nil
         scheduleDebouncedLoad(for: snappedYear)
+    }
+
+    var selectedCountry: HistoricalCountry? {
+        guard let selectedCountryID else { return nil }
+        return visibleCountries.first { $0.id == selectedCountryID }
+    }
+
+    func selectCountry(id: String?) {
+        guard let id else {
+            selectedCountryID = nil
+            return
+        }
+
+        selectedCountryID = visibleCountries.contains(where: { $0.id == id }) ? id : nil
     }
 
     private func bootstrap() async {
@@ -64,13 +80,17 @@ final class AtlasViewModel: ObservableObject {
 
             availableYears = years
             displayYear = initialYear
+            renderSnapshot = nil
             visibleCountries = []
+            selectedCountryID = nil
             errorMessage = nil
             isLoading = false
 
             loadImmediately(for: initialYear)
         } catch {
+            renderSnapshot = nil
             visibleCountries = []
+            selectedCountryID = nil
             isLoading = false
             errorMessage = AppError.wrap(error).userMessage
         }
@@ -111,12 +131,20 @@ final class AtlasViewModel: ObservableObject {
             guard token == latestRequestToken else { return }
             renderSnapshot = snapshot
             visibleCountries = snapshot.countries
+            if let selectedCountryID,
+               snapshot.countries.contains(where: { $0.id == selectedCountryID }) {
+                self.selectedCountryID = selectedCountryID
+            } else {
+                selectedCountryID = nil
+            }
             errorMessage = nil
         } catch is CancellationError {
             // Newer request replaced this one.
         } catch {
             guard token == latestRequestToken else { return }
+            renderSnapshot = nil
             visibleCountries = []
+            selectedCountryID = nil
             errorMessage = AppError.wrap(error).userMessage
         }
 
