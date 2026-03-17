@@ -36,8 +36,10 @@ struct AtlasMapView: UIViewRepresentable {
             let configuration = MKStandardMapConfiguration(elevationStyle: .flat)
             configuration.emphasisStyle = .muted
             configuration.pointOfInterestFilter = .excludingAll
-            configuration.elevationStyle = .realistic
             mapView.preferredConfiguration = configuration
+            if #available(iOS 17.0, *) {
+                mapView.selectableMapFeatures = []
+            }
         } else {
             mapView.mapType = .mutedStandard
             mapView.pointOfInterestFilter = .excludingAll
