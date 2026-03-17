@@ -20,3 +20,14 @@ enum HistoricalBorderModel: String, Equatable, Sendable, Codable {
     case lineWithUncertainty
     case zone
 }
+
+enum HistoricalRelationshipType: String, Equatable, Sendable, Codable {
+    case subjectOf
+    case partOf
+}
+
+enum HistoricalRelationshipBasis: String, Equatable, Sendable, Codable {
+    case assertedBySource
+    case inferred
+    case unknown
+}

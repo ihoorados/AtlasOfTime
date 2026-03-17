@@ -41,6 +41,7 @@ struct YearSnapshot: Sendable {
                         sourceReferences: HistoricalSourceReference.defaultReferences(for: country.infoURL)
                     )
                 ],
+                relationships: [],
                 sourceReferences: HistoricalSourceReference.defaultReferences(for: country.infoURL)
             )
         }
@@ -63,7 +64,8 @@ struct YearSnapshot: Sendable {
                         borderConfidence: .unknown,
                         polygons: polygons
                     )
-                ]
+                ],
+                relationships: []
             )
         ]
     }

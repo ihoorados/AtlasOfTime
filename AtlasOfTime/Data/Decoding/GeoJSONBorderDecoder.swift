@@ -262,6 +262,7 @@ private struct HistoricalCountryAccumulator {
                     sourceReferences: sourceReferences
                 )
             ],
+            relationships: makeRelationships(sourceReferences: sourceReferences),
             sourceReferences: sourceReferences
         )
     }
@@ -309,5 +310,46 @@ private struct HistoricalCountryAccumulator {
         }
 
         return references
+    }
+
+    private func makeRelationships(sourceReferences: [HistoricalSourceReference]) -> [HistoricalRelationship] {
+        var relationships: [HistoricalRelationship] = []
+
+        if let subjectOf = identity.sovereignName {
+            relationships.append(
+                HistoricalRelationship(
+                    id: "\(identity.id)|subjectOf|\(normalizedRelationshipComponent(subjectOf))",
+                    type: .subjectOf,
+                    targetEntityID: "derived:\(normalizedRelationshipComponent(subjectOf))",
+                    targetDisplayName: subjectOf,
+                    basis: .assertedBySource,
+                    confidence: .medium,
+                    sourceReferences: sourceReferences
+                )
+            )
+        }
+
+        if let partOf = identity.parentName {
+            relationships.append(
+                HistoricalRelationship(
+                    id: "\(identity.id)|partOf|\(normalizedRelationshipComponent(partOf))",
+                    type: .partOf,
+                    targetEntityID: "derived:\(normalizedRelationshipComponent(partOf))",
+                    targetDisplayName: partOf,
+                    basis: .assertedBySource,
+                    confidence: .medium,
+                    sourceReferences: sourceReferences
+                )
+            )
+        }
+
+        return relationships
+    }
+
+    private func normalizedRelationshipComponent(_ value: String) -> String {
+        value
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            .lowercased()
+            .replacingOccurrences(of: #"\s+"#, with: "-", options: .regularExpression)
     }
 }

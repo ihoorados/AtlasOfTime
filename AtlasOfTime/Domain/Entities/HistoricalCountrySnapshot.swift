@@ -9,6 +9,7 @@ struct HistoricalCountrySnapshot: Identifiable, Equatable, Sendable, Codable {
     let formalName: String?
     let nameConfidence: HistoricalConfidence
     let extents: [HistoricalExtent]
+    let relationships: [HistoricalRelationship]
     let sourceReferences: [HistoricalSourceReference]
 
     init(
@@ -20,6 +21,7 @@ struct HistoricalCountrySnapshot: Identifiable, Equatable, Sendable, Codable {
         formalName: String? = nil,
         nameConfidence: HistoricalConfidence = .unknown,
         extents: [HistoricalExtent],
+        relationships: [HistoricalRelationship] = [],
         sourceReferences: [HistoricalSourceReference] = []
     ) {
         self.id = id
@@ -30,6 +32,7 @@ struct HistoricalCountrySnapshot: Identifiable, Equatable, Sendable, Codable {
         self.formalName = formalName
         self.nameConfidence = nameConfidence
         self.extents = extents
+        self.relationships = relationships
         self.sourceReferences = sourceReferences
     }
 }
