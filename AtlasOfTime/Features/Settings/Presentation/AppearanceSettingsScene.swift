@@ -164,10 +164,7 @@ struct AppearanceSettingsScene_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         NavigationStack {
-            AppearanceSettingsScene(
-                appearanceController: AppearanceController(),
-                languageController: AppLanguageController()
-            )
+            SettingsPreviewFactory.makeAppearanceSettingsScene()
         }
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)

@@ -60,11 +60,7 @@ struct SettingsScene_Previews: PreviewProvider {
         localeIdentifier: String,
         layoutDirection: LayoutDirection
     ) -> some View {
-        SettingsScene(
-            appearanceController: AppearanceController(),
-            languageController: AppLanguageController(),
-            preferencesController: AppPreferencesController()
-        )
+        SettingsPreviewFactory.makeSettingsScene()
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)
     }

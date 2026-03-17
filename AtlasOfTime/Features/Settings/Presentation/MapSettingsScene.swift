@@ -75,7 +75,7 @@ struct MapSettingsScene_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         NavigationStack {
-            MapSettingsScene(preferencesController: AppPreferencesController())
+            SettingsPreviewFactory.makeMapSettingsScene()
         }
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)

@@ -1,0 +1,39 @@
+import SwiftUI
+
+@MainActor
+enum SettingsPreviewFactory {
+    static func makeAppearanceController() -> AppearanceController {
+        AppearanceController()
+    }
+
+    static func makeLanguageController() -> AppLanguageController {
+        AppLanguageController()
+    }
+
+    static func makePreferencesController() -> AppPreferencesController {
+        AppPreferencesController()
+    }
+
+    static func makeSettingsScene() -> SettingsScene {
+        SettingsScene(
+            appearanceController: makeAppearanceController(),
+            languageController: makeLanguageController(),
+            preferencesController: makePreferencesController()
+        )
+    }
+
+    static func makeAppearanceSettingsScene() -> AppearanceSettingsScene {
+        AppearanceSettingsScene(
+            appearanceController: makeAppearanceController(),
+            languageController: makeLanguageController()
+        )
+    }
+
+    static func makeMapSettingsScene() -> MapSettingsScene {
+        MapSettingsScene(preferencesController: makePreferencesController())
+    }
+
+    static func makeDataSettingsScene() -> DataSettingsScene {
+        DataSettingsScene()
+    }
+}

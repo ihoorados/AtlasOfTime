@@ -63,7 +63,7 @@ struct DataSettingsScene_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         NavigationStack {
-            DataSettingsScene()
+            SettingsPreviewFactory.makeDataSettingsScene()
         }
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)
