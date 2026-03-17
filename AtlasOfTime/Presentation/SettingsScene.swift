@@ -21,8 +21,7 @@ struct SettingsScene: View {
                     }
 
                     NavigationLink {
-                        Color.clear
-                            .navigationTitle("Data")
+                        DataSettingsScene()
                     } label: {
                         settingsRow(title: "Data", systemImage: "internaldrive")
                     }
