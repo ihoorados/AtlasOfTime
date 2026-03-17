@@ -68,6 +68,34 @@ final class AtlasViewModel: ObservableObject {
         )
     }
 
+    var selectedCountrySnapshot: HistoricalCountrySnapshot? {
+        guard let selectedCountryID else { return nil }
+        return visibleSnapshots.first { $0.id == selectedCountryID }
+    }
+
+    var selectedPrimaryExtent: HistoricalExtent? {
+        selectedCountrySnapshot?.extents.first
+    }
+
+    var selectedCountryBorderConfidenceText: LocalizedStringResource {
+        switch selectedPrimaryExtent?.borderConfidence ?? .unknown {
+        case .high:
+            AppStrings.Home.confidenceHigh
+        case .medium:
+            AppStrings.Home.confidenceMedium
+        case .low:
+            AppStrings.Home.confidenceLow
+        case .unknown:
+            AppStrings.Home.confidenceUnknown
+        }
+    }
+
+    var selectedCountrySourceCount: Int {
+        let extentReferences = selectedPrimaryExtent?.sourceReferences ?? []
+        let snapshotReferences = selectedCountrySnapshot?.sourceReferences ?? []
+        return Set(extentReferences.map(\.id) + snapshotReferences.map(\.id)).count
+    }
+
     func selectCountry(id: String?) {
         guard let id else {
             selectedCountryID = nil

@@ -71,6 +71,33 @@ struct AtlasScreen: View {
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .background(theme.selectionFill, in: Capsule())
+
+                    HStack(spacing: 12) {
+                        LabeledContent {
+                            Text(viewModel.selectedCountryBorderConfidenceText)
+                                .foregroundStyle(theme.primaryText)
+                        } label: {
+                            Text(AppStrings.Home.borderConfidenceTitle)
+                                .foregroundStyle(theme.secondaryText)
+                        }
+
+                        if viewModel.selectedCountrySourceCount > 0 {
+                            LabeledContent {
+                                Text(
+                                    LocalizedStringFormat.resolve(
+                                        AppStrings.Home.sourceCountFormat,
+                                        locale: .current,
+                                        viewModel.selectedCountrySourceCount
+                                    )
+                                )
+                                .foregroundStyle(theme.primaryText)
+                            } label: {
+                                Text(AppStrings.Home.sourcesTitle)
+                                    .foregroundStyle(theme.secondaryText)
+                            }
+                        }
+                    }
+                    .font(.caption)
                 }
             }
 
