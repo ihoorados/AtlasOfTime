@@ -11,10 +11,18 @@ struct YearSliderView: View {
     }
 
     var body: some View {
+        timelineContent
+            .environment(\.layoutDirection, .leftToRight)
+    }
+
+    private var timelineContent: some View {
         VStack(spacing: 8) {
             Slider(value: sliderIndexBinding, in: sliderRange, step: 1)
                 .tint(theme.primaryText)
                 .disabled(years.count < 2)
+                .accessibilityLabel(AppStrings.Accessibility.Timeline.yearSliderLabel)
+                .accessibilityValue(selectedYearAccessibilityValue)
+                .accessibilityHint(AppStrings.Accessibility.Timeline.yearSliderHint)
 
             if showYearRangeLabels {
                 HStack {
@@ -24,6 +32,7 @@ struct YearSliderView: View {
                 }
                 .font(.caption)
                 .foregroundStyle(theme.secondaryText)
+                .accessibilityHidden(true)
             }
         }
         .padding(12)
@@ -31,6 +40,7 @@ struct YearSliderView: View {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(theme.groupedBackground)
         )
+        // Historical time flows from earlier to later years regardless of UI language.
     }
 
     private var sliderRange: ClosedRange<Double> {
@@ -70,5 +80,13 @@ struct YearSliderView: View {
         }
 
         return bestIndex
+    }
+
+    private var selectedYearAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.Timeline.selectedYearFormat,
+            locale: .current,
+            Int64(selectedYear)
+        )
     }
 }

@@ -12,7 +12,7 @@ struct AtlasScreen: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text(viewModel.displayYear == 0 ? "--" : "\(viewModel.displayYear)")
+                    Text(viewModel.displayYear == 0 ? String(localized: AppStrings.Common.unavailableValue) : "\(viewModel.displayYear)")
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(theme.primaryText)
@@ -54,7 +54,23 @@ struct AtlasScreen: View {
 struct AtlasScreen_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
-        AtlasScreen(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+        Group {
+            atlasPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName(PreviewDisplayName.english("Home Panel"))
+
+            atlasPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName(PreviewDisplayName.persianRTL("Home Panel"))
+        }
+    }
+
+    @MainActor
+    private static func atlasPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
+        AtlasScreen(viewModel: HomePreviewFactory.makeViewModel())
+            .environment(\.locale, Locale(identifier: localeIdentifier))
+            .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

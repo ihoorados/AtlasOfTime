@@ -24,23 +24,23 @@ enum AppError: Error, LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .resourceNotFound(let path):
-            return "Resource not found: \(path)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.resourceNotFoundFormat, locale: .current, path)
         case .fileReadFailed(let path):
-            return "Unable to read file: \(path)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.fileReadFailedFormat, locale: .current, path)
         case .invalidIndexFormat(let details):
-            return "Invalid index.json format: \(details)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.invalidIndexFormatFormat, locale: .current, details)
         case .invalidGeoJSON(let details):
-            return "Invalid GeoJSON: \(details)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.invalidGeoJSONFormat, locale: .current, details)
         case .yearUnavailable(let year):
-            return "No border data available for year \(year)."
+            return LocalizedStringFormat.resolve(AppStrings.Errors.yearUnavailableFormat, locale: .current, year)
         case .yearIndexNotLoaded:
-            return "Year index is not loaded."
+            return String(localized: AppStrings.Errors.yearIndexNotLoaded)
         case .decompressionFailed(let reason):
-            return "Gzip decompression failed: \(reason)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.decompressionFailedFormat, locale: .current, reason)
         case .cancelled:
-            return "Operation cancelled."
+            return String(localized: AppStrings.Errors.cancelled)
         case .unknown(let message):
-            return "Unexpected error: \(message)"
+            return LocalizedStringFormat.resolve(AppStrings.Errors.unexpectedErrorFormat, locale: .current, message)
         }
     }
 
@@ -49,9 +49,9 @@ enum AppError: Error, LocalizedError, Sendable {
         case .cancelled:
             return ""
         case .unknown:
-            return "Something went wrong while loading map borders."
+            return String(localized: AppStrings.Errors.loadingMapBorders)
         default:
-            return errorDescription ?? "An unexpected error occurred."
+            return errorDescription ?? String(localized: AppStrings.Errors.unexpectedFallback)
         }
     }
 }

@@ -1,10 +1,8 @@
 import Foundation
 
 @MainActor
-final class PreviewAppDIContainer: AtlasDIProviding {
-    private let featureContainer: AtlasFeatureDIContainer
-
-    init() {
+enum HomePreviewFactory {
+    static func makeViewModel() -> AtlasViewModel {
         let year1900 = 1900
         let year1914 = 1914
 
@@ -34,22 +32,18 @@ final class PreviewAppDIContainer: AtlasDIProviding {
             year1914: YearSnapshot(year: year1914, polygons: [samplePolygon])
         ]
 
-        let yearIndexRepository = PreviewYearIndexRepository(index: index)
-        let borderRepository = PreviewBorderRepository(snapshots: snapshots)
         let domainContainer = DomainDIContainer(
-            yearIndexRepository: yearIndexRepository,
-            borderRepository: borderRepository
+            yearIndexRepository: PreviewYearIndexRepository(index: index),
+            borderRepository: PreviewBorderRepository(snapshots: snapshots)
         )
 
-        self.featureContainer = AtlasFeatureDIContainer(
+        let featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
             debounceNanoseconds: 50_000_000
         )
-    }
 
-    func makeAtlasViewModel() -> AtlasViewModel {
-        featureContainer.makeAtlasViewModel()
+        return featureContainer.makeAtlasViewModel()
     }
 }
 

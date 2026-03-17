@@ -10,11 +10,11 @@ enum AppAppearanceOption: String, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .system:
-            "System"
+            String(localized: AppStrings.AppearanceOptions.systemTitle)
         case .light:
-            "Light"
+            String(localized: AppStrings.AppearanceOptions.lightTitle)
         case .dark:
-            "Dark"
+            String(localized: AppStrings.AppearanceOptions.darkTitle)
         }
     }
 
@@ -43,11 +43,11 @@ enum AppAppearanceOption: String, CaseIterable, Identifiable, Sendable {
     var summary: String {
         switch self {
         case .system:
-            "Follow the device appearance automatically."
+            String(localized: AppStrings.AppearanceOptions.systemSummary)
         case .light:
-            "Always use the light interface."
+            String(localized: AppStrings.AppearanceOptions.lightSummary)
         case .dark:
-            "Always use the dark interface."
+            String(localized: AppStrings.AppearanceOptions.darkSummary)
         }
     }
 }

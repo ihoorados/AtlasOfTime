@@ -12,7 +12,7 @@ struct HomeScene: View {
 struct HomeScene_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
-        HomeScene(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+        HomeScene(viewModel: HomePreviewFactory.makeViewModel())
     }
 }
 #endif
