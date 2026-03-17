@@ -1,0 +1,53 @@
+"common.appName" = "اطلس زمان";
+
+"tabs.home" = "خانه";
+"tabs.settings" = "تنظیمات";
+
+"appearance.option.system.title" = "سیستم";
+"appearance.option.light.title" = "روشن";
+"appearance.option.dark.title" = "تیره";
+"appearance.option.system.summary" = "از حالت ظاهری دستگاه به صورت خودکار پیروی می‌کند.";
+"appearance.option.light.summary" = "همیشه از رابط روشن استفاده می‌کند.";
+"appearance.option.dark.summary" = "همیشه از رابط تیره استفاده می‌کند.";
+
+"settings.root.title" = "تنظیمات";
+"settings.root.appearance" = "ظاهر";
+"settings.root.map" = "نقشه";
+"settings.root.data" = "داده";
+
+"settings.appearance.title" = "ظاهر";
+"settings.appearance.section.title" = "ظاهر";
+"settings.appearance.appAppearance" = "ظاهر برنامه";
+"settings.appearance.liquidGlass.title" = "شیشه مایع";
+"settings.appearance.liquidGlass.glassSurfaces" = "سطوح شیشه‌ای";
+"settings.appearance.liquidGlass.footer" = "نوار تب بومی به صورت خودکار از سبک شیشه مایع سیستم استفاده می‌کند. این تنظیم پنل‌های شیشه‌ای سفارشی داخل برنامه را کنترل می‌کند.";
+"settings.appearance.preview.title" = "پیش‌نمایش";
+"settings.appearance.preview.cardTitle" = "پیش‌نمایش پوسته";
+"settings.appearance.preview.light" = "روشن";
+"settings.appearance.preview.dark" = "تیره";
+"settings.appearance.preview.glass" = "شیشه";
+"settings.appearance.preview.glassEnabled" = "سطوح شیشه‌ای فعال";
+"settings.appearance.preview.glassReduced" = "سطوح شیشه‌ای کاهش‌یافته";
+"settings.appearance.preview.summary" = "حالت %1$@ با %2$@.";
+"settings.appearance.reset" = "بازنشانی تنظیمات ظاهر";
+
+"settings.map.title" = "نقشه";
+"settings.map.presentation.title" = "نمایش";
+"settings.map.showYearRangeLabels" = "نمایش برچسب‌های بازه سال";
+"settings.map.showLoadingIndicator" = "نمایش نشانگر بارگذاری";
+"settings.map.presentation.footer" = "این کنترل‌ها نمایش پنل نقشه و خط زمان را تغییر می‌دهند، بدون اینکه بر داده‌های تاریخی اصلی اثر بگذارند.";
+"settings.map.reset" = "بازنشانی تنظیمات نقشه";
+
+"settings.data.title" = "داده";
+"settings.data.dataset.title" = "مجموعه‌داده";
+"settings.data.dataset.source" = "منبع";
+"settings.data.dataset.bundled" = "همراه برنامه";
+"settings.data.dataset.format" = "قالب";
+"settings.data.dataset.geojsonGzip" = "GeoJSON + Gzip";
+"settings.data.dataset.footer" = "داده‌های مرزهای تاریخی در حال حاضر همراه برنامه ارائه می‌شوند. هنوز تنظیمی برای همگام‌سازی یا دانلود خارجی وجود ندارد.";
+"settings.data.loading.title" = "بارگذاری";
+"settings.data.loading.caching" = "کش";
+"settings.data.loading.automatic" = "خودکار";
+"settings.data.loading.yearIndex" = "فهرست سال‌ها";
+"settings.data.loading.cachedInMemory" = "کش‌شده در حافظه";
+"settings.data.loading.footer" = "بارگذاری و کش داده‌ها به صورت خودکار مدیریت می‌شوند. وقتی تنظیمات واقعی داده اضافه شوند، باید به جای کنترل‌های نمایشی در اینجا قرار بگیرند.";
