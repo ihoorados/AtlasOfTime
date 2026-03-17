@@ -15,8 +15,7 @@ struct SettingsScene: View {
                     }
 
                     NavigationLink {
-                        Color.clear
-                            .navigationTitle("Map")
+                        MapSettingsScene(preferencesController: preferencesController)
                     } label: {
                         settingsRow(title: "Map", systemImage: "map")
                     }
