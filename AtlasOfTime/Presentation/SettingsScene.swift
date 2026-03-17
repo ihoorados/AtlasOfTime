@@ -9,8 +9,7 @@ struct SettingsScene: View {
             Form {
                 Section {
                     NavigationLink {
-                        Color.clear
-                            .navigationTitle("Appearance")
+                        AppearanceSettingsScene(appearanceController: appearanceController)
                     } label: {
                         settingsRow(title: "Appearance", systemImage: "circle.lefthalf.filled")
                     }
