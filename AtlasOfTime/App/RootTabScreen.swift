@@ -51,10 +51,10 @@ struct RootTabScreen_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         RootTabScreen(
-            viewModel: PreviewAppDIContainer().makeAtlasViewModel(),
-            appearanceController: AppearanceController(),
-            languageController: AppLanguageController(),
-            preferencesController: AppPreferencesController()
+            viewModel: HomePreviewFactory.makeViewModel(),
+            appearanceController: SettingsPreviewFactory.makeAppearanceController(),
+            languageController: SettingsPreviewFactory.makeLanguageController(),
+            preferencesController: SettingsPreviewFactory.makePreferencesController()
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)
