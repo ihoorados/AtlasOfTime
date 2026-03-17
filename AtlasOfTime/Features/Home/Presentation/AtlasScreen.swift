@@ -68,7 +68,7 @@ struct AtlasScreen_Previews: PreviewProvider {
         localeIdentifier: String,
         layoutDirection: LayoutDirection
     ) -> some View {
-        AtlasScreen(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+        AtlasScreen(viewModel: HomePreviewFactory.makeViewModel())
             .environment(\.locale, Locale(identifier: localeIdentifier))
             .environment(\.layoutDirection, layoutDirection)
     }
