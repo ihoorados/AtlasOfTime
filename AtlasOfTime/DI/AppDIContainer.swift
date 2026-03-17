@@ -2,7 +2,7 @@ import Foundation
 
 // App composition root container. Keeps assembly logic out of App entry file.
 @MainActor
-final class AppDIContainer: AtlasDIProviding {
+final class AppDIContainer {
     private let dataContainer: DataDIContainer
     private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
