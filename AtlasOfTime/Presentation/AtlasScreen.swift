@@ -54,7 +54,23 @@ struct AtlasScreen: View {
 struct AtlasScreen_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
+        Group {
+            atlasPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Home Panel · English")
+
+            atlasPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Home Panel · Persian RTL")
+        }
+    }
+
+    @MainActor
+    private static func atlasPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         AtlasScreen(viewModel: PreviewAppDIContainer().makeAtlasViewModel())
+            .environment(\.locale, Locale(identifier: localeIdentifier))
+            .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

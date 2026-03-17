@@ -39,9 +39,24 @@ struct MapSettingsScene: View {
 #if DEBUG
 struct MapSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
+        Group {
+            mapPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Map · English")
+
+            mapPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Map · Persian RTL")
+        }
+    }
+
+    private static func mapPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         NavigationStack {
             MapSettingsScene(preferencesController: AppPreferencesController())
         }
+        .environment(\.locale, Locale(identifier: localeIdentifier))
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

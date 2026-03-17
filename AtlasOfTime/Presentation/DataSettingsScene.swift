@@ -49,9 +49,24 @@ struct DataSettingsScene: View {
 #if DEBUG
 struct DataSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
+        Group {
+            dataPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Data · English")
+
+            dataPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Data · Persian RTL")
+        }
+    }
+
+    private static func dataPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         NavigationStack {
             DataSettingsScene()
         }
+        .environment(\.locale, Locale(identifier: localeIdentifier))
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

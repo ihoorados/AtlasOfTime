@@ -34,11 +34,27 @@ struct RootTabScreen: View {
 struct RootTabScreen_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
+        Group {
+            rootPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Root Tabs · English")
+
+            rootPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Root Tabs · Persian RTL")
+        }
+    }
+
+    @MainActor
+    private static func rootPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         RootTabScreen(
             viewModel: PreviewAppDIContainer().makeAtlasViewModel(),
             appearanceController: AppearanceController(),
             preferencesController: AppPreferencesController()
         )
+        .environment(\.locale, Locale(identifier: localeIdentifier))
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

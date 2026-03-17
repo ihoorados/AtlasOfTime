@@ -106,9 +106,24 @@ struct AppearanceSettingsScene: View {
 #if DEBUG
 struct AppearanceSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
+        Group {
+            appearancePreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Appearance · English")
+
+            appearancePreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Appearance · Persian RTL")
+        }
+    }
+
+    private static func appearancePreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         NavigationStack {
             AppearanceSettingsScene(appearanceController: AppearanceController())
         }
+        .environment(\.locale, Locale(identifier: localeIdentifier))
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

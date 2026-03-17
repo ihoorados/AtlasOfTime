@@ -43,10 +43,25 @@ struct SettingsScene: View {
 #if DEBUG
 struct SettingsScene_Previews: PreviewProvider {
     static var previews: some View {
+        Group {
+            settingsPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
+                .previewDisplayName("Settings · English")
+
+            settingsPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
+                .previewDisplayName("Settings · Persian RTL")
+        }
+    }
+
+    private static func settingsPreview(
+        localeIdentifier: String,
+        layoutDirection: LayoutDirection
+    ) -> some View {
         SettingsScene(
             appearanceController: AppearanceController(),
             preferencesController: AppPreferencesController()
         )
+        .environment(\.locale, Locale(identifier: localeIdentifier))
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif
