@@ -56,10 +56,10 @@ struct AtlasScreen_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             atlasPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Home Panel · English")
+                .previewDisplayName(PreviewDisplayName.english("Home Panel"))
 
             atlasPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Home Panel · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Home Panel"))
         }
     }
 

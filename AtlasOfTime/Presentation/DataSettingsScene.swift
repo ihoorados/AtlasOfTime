@@ -51,10 +51,10 @@ struct DataSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             dataPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Data · English")
+                .previewDisplayName(PreviewDisplayName.english("Data"))
 
             dataPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Data · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Data"))
         }
     }
 

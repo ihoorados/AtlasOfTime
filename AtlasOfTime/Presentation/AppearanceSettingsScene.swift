@@ -83,11 +83,13 @@ struct AppearanceSettingsScene: View {
         let glass = appearanceController.glassEnabled
             ? String(localized: AppStrings.Settings.Appearance.previewGlassEnabled)
             : String(localized: AppStrings.Settings.Appearance.previewGlassReduced)
-        let format = NSLocalizedString(
+        return LocalizedStringFormat.resolve(
             AppStrings.Settings.Appearance.previewSummaryFormat,
-            comment: "Appearance preview summary"
+            locale: .current,
+            comment: "Appearance preview summary",
+            appearance,
+            glass
         )
-        return String(format: format, locale: Locale.current, appearance, glass)
     }
 
     private func previewPill(title: LocalizedStringResource, isSelected: Bool) -> some View {
@@ -108,10 +110,10 @@ struct AppearanceSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             appearancePreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Appearance · English")
+                .previewDisplayName(PreviewDisplayName.english("Appearance"))
 
             appearancePreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Appearance · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Appearance"))
         }
     }
 

@@ -45,10 +45,10 @@ struct SettingsScene_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             settingsPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Settings · English")
+                .previewDisplayName(PreviewDisplayName.english("Settings"))
 
             settingsPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Settings · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Settings"))
         }
     }
 

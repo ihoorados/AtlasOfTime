@@ -24,23 +24,23 @@ enum AppError: Error, LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .resourceNotFound(let path):
-            return localizedString(AppStrings.Errors.resourceNotFoundFormat, path)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.resourceNotFoundFormat, locale: .current, path)
         case .fileReadFailed(let path):
-            return localizedString(AppStrings.Errors.fileReadFailedFormat, path)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.fileReadFailedFormat, locale: .current, path)
         case .invalidIndexFormat(let details):
-            return localizedString(AppStrings.Errors.invalidIndexFormatFormat, details)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.invalidIndexFormatFormat, locale: .current, details)
         case .invalidGeoJSON(let details):
-            return localizedString(AppStrings.Errors.invalidGeoJSONFormat, details)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.invalidGeoJSONFormat, locale: .current, details)
         case .yearUnavailable(let year):
-            return localizedString(AppStrings.Errors.yearUnavailableFormat, year)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.yearUnavailableFormat, locale: .current, year)
         case .yearIndexNotLoaded:
             return String(localized: AppStrings.Errors.yearIndexNotLoaded)
         case .decompressionFailed(let reason):
-            return localizedString(AppStrings.Errors.decompressionFailedFormat, reason)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.decompressionFailedFormat, locale: .current, reason)
         case .cancelled:
             return String(localized: AppStrings.Errors.cancelled)
         case .unknown(let message):
-            return localizedString(AppStrings.Errors.unexpectedErrorFormat, message)
+            return LocalizedStringFormat.resolve(AppStrings.Errors.unexpectedErrorFormat, locale: .current, message)
         }
     }
 
@@ -53,10 +53,5 @@ enum AppError: Error, LocalizedError, Sendable {
         default:
             return errorDescription ?? String(localized: AppStrings.Errors.unexpectedFallback)
         }
-    }
-
-    private func localizedString(_ key: String, _ arguments: CVarArg...) -> String {
-        let format = NSLocalizedString(key, comment: "")
-        return String(format: format, locale: Locale.current, arguments: arguments)
     }
 }

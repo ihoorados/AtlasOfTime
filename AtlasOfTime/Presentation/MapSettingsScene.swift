@@ -41,10 +41,10 @@ struct MapSettingsScene_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             mapPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Map · English")
+                .previewDisplayName(PreviewDisplayName.english("Map"))
 
             mapPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Map · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Map"))
         }
     }
 

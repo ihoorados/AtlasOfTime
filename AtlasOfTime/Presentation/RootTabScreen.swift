@@ -36,10 +36,10 @@ struct RootTabScreen_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             rootPreview(localeIdentifier: "en", layoutDirection: .leftToRight)
-                .previewDisplayName("Root Tabs · English")
+                .previewDisplayName(PreviewDisplayName.english("Root Tabs"))
 
             rootPreview(localeIdentifier: "fa", layoutDirection: .rightToLeft)
-                .previewDisplayName("Root Tabs · Persian RTL")
+                .previewDisplayName(PreviewDisplayName.persianRTL("Root Tabs"))
         }
     }
 
