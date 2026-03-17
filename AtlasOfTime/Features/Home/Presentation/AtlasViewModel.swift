@@ -6,6 +6,7 @@ final class AtlasViewModel: ObservableObject {
     @Published var availableYears: [Int] = []
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
+    @Published private(set) var visibleCountries: [HistoricalCountry] = []
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
@@ -63,11 +64,13 @@ final class AtlasViewModel: ObservableObject {
 
             availableYears = years
             displayYear = initialYear
+            visibleCountries = []
             errorMessage = nil
             isLoading = false
 
             loadImmediately(for: initialYear)
         } catch {
+            visibleCountries = []
             isLoading = false
             errorMessage = AppError.wrap(error).userMessage
         }
@@ -107,11 +110,13 @@ final class AtlasViewModel: ObservableObject {
 
             guard token == latestRequestToken else { return }
             renderSnapshot = snapshot
+            visibleCountries = snapshot.countries
             errorMessage = nil
         } catch is CancellationError {
             // Newer request replaced this one.
         } catch {
             guard token == latestRequestToken else { return }
+            visibleCountries = []
             errorMessage = AppError.wrap(error).userMessage
         }
 

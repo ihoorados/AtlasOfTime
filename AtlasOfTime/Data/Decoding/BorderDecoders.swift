@@ -5,7 +5,15 @@ protocol GzipDecoding: Sendable {
 }
 
 protocol BorderDecoding: Sendable {
+    func decodeCountries(from data: Data) throws -> [HistoricalCountry]
     func decodeBorders(from data: Data) throws -> [GeoPolygon]
+}
+
+extension BorderDecoding {
+    func decodeBorders(from data: Data) throws -> [GeoPolygon] {
+        try decodeCountries(from: data)
+            .flatMap(\.polygons)
+    }
 }
 
 struct CompressionGzipDecoderAdapter: GzipDecoding {
@@ -15,8 +23,7 @@ struct CompressionGzipDecoderAdapter: GzipDecoding {
 }
 
 struct GeoJSONBorderDecoderAdapter: BorderDecoding {
-    func decodeBorders(from data: Data) throws -> [GeoPolygon] {
-        try GeoJSONBorderDecoder.decode(data: data)
+    func decodeCountries(from data: Data) throws -> [HistoricalCountry] {
+        try GeoJSONBorderDecoder.decodeCountries(data: data)
     }
 }
-

@@ -4,6 +4,9 @@
 "tabs.home" = "Home";
 "tabs.settings" = "Settings";
 
+"home.countries.title" = "Countries";
+"home.countries.more" = "+ %1$lld more";
+
 "appearance.option.system.title" = "System";
 "appearance.option.light.title" = "Light";
 "appearance.option.dark.title" = "Dark";

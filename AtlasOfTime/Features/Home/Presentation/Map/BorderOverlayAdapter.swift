@@ -3,7 +3,9 @@ import MapKit
 enum BorderOverlayAdapter {
     static func makeOverlays(from snapshot: YearSnapshot?) -> [MKPolygon] {
         guard let snapshot else { return [] }
-        return snapshot.polygons.map { makePolygonOverlay(from: $0) }
+        return snapshot.countries
+            .flatMap(\.polygons)
+            .map { makePolygonOverlay(from: $0) }
     }
 
     private static func makePolygonOverlay(from polygon: GeoPolygon) -> MKPolygon {

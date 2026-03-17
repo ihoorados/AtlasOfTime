@@ -4,6 +4,9 @@
 "tabs.home" = "خانه";
 "tabs.settings" = "تنظیمات";
 
+"home.countries.title" = "کشورها";
+"home.countries.more" = "+ %1$lld مورد دیگر";
+
 "appearance.option.system.title" = "سیستم";
 "appearance.option.light.title" = "روشن";
 "appearance.option.dark.title" = "تیره";

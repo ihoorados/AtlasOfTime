@@ -4,7 +4,7 @@ import OSLog
 enum GeoJSONBorderDecoder {
     private static let logger = Logger(subsystem: "AtlasOfTime", category: "GeoJSONBorderDecoder")
 
-    static func decode(data: Data) throws -> [GeoPolygon] {
+    static func decodeCountries(data: Data) throws -> [HistoricalCountry] {
         let collection: FeatureCollection
         do {
             collection = try JSONDecoder().decode(FeatureCollection.self, from: data)
@@ -16,21 +16,27 @@ enum GeoJSONBorderDecoder {
             throw AppError.invalidGeoJSON("Root type must be FeatureCollection.")
         }
 
-        var polygons: [GeoPolygon] = []
+        var groupedCountries: [CountryGroupingKey: HistoricalCountryAccumulator] = [:]
 
         for feature in collection.features {
             guard let geometry = feature.geometry else { continue }
+            let countryIdentity = makeCountryIdentity(from: feature.properties)
+            let key = countryIdentity.groupingKey
 
             switch geometry.coordinates {
             case .polygon(let polygonRings):
                 if let polygon = makePolygon(from: polygonRings) {
-                    polygons.append(polygon)
+                    groupedCountries[key, default: .init(identity: countryIdentity)]
+                        .polygons
+                        .append(polygon)
                 }
 
             case .multiPolygon(let multiPolygonRings):
                 for polygonRings in multiPolygonRings {
                     if let polygon = makePolygon(from: polygonRings) {
-                        polygons.append(polygon)
+                        groupedCountries[key, default: .init(identity: countryIdentity)]
+                            .polygons
+                            .append(polygon)
                     }
                 }
 
@@ -39,7 +45,10 @@ enum GeoJSONBorderDecoder {
             }
         }
 
-        return polygons
+        return groupedCountries.values
+            .filter { !$0.polygons.isEmpty }
+            .map(\.country)
+            .sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
     }
 
     private static func makePolygon(from rings: [[[Double]]]) -> GeoPolygon? {
@@ -92,6 +101,64 @@ enum GeoJSONBorderDecoder {
 
         return ring
     }
+
+    private static func makeCountryIdentity(from properties: FeatureProperties) -> HistoricalCountryIdentity {
+        let displayName = firstMeaningfulValue(
+            properties.name,
+            properties.abbreviatedName,
+            properties.subjectOf,
+            properties.partOf
+        ) ?? "Unknown"
+
+        let shortName = normalizedOptional(properties.abbreviatedName)
+        let sovereignName = normalizedOptional(properties.subjectOf)
+        let parentName = normalizedOptional(properties.partOf)
+        let infoURL = normalizedOptional(properties.infoURL).flatMap(URL.init(string:))
+
+        let groupingKey = CountryGroupingKey(
+            displayName: normalizedKeyComponent(displayName) ?? "unknown",
+            sovereignName: normalizedKeyComponent(sovereignName),
+            parentName: normalizedKeyComponent(parentName)
+        )
+
+        let identifier = [
+            groupingKey.displayName,
+            groupingKey.sovereignName ?? "_",
+            groupingKey.parentName ?? "_"
+        ]
+        .joined(separator: "|")
+
+        return HistoricalCountryIdentity(
+            id: identifier,
+            displayName: displayName,
+            shortName: shortName,
+            sovereignName: sovereignName,
+            parentName: parentName,
+            borderPrecision: properties.borderPrecision,
+            infoURL: infoURL,
+            groupingKey: groupingKey
+        )
+    }
+
+    private static func firstMeaningfulValue(_ values: String?...) -> String? {
+        values.compactMap(normalizedOptional).first
+    }
+
+    private static func normalizedOptional(_ value: String?) -> String? {
+        guard let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty,
+              trimmed.lowercased() != "null" else {
+            return nil
+        }
+
+        return trimmed
+    }
+
+    private static func normalizedKeyComponent(_ value: String?) -> String? {
+        normalizedOptional(value)?
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            .lowercased()
+    }
 }
 
 private struct FeatureCollection: Decodable {
@@ -101,6 +168,25 @@ private struct FeatureCollection: Decodable {
 
 private struct Feature: Decodable {
     let geometry: Geometry?
+    let properties: FeatureProperties
+}
+
+private struct FeatureProperties: Decodable {
+    let name: String?
+    let abbreviatedName: String?
+    let infoURL: String?
+    let subjectOf: String?
+    let borderPrecision: Int?
+    let partOf: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case name = "NAME"
+        case abbreviatedName = "ABBREVN"
+        case infoURL = "INFO_UR"
+        case subjectOf = "SUBJECTO"
+        case borderPrecision = "BORDERPRECISION"
+        case partOf = "PARTOF"
+    }
 }
 
 private struct Geometry: Decodable {
@@ -131,4 +217,39 @@ private enum CoordinatesPayload {
     case polygon([[[Double]]])
     case multiPolygon([[[[Double]]]])
     case unsupported
+}
+
+private struct CountryGroupingKey: Hashable {
+    let displayName: String
+    let sovereignName: String?
+    let parentName: String?
+}
+
+private struct HistoricalCountryIdentity {
+    let id: String
+    let displayName: String
+    let shortName: String?
+    let sovereignName: String?
+    let parentName: String?
+    let borderPrecision: Int?
+    let infoURL: URL?
+    let groupingKey: CountryGroupingKey
+}
+
+private struct HistoricalCountryAccumulator {
+    let identity: HistoricalCountryIdentity
+    var polygons: [GeoPolygon] = []
+
+    var country: HistoricalCountry {
+        HistoricalCountry(
+            id: identity.id,
+            displayName: identity.displayName,
+            shortName: identity.shortName,
+            sovereignName: identity.sovereignName,
+            parentName: identity.parentName,
+            borderPrecision: identity.borderPrecision,
+            infoURL: identity.infoURL,
+            polygons: polygons
+        )
+    }
 }

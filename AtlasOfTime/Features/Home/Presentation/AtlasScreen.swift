@@ -33,6 +33,10 @@ struct AtlasScreen: View {
                     availableYears: viewModel.availableYears
                 )
 
+                if !viewModel.visibleCountries.isEmpty {
+                    countrySummarySection
+                }
+
                 if let message = viewModel.errorMessage, !message.isEmpty {
                     Text(message)
                         .font(.footnote)
@@ -46,6 +50,36 @@ struct AtlasScreen: View {
         }
         .onAppear {
             viewModel.onAppear()
+        }
+    }
+
+    private var countrySummarySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(AppStrings.Home.countriesTitle)
+                .font(.caption)
+                .foregroundStyle(theme.secondaryText)
+
+            let visibleNames = Array(viewModel.visibleCountries.prefix(3)).map(\.displayName)
+            let remainingCount = max(0, viewModel.visibleCountries.count - visibleNames.count)
+
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(visibleNames.joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(theme.primaryText)
+                    .lineLimit(2)
+
+                if remainingCount > 0 {
+                    Text(
+                        LocalizedStringFormat.resolve(
+                            AppStrings.Home.countriesMoreFormat,
+                            locale: .current,
+                            remainingCount
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(theme.secondaryText)
+                }
+            }
         }
     }
 }
