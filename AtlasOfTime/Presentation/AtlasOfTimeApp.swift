@@ -5,6 +5,7 @@ struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
     @StateObject private var viewModel: AtlasViewModel
     @StateObject private var appearanceController = AppearanceController()
+    @StateObject private var languageController = AppLanguageController()
     @StateObject private var preferencesController = AppPreferencesController()
 
     init() {
@@ -17,16 +18,29 @@ struct AtlasOfTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabScreen(
-                viewModel: viewModel,
-                appearanceController: appearanceController,
-                preferencesController: preferencesController
-            )
-            .preferredColorScheme(appearanceController.preferredColorScheme)
-            .environment(\.atlasAppearance, appearanceController.selectedAppearance)
-            .environment(\.atlasGlassEnabled, appearanceController.glassEnabled)
-            .environment(\.atlasShowYearRangeLabels, preferencesController.showYearRangeLabels)
-            .environment(\.atlasShowLoadingIndicator, preferencesController.showLoadingIndicator)
+            Group {
+                if let localeIdentifier = languageController.selectedLanguage.localeIdentifier,
+                   let isRightToLeft = languageController.selectedLanguage.isRightToLeft {
+                    rootContent
+                        .environment(\.locale, Locale(identifier: localeIdentifier))
+                        .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
+                } else {
+                    rootContent
+                }
+            }
         }
+    }
+
+    private var rootContent: some View {
+        RootTabScreen(
+            viewModel: viewModel,
+            appearanceController: appearanceController,
+            preferencesController: preferencesController
+        )
+        .preferredColorScheme(appearanceController.preferredColorScheme)
+        .environment(\.atlasAppearance, appearanceController.selectedAppearance)
+        .environment(\.atlasGlassEnabled, appearanceController.glassEnabled)
+        .environment(\.atlasShowYearRangeLabels, preferencesController.showYearRangeLabels)
+        .environment(\.atlasShowLoadingIndicator, preferencesController.showLoadingIndicator)
     }
 }
