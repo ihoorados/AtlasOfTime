@@ -2,7 +2,7 @@ import Foundation
 
 // Atlas feature container: assembles feature-level presentation objects.
 @MainActor
-final class AtlasFeatureDIContainer: FeatureDIContainerBlueprint {
+final class AtlasFeatureDIContainer {
     private let loadYearIndex: LoadYearIndex
     private let loadBordersForYear: LoadBordersForYear
     private let debounceNanoseconds: UInt64
@@ -24,9 +24,5 @@ final class AtlasFeatureDIContainer: FeatureDIContainerBlueprint {
             debouncer: Debouncer(),
             debounceNanoseconds: debounceNanoseconds
         )
-    }
-
-    func makeFeatureViewModel() -> AtlasViewModel {
-        makeAtlasViewModel()
     }
 }
