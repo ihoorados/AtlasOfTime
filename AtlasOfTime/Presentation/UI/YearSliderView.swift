@@ -11,6 +11,11 @@ struct YearSliderView: View {
     }
 
     var body: some View {
+        timelineContent
+            .environment(\.layoutDirection, .leftToRight)
+    }
+
+    private var timelineContent: some View {
         VStack(spacing: 8) {
             Slider(value: sliderIndexBinding, in: sliderRange, step: 1)
                 .tint(theme.primaryText)
@@ -36,7 +41,6 @@ struct YearSliderView: View {
                 .fill(theme.groupedBackground)
         )
         // Historical time flows from earlier to later years regardless of UI language.
-        .environment(\.layoutDirection, .leftToRight)
     }
 
     private var sliderRange: ClosedRange<Double> {

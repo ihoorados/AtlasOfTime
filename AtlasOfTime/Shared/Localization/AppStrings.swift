@@ -108,6 +108,7 @@ enum AppStrings {
 
         enum AppearanceSettings {
             static let appAppearanceValueFormat: String = "accessibility.appearance.appAppearance.value"
+            static let appLanguageValueFormat: String = "accessibility.appearance.appLanguage.value"
             static let glassSurfacesValueFormat: String = "accessibility.appearance.glassSurfaces.value"
         }
 

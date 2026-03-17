@@ -31,6 +31,7 @@ struct AppearanceSettingsScene: View {
                         .tag(option)
                 }
             }
+            .accessibilityValue(languageSelectionAccessibilityValue)
         } header: {
             Text(AppStrings.Settings.Appearance.sectionTitle)
         } footer: {
@@ -130,6 +131,14 @@ struct AppearanceSettingsScene: View {
             AppStrings.Accessibility.AppearanceSettings.glassSurfacesValueFormat,
             locale: .current,
             accessibilityOnOffValue(for: appearanceController.glassEnabled)
+        )
+    }
+
+    private var languageSelectionAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.AppearanceSettings.appLanguageValueFormat,
+            locale: .current,
+            String(localized: languageController.selectedLanguage.title)
         )
     }
 
