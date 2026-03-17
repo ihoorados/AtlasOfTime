@@ -31,6 +31,8 @@ struct YearSliderView: View {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(theme.groupedBackground)
         )
+        // Historical time flows from earlier to later years regardless of UI language.
+        .environment(\.layoutDirection, .leftToRight)
     }
 
     private var sliderRange: ClosedRange<Double> {
