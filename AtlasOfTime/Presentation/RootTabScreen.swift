@@ -3,6 +3,7 @@ import SwiftUI
 struct RootTabScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
     @ObservedObject var appearanceController: AppearanceController
+    @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
     @Environment(\.colorScheme) private var colorScheme
 
@@ -15,6 +16,7 @@ struct RootTabScreen: View {
             Tab(AppStrings.Tabs.settings, systemImage: "gearshape") {
                 SettingsScene(
                     appearanceController: appearanceController,
+                    languageController: languageController,
                     preferencesController: preferencesController
                 )
             }
@@ -51,6 +53,7 @@ struct RootTabScreen_Previews: PreviewProvider {
         RootTabScreen(
             viewModel: PreviewAppDIContainer().makeAtlasViewModel(),
             appearanceController: AppearanceController(),
+            languageController: AppLanguageController(),
             preferencesController: AppPreferencesController()
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))

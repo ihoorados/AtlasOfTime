@@ -11,6 +11,10 @@
 "appearance.option.light.summary" = "Always use the light interface.";
 "appearance.option.dark.summary" = "Always use the dark interface.";
 
+"language.option.system.title" = "System";
+"language.option.english.title" = "English";
+"language.option.persian.title" = "Persian";
+
 "settings.root.title" = "Settings";
 "settings.root.appearance" = "Appearance";
 "settings.root.map" = "Map";
@@ -19,6 +23,8 @@
 "settings.appearance.title" = "Appearance";
 "settings.appearance.section.title" = "Appearance";
 "settings.appearance.appAppearance" = "App Appearance";
+"settings.appearance.appLanguage" = "App Language";
+"settings.appearance.language.footer" = "Choose whether the app follows the system language or always uses English or Persian.";
 "settings.appearance.liquidGlass.title" = "Liquid Glass";
 "settings.appearance.liquidGlass.glassSurfaces" = "Glass Surfaces";
 "settings.appearance.liquidGlass.footer" = "The native tab bar uses the system Liquid Glass style automatically. This setting controls custom glass panels inside the app.";

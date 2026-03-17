@@ -35,6 +35,7 @@ struct AtlasOfTimeApp: App {
         RootTabScreen(
             viewModel: viewModel,
             appearanceController: appearanceController,
+            languageController: languageController,
             preferencesController: preferencesController
         )
         .preferredColorScheme(appearanceController.preferredColorScheme)

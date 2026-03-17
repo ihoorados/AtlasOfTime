@@ -11,6 +11,10 @@
 "appearance.option.light.summary" = "همیشه از رابط روشن استفاده می‌کند.";
 "appearance.option.dark.summary" = "همیشه از رابط تیره استفاده می‌کند.";
 
+"language.option.system.title" = "سیستم";
+"language.option.english.title" = "انگلیسی";
+"language.option.persian.title" = "فارسی";
+
 "settings.root.title" = "تنظیمات";
 "settings.root.appearance" = "ظاهر";
 "settings.root.map" = "نقشه";
@@ -19,6 +23,8 @@
 "settings.appearance.title" = "ظاهر";
 "settings.appearance.section.title" = "ظاهر";
 "settings.appearance.appAppearance" = "ظاهر برنامه";
+"settings.appearance.appLanguage" = "زبان برنامه";
+"settings.appearance.language.footer" = "مشخص می‌کند برنامه از زبان سیستم پیروی کند یا همیشه از انگلیسی یا فارسی استفاده کند.";
 "settings.appearance.liquidGlass.title" = "شیشه مایع";
 "settings.appearance.liquidGlass.glassSurfaces" = "سطوح شیشه‌ای";
 "settings.appearance.liquidGlass.footer" = "نوار تب بومی به صورت خودکار از سبک شیشه مایع سیستم استفاده می‌کند. این تنظیم پنل‌های شیشه‌ای سفارشی داخل برنامه را کنترل می‌کند.";

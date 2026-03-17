@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AppearanceSettingsScene: View {
     @ObservedObject var appearanceController: AppearanceController
+    @ObservedObject var languageController: AppLanguageController
     @Environment(\.atlasTheme) private var theme
 
     var body: some View {
@@ -23,10 +24,20 @@ struct AppearanceSettingsScene: View {
                 }
             }
             .accessibilityValue(appearanceSelectionAccessibilityValue)
+
+            Picker(AppStrings.Settings.Appearance.appLanguage, selection: $languageController.selectedLanguage) {
+                ForEach(AppLanguageOption.allCases) { option in
+                    Text(option.title)
+                        .tag(option)
+                }
+            }
         } header: {
             Text(AppStrings.Settings.Appearance.sectionTitle)
         } footer: {
-            Text(appearanceController.selectedAppearance.summary)
+            VStack(alignment: .leading, spacing: 8) {
+                Text(appearanceController.selectedAppearance.summary)
+                Text(AppStrings.Settings.Appearance.languageFooter)
+            }
         }
     }
 
@@ -144,7 +155,10 @@ struct AppearanceSettingsScene_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         NavigationStack {
-            AppearanceSettingsScene(appearanceController: AppearanceController())
+            AppearanceSettingsScene(
+                appearanceController: AppearanceController(),
+                languageController: AppLanguageController()
+            )
         }
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)

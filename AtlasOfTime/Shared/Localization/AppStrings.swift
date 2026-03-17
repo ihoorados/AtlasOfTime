@@ -23,6 +23,8 @@ enum AppStrings {
             static let title: LocalizedStringResource = "settings.appearance.title"
             static let sectionTitle: LocalizedStringResource = "settings.appearance.section.title"
             static let appAppearance: LocalizedStringResource = "settings.appearance.appAppearance"
+            static let appLanguage: LocalizedStringResource = "settings.appearance.appLanguage"
+            static let languageFooter: LocalizedStringResource = "settings.appearance.language.footer"
             static let liquidGlassTitle: LocalizedStringResource = "settings.appearance.liquidGlass.title"
             static let glassSurfaces: LocalizedStringResource = "settings.appearance.liquidGlass.glassSurfaces"
             static let liquidGlassFooter: LocalizedStringResource = "settings.appearance.liquidGlass.footer"
@@ -70,6 +72,12 @@ enum AppStrings {
         static let systemSummary: LocalizedStringResource = "appearance.option.system.summary"
         static let lightSummary: LocalizedStringResource = "appearance.option.light.summary"
         static let darkSummary: LocalizedStringResource = "appearance.option.dark.summary"
+    }
+
+    enum LanguageOptions {
+        static let systemTitle: LocalizedStringResource = "language.option.system.title"
+        static let englishTitle: LocalizedStringResource = "language.option.english.title"
+        static let persianTitle: LocalizedStringResource = "language.option.persian.title"
     }
 
     enum Errors {

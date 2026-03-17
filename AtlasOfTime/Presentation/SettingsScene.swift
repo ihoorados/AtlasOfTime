@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsScene: View {
     @ObservedObject var appearanceController: AppearanceController
+    @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
 
     var body: some View {
@@ -9,7 +10,10 @@ struct SettingsScene: View {
             Form {
                 Section {
                     NavigationLink {
-                        AppearanceSettingsScene(appearanceController: appearanceController)
+                        AppearanceSettingsScene(
+                            appearanceController: appearanceController,
+                            languageController: languageController
+                        )
                     } label: {
                         settingsRow(title: AppStrings.Settings.Root.appearance, systemImage: "circle.lefthalf.filled")
                     }
@@ -58,6 +62,7 @@ struct SettingsScene_Previews: PreviewProvider {
     ) -> some View {
         SettingsScene(
             appearanceController: AppearanceController(),
+            languageController: AppLanguageController(),
             preferencesController: AppPreferencesController()
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))
