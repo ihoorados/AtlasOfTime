@@ -22,11 +22,14 @@ AtlasOfTime/
     Loaders/
     Repositories/
   Shared/
-    DesignSystem/
-    Errors/
-    Localization/
-    Settings/
-    Utils/
+    Foundation/
+      Localization/
+      Utils/
+    AppSupport/
+      DesignSystem/
+      Errors/
+      Localization/
+      Settings/
   Resources/
 ```
 
@@ -37,7 +40,8 @@ AtlasOfTime/
 - `Features/Settings` owns settings presentation only.
 - `Domain` owns app-wide entities, use cases, and repository protocols.
 - `Data` owns concrete data access, decoding, cache, and repository implementations.
-- `Shared` is for cross-feature support code, not feature UI moved out for convenience.
+- `Shared/Foundation` owns feature-agnostic infrastructure that could later move without dragging app policy with it.
+- `Shared/AppSupport` owns app-specific shared support such as strings, theming, app preferences, preview labels, and app-facing error presentation.
 
 ## Package Readiness
 
@@ -96,13 +100,14 @@ Reason:
 Do not split `Shared` into packages blindly.
 
 Only extract when a subgroup has a stable responsibility, for example:
-- localization support
+- foundation localization helpers
 - design system support
 - settings/preferences support
 
 Current recommendation:
-- keep `Shared` as source-level shared code for now
-- extract only after duplication or ownership pressure appears
+- keep `Shared/Foundation` and `Shared/AppSupport` as source-level boundaries for now
+- consider extracting `Shared/Foundation` first if multiple feature packages begin depending on it
+- extract `Shared/AppSupport` only when its public API is stable and clearly app-owned
 
 ## What Should Not Move Yet
 
@@ -118,7 +123,7 @@ Reason:
 
 1. `Features/Home`
 2. `Features/Settings`
-3. selected `Shared` subgroups only if justified
+3. selected `Shared/Foundation` pieces first, then `Shared/AppSupport` only if justified
 4. broader `Domain` / `Data` modularization later, if the app grows enough to need it
 
 ## Review Standard
