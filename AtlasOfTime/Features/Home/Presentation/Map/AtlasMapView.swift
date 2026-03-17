@@ -11,9 +11,16 @@ struct AtlasMapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: .zero)
         mapView.delegate = context.coordinator
-        mapView.mapType = .mutedStandard
+        configureBaseMap(for: mapView)
         mapView.isPitchEnabled = false
-        mapView.pointOfInterestFilter = .excludingAll
+        mapView.showsCompass = false
+        mapView.showsScale = false
+        mapView.showsTraffic = false
+        mapView.showsBuildings = false
+        mapView.showsUserLocation = false
+        mapView.isRotateEnabled = false
+        mapView.isScrollEnabled = true
+        mapView.isZoomEnabled = true
 
         let initialRegion = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 20, longitude: 0),
@@ -22,6 +29,19 @@ struct AtlasMapView: UIViewRepresentable {
         mapView.setRegion(initialRegion, animated: false)
 
         return mapView
+    }
+
+    private func configureBaseMap(for mapView: MKMapView) {
+        if #available(iOS 16.0, *) {
+            let configuration = MKStandardMapConfiguration(elevationStyle: .flat)
+            configuration.emphasisStyle = .muted
+            configuration.pointOfInterestFilter = .excludingAll
+            configuration.elevationStyle = .realistic
+            mapView.preferredConfiguration = configuration
+        } else {
+            mapView.mapType = .mutedStandard
+            mapView.pointOfInterestFilter = .excludingAll
+        }
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
