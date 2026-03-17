@@ -2,6 +2,8 @@ import SwiftUI
 
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
+    @Environment(\.atlasTheme) private var theme
+    @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -13,10 +15,11 @@ struct AtlasScreen: View {
                     Text(viewModel.displayYear == 0 ? "--" : "\(viewModel.displayYear)")
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .monospacedDigit()
+                        .foregroundStyle(theme.primaryText)
 
                     Spacer()
 
-                    if viewModel.isLoading {
+                    if viewModel.isLoading && showLoadingIndicator {
                         ProgressView()
                             .controlSize(.small)
                     }
@@ -33,14 +36,11 @@ struct AtlasScreen: View {
                 if let message = viewModel.errorMessage, !message.isEmpty {
                     Text(message)
                         .font(.footnote)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
             .padding(16)
-            .background(
-                .ultraThinMaterial,
-                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-            )
+            .atlasCardSurface(cornerRadius: 16)
             .padding(.horizontal, 16)
             .padding(.bottom, 20)
         }
