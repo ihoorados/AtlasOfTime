@@ -4,6 +4,7 @@
 "tabs.home" = "Home";
 "tabs.settings" = "Settings";
 
+"home.selectedCountry.title" = "Selected Country";
 "home.countries.title" = "Countries";
 "home.countries.more" = "+ %1$lld more";
 

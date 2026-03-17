@@ -37,7 +37,7 @@ struct AtlasScreen: View {
                     availableYears: viewModel.availableYears
                 )
 
-                if !viewModel.visibleCountries.isEmpty {
+                if viewModel.selectedCountry != nil || !viewModel.visibleCountries.isEmpty {
                     countrySummarySection
                 }
 
@@ -59,29 +59,47 @@ struct AtlasScreen: View {
 
     private var countrySummarySection: some View {
         VStack(alignment: .leading, spacing: 6) {
+            if let selectedCountry = viewModel.selectedCountry {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(AppStrings.Home.selectedCountryTitle)
+                        .font(.caption)
+                        .foregroundStyle(theme.secondaryText)
+
+                    Text(selectedCountry.displayName)
+                        .font(.headline)
+                        .foregroundStyle(theme.primaryText)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(theme.selectionFill, in: Capsule())
+                }
+            }
+
             Text(AppStrings.Home.countriesTitle)
                 .font(.caption)
                 .foregroundStyle(theme.secondaryText)
 
-            let visibleNames = Array(viewModel.visibleCountries.prefix(3)).map(\.displayName)
-            let remainingCount = max(0, viewModel.visibleCountries.count - visibleNames.count)
+            let remainingCountries = viewModel.visibleCountries.filter { $0.id != viewModel.selectedCountryID }
+            let visibleNames = Array(remainingCountries.prefix(3)).map(\.displayName)
+            let remainingCount = max(0, remainingCountries.count - visibleNames.count)
 
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(visibleNames.joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(theme.primaryText)
-                    .lineLimit(2)
+            if !visibleNames.isEmpty {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(visibleNames.joined(separator: ", "))
+                        .font(.subheadline)
+                        .foregroundStyle(theme.primaryText)
+                        .lineLimit(2)
 
-                if remainingCount > 0 {
-                    Text(
-                        LocalizedStringFormat.resolve(
-                            AppStrings.Home.countriesMoreFormat,
-                            locale: .current,
-                            remainingCount
+                    if remainingCount > 0 {
+                        Text(
+                            LocalizedStringFormat.resolve(
+                                AppStrings.Home.countriesMoreFormat,
+                                locale: .current,
+                                remainingCount
+                            )
                         )
-                    )
-                    .font(.caption)
-                    .foregroundStyle(theme.secondaryText)
+                        .font(.caption)
+                        .foregroundStyle(theme.secondaryText)
+                    }
                 }
             }
         }

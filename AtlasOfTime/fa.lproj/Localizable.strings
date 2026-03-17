@@ -4,6 +4,7 @@
 "tabs.home" = "خانه";
 "tabs.settings" = "تنظیمات";
 
+"home.selectedCountry.title" = "کشور انتخاب‌شده";
 "home.countries.title" = "کشورها";
 "home.countries.more" = "+ %1$lld مورد دیگر";
 

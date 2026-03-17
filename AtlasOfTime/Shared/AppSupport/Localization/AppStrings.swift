@@ -12,6 +12,7 @@ enum AppStrings {
     }
 
     enum Home {
+        static let selectedCountryTitle: LocalizedStringResource = "home.selectedCountry.title"
         static let countriesTitle: LocalizedStringResource = "home.countries.title"
         static let countriesMoreFormat: String = "home.countries.more"
     }
