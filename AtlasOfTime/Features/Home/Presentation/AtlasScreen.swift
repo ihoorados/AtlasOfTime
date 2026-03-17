@@ -37,7 +37,7 @@ struct AtlasScreen: View {
                     availableYears: viewModel.availableYears
                 )
 
-                if viewModel.selectedCountry != nil || !viewModel.visibleCountries.isEmpty {
+                if viewModel.selectedCountry != nil || !viewModel.visibleSnapshots.isEmpty {
                     countrySummarySection
                 }
 
@@ -78,7 +78,7 @@ struct AtlasScreen: View {
                 .font(.caption)
                 .foregroundStyle(theme.secondaryText)
 
-            let remainingCountries = viewModel.visibleCountries.filter { $0.id != viewModel.selectedCountryID }
+            let remainingCountries = viewModel.visibleSnapshots.filter { $0.id != viewModel.selectedCountryID }
             let visibleNames = Array(remainingCountries.prefix(3)).map(\.displayName)
             let remainingCount = max(0, remainingCountries.count - visibleNames.count)
 

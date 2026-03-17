@@ -6,7 +6,7 @@ final class AtlasViewModel: ObservableObject {
     @Published var availableYears: [Int] = []
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
-    @Published private(set) var visibleCountries: [HistoricalCountry] = []
+    @Published private(set) var visibleSnapshots: [HistoricalCountrySnapshot] = []
     @Published private(set) var selectedCountryID: String?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
@@ -55,7 +55,17 @@ final class AtlasViewModel: ObservableObject {
 
     var selectedCountry: HistoricalCountry? {
         guard let selectedCountryID else { return nil }
-        return visibleCountries.first { $0.id == selectedCountryID }
+        guard let snapshot = visibleSnapshots.first(where: { $0.id == selectedCountryID }) else { return nil }
+        return HistoricalCountry(
+            id: snapshot.id,
+            displayName: snapshot.displayName,
+            shortName: snapshot.shortDisplayName,
+            sovereignName: nil,
+            parentName: nil,
+            borderPrecision: snapshot.extents.first?.borderPrecisionRank,
+            infoURL: snapshot.sourceReferences.first?.url ?? snapshot.extents.first?.sourceReferences.first?.url,
+            polygons: snapshot.extents.flatMap(\.polygons)
+        )
     }
 
     func selectCountry(id: String?) {
@@ -64,7 +74,7 @@ final class AtlasViewModel: ObservableObject {
             return
         }
 
-        selectedCountryID = visibleCountries.contains(where: { $0.id == id }) ? id : nil
+        selectedCountryID = visibleSnapshots.contains(where: { $0.id == id }) ? id : nil
     }
 
     private func bootstrap() async {
@@ -81,7 +91,7 @@ final class AtlasViewModel: ObservableObject {
             availableYears = years
             displayYear = initialYear
             renderSnapshot = nil
-            visibleCountries = []
+            visibleSnapshots = []
             selectedCountryID = nil
             errorMessage = nil
             isLoading = false
@@ -89,7 +99,7 @@ final class AtlasViewModel: ObservableObject {
             loadImmediately(for: initialYear)
         } catch {
             renderSnapshot = nil
-            visibleCountries = []
+            visibleSnapshots = []
             selectedCountryID = nil
             isLoading = false
             errorMessage = AppError.wrap(error).userMessage
@@ -130,9 +140,9 @@ final class AtlasViewModel: ObservableObject {
 
             guard token == latestRequestToken else { return }
             renderSnapshot = snapshot
-            visibleCountries = snapshot.countries
+            visibleSnapshots = snapshot.snapshots
             if let selectedCountryID,
-               snapshot.countries.contains(where: { $0.id == selectedCountryID }) {
+               snapshot.snapshots.contains(where: { $0.id == selectedCountryID }) {
                 self.selectedCountryID = selectedCountryID
             } else {
                 selectedCountryID = nil
@@ -143,7 +153,7 @@ final class AtlasViewModel: ObservableObject {
         } catch {
             guard token == latestRequestToken else { return }
             renderSnapshot = nil
-            visibleCountries = []
+            visibleSnapshots = []
             selectedCountryID = nil
             errorMessage = AppError.wrap(error).userMessage
         }

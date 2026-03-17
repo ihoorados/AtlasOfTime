@@ -7,10 +7,12 @@ enum BorderOverlayAdapter {
     @MainActor
     static func makeOverlays(from snapshot: YearSnapshot?) -> [MKPolygon] {
         guard let snapshot else { return [] }
-        return snapshot.countries
-            .flatMap { country in
-                country.polygons.map { polygon in
-                    makePolygonOverlay(from: polygon, country: country)
+        return snapshot.snapshots
+            .flatMap { countrySnapshot in
+                countrySnapshot.extents.flatMap { extent in
+                    extent.polygons.map { polygon in
+                        makePolygonOverlay(from: polygon, snapshot: countrySnapshot)
+                    }
                 }
             }
     }
@@ -18,9 +20,10 @@ enum BorderOverlayAdapter {
     static func makeCountryLabelPoints(from snapshot: YearSnapshot?) -> [CountryLabelPoint] {
         guard let snapshot else { return [] }
 
-        return snapshot.countries.compactMap { country in
-            let trimmedCountryName = country.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard let polygon = largestPolygon(in: country.polygons),
+        return snapshot.snapshots.compactMap { countrySnapshot in
+            let trimmedCountryName = countrySnapshot.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+            let polygons = countrySnapshot.extents.flatMap(\.polygons)
+            guard let polygon = largestPolygon(in: polygons),
                   !trimmedCountryName.isEmpty,
                   approximateArea(of: polygon) >= minimumCountryLabelArea,
                   let coordinate = representativeCoordinate(for: polygon) else {
@@ -28,7 +31,7 @@ enum BorderOverlayAdapter {
             }
 
             return CountryLabelPoint(
-                countryID: country.id,
+                countryID: countrySnapshot.id,
                 countryName: trimmedCountryName,
                 coordinate: coordinate
             )
@@ -38,7 +41,7 @@ enum BorderOverlayAdapter {
     @MainActor
     private static func makePolygonOverlay(
         from polygon: GeoPolygon,
-        country: HistoricalCountry
+        snapshot: HistoricalCountrySnapshot
     ) -> MKPolygon {
         var outerCoordinates = polygon.outer.map {
             CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon)
@@ -56,8 +59,8 @@ enum BorderOverlayAdapter {
             count: outerCoordinates.count,
             interiorPolygons: holes.isEmpty ? nil : holes
         )
-        overlay.atlasCountryID = country.id
-        overlay.atlasCountryName = country.displayName
+        overlay.atlasCountryID = snapshot.id
+        overlay.atlasCountryName = snapshot.displayName
         return overlay
     }
 
