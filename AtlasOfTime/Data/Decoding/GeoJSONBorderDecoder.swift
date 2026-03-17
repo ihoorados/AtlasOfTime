@@ -4,7 +4,7 @@ import OSLog
 enum GeoJSONBorderDecoder {
     private static let logger = Logger(subsystem: "AtlasOfTime", category: "GeoJSONBorderDecoder")
 
-    static func decodeCountries(data: Data) throws -> [HistoricalCountry] {
+    static func decodeSnapshots(data: Data, year: Int) throws -> [HistoricalCountrySnapshot] {
         let collection: FeatureCollection
         do {
             collection = try JSONDecoder().decode(FeatureCollection.self, from: data)
@@ -47,7 +47,7 @@ enum GeoJSONBorderDecoder {
 
         return groupedCountries.values
             .filter { !$0.polygons.isEmpty }
-            .map(\.country)
+            .map { $0.snapshot(year: year) }
             .sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
     }
 
@@ -240,16 +240,74 @@ private struct HistoricalCountryAccumulator {
     let identity: HistoricalCountryIdentity
     var polygons: [GeoPolygon] = []
 
-    var country: HistoricalCountry {
-        HistoricalCountry(
+    func snapshot(year: Int) -> HistoricalCountrySnapshot {
+        let sourceReferences = makeSourceReferences()
+
+        return HistoricalCountrySnapshot(
             id: identity.id,
+            entityID: identity.id,
+            year: year,
             displayName: identity.displayName,
-            shortName: identity.shortName,
-            sovereignName: identity.sovereignName,
-            parentName: identity.parentName,
-            borderPrecision: identity.borderPrecision,
-            infoURL: identity.infoURL,
-            polygons: polygons
+            shortDisplayName: identity.shortName,
+            formalName: nil,
+            nameConfidence: .unknown,
+            extents: [
+                HistoricalExtent(
+                    id: "\(identity.id)-extent-\(year)",
+                    extentType: .control,
+                    borderModel: borderModel,
+                    borderPrecisionRank: identity.borderPrecision,
+                    borderConfidence: borderConfidence,
+                    polygons: polygons,
+                    sourceReferences: sourceReferences
+                )
+            ],
+            sourceReferences: sourceReferences
         )
+    }
+
+    private var borderModel: HistoricalBorderModel {
+        switch identity.borderPrecision {
+        case let value? where value >= 3:
+            return .preciseLine
+        case 2:
+            return .lineWithUncertainty
+        default:
+            return .approximateLine
+        }
+    }
+
+    private var borderConfidence: HistoricalConfidence {
+        switch identity.borderPrecision {
+        case let value? where value >= 3:
+            return .high
+        case 2:
+            return .medium
+        case 1:
+            return .low
+        default:
+            return .unknown
+        }
+    }
+
+    private func makeSourceReferences() -> [HistoricalSourceReference] {
+        var references = [
+            HistoricalSourceReference(
+                id: "source:historical-geojson",
+                title: "Imported Historical GeoJSON"
+            )
+        ]
+
+        if let infoURL = identity.infoURL {
+            references.append(
+                HistoricalSourceReference(
+                    id: infoURL.absoluteString,
+                    title: "Feature Reference",
+                    url: infoURL
+                )
+            )
+        }
+
+        return references
     }
 }
