@@ -11,28 +11,28 @@ struct SettingsScene: View {
                     NavigationLink {
                         AppearanceSettingsScene(appearanceController: appearanceController)
                     } label: {
-                        settingsRow(title: "Appearance", systemImage: "circle.lefthalf.filled")
+                        settingsRow(title: AppStrings.Settings.Root.appearance, systemImage: "circle.lefthalf.filled")
                     }
 
                     NavigationLink {
                         MapSettingsScene(preferencesController: preferencesController)
                     } label: {
-                        settingsRow(title: "Map", systemImage: "map")
+                        settingsRow(title: AppStrings.Settings.Root.map, systemImage: "map")
                     }
 
                     NavigationLink {
                         DataSettingsScene()
                     } label: {
-                        settingsRow(title: "Data", systemImage: "internaldrive")
+                        settingsRow(title: AppStrings.Settings.Root.data, systemImage: "internaldrive")
                     }
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(AppStrings.Settings.Root.title)
         }
     }
 
     private func settingsRow(
-        title: String,
+        title: LocalizedStringResource,
         systemImage: String
     ) -> some View {
         Label(title, systemImage: systemImage)

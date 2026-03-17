@@ -1,0 +1,53 @@
+"common.appName" = "Atlas of Time";
+
+"tabs.home" = "Home";
+"tabs.settings" = "Settings";
+
+"appearance.option.system.title" = "System";
+"appearance.option.light.title" = "Light";
+"appearance.option.dark.title" = "Dark";
+"appearance.option.system.summary" = "Follow the device appearance automatically.";
+"appearance.option.light.summary" = "Always use the light interface.";
+"appearance.option.dark.summary" = "Always use the dark interface.";
+
+"settings.root.title" = "Settings";
+"settings.root.appearance" = "Appearance";
+"settings.root.map" = "Map";
+"settings.root.data" = "Data";
+
+"settings.appearance.title" = "Appearance";
+"settings.appearance.section.title" = "Appearance";
+"settings.appearance.appAppearance" = "App Appearance";
+"settings.appearance.liquidGlass.title" = "Liquid Glass";
+"settings.appearance.liquidGlass.glassSurfaces" = "Glass Surfaces";
+"settings.appearance.liquidGlass.footer" = "The native tab bar uses the system Liquid Glass style automatically. This setting controls custom glass panels inside the app.";
+"settings.appearance.preview.title" = "Preview";
+"settings.appearance.preview.cardTitle" = "Theme Preview";
+"settings.appearance.preview.light" = "Light";
+"settings.appearance.preview.dark" = "Dark";
+"settings.appearance.preview.glass" = "Glass";
+"settings.appearance.preview.glassEnabled" = "glass surfaces on";
+"settings.appearance.preview.glassReduced" = "glass surfaces reduced";
+"settings.appearance.preview.summary" = "%1$@ mode with %2$@.";
+"settings.appearance.reset" = "Reset Appearance Settings";
+
+"settings.map.title" = "Map";
+"settings.map.presentation.title" = "Presentation";
+"settings.map.showYearRangeLabels" = "Show Year Range Labels";
+"settings.map.showLoadingIndicator" = "Show Loading Indicator";
+"settings.map.presentation.footer" = "These controls adjust the map panel and timeline presentation without affecting the underlying historical data.";
+"settings.map.reset" = "Reset Map Settings";
+
+"settings.data.title" = "Data";
+"settings.data.dataset.title" = "Dataset";
+"settings.data.dataset.source" = "Source";
+"settings.data.dataset.bundled" = "Bundled";
+"settings.data.dataset.format" = "Format";
+"settings.data.dataset.geojsonGzip" = "GeoJSON + Gzip";
+"settings.data.dataset.footer" = "Historical border data is currently shipped with the app. There is no external sync or download configuration yet.";
+"settings.data.loading.title" = "Loading";
+"settings.data.loading.caching" = "Caching";
+"settings.data.loading.automatic" = "Automatic";
+"settings.data.loading.yearIndex" = "Year Index";
+"settings.data.loading.cachedInMemory" = "Cached In Memory";
+"settings.data.loading.footer" = "Data loading and caching are managed automatically. When real data preferences exist, they should be added here instead of using placeholder controls.";

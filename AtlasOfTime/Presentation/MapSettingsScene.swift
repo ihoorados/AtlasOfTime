@@ -8,28 +8,28 @@ struct MapSettingsScene: View {
             controlsSection
             resetSection
         }
-        .navigationTitle("Map")
+        .navigationTitle(AppStrings.Settings.Map.title)
     }
 
     private var controlsSection: some View {
         Section {
             Toggle(isOn: $preferencesController.showYearRangeLabels) {
-                Label("Show Year Range Labels", systemImage: "textformat.123")
+                Label(AppStrings.Settings.Map.showYearRangeLabels, systemImage: "textformat.123")
             }
 
             Toggle(isOn: $preferencesController.showLoadingIndicator) {
-                Label("Show Loading Indicator", systemImage: "progress.indicator")
+                Label(AppStrings.Settings.Map.showLoadingIndicator, systemImage: "progress.indicator")
             }
         } header: {
-            Text("Presentation")
+            Text(AppStrings.Settings.Map.presentationTitle)
         } footer: {
-            Text("These controls adjust the map panel and timeline presentation without affecting the underlying historical data.")
+            Text(AppStrings.Settings.Map.presentationFooter)
         }
     }
 
     private var resetSection: some View {
         Section {
-            Button("Reset Map Settings", role: .destructive) {
+            Button(AppStrings.Settings.Map.reset, role: .destructive) {
                 preferencesController.resetToDefaults()
             }
         }

@@ -11,19 +11,19 @@ struct AppearanceSettingsScene: View {
             previewSection
             resetSection
         }
-        .navigationTitle("Appearance")
+        .navigationTitle(AppStrings.Settings.Appearance.title)
     }
 
     private var appearanceSection: some View {
         Section {
-            Picker("App Appearance", selection: $appearanceController.selectedAppearance) {
+            Picker(AppStrings.Settings.Appearance.appAppearance, selection: $appearanceController.selectedAppearance) {
                 ForEach(AppAppearanceOption.allCases) { option in
                     Label(option.title, systemImage: option.systemImage)
                         .tag(option)
                 }
             }
         } header: {
-            Text("Appearance")
+            Text(AppStrings.Settings.Appearance.sectionTitle)
         } footer: {
             Text(appearanceController.selectedAppearance.summary)
         }
@@ -32,23 +32,23 @@ struct AppearanceSettingsScene: View {
     private var liquidGlassSection: some View {
         Section {
             Toggle(isOn: $appearanceController.glassEnabled) {
-                Label("Glass Surfaces", systemImage: "sparkles")
+                Label(AppStrings.Settings.Appearance.glassSurfaces, systemImage: "sparkles")
             }
         } header: {
-            Text("Liquid Glass")
+            Text(AppStrings.Settings.Appearance.liquidGlassTitle)
         } footer: {
-            Text("The native tab bar uses the system Liquid Glass style automatically. This setting controls custom glass panels inside the app.")
+            Text(AppStrings.Settings.Appearance.liquidGlassFooter)
         }
     }
 
     private var previewSection: some View {
-        Section("Preview") {
+        Section(AppStrings.Settings.Appearance.previewTitle) {
             VStack(alignment: .leading, spacing: 14) {
-                Text("Theme Preview")
+                Text(AppStrings.Settings.Appearance.previewCardTitle)
                     .font(.headline)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Atlas of Time")
+                    Text(AppStrings.Common.appName)
                         .font(.title3.weight(.semibold))
 
                     Text(previewSummary)
@@ -56,9 +56,9 @@ struct AppearanceSettingsScene: View {
                         .foregroundStyle(.secondary)
 
                     HStack(spacing: 10) {
-                        previewPill(title: "Light", isSelected: appearanceController.selectedAppearance == .light)
-                        previewPill(title: "Dark", isSelected: appearanceController.selectedAppearance == .dark)
-                        previewPill(title: "Glass", isSelected: appearanceController.glassEnabled)
+                        previewPill(title: AppStrings.Settings.Appearance.previewLight, isSelected: appearanceController.selectedAppearance == .light)
+                        previewPill(title: AppStrings.Settings.Appearance.previewDark, isSelected: appearanceController.selectedAppearance == .dark)
+                        previewPill(title: AppStrings.Settings.Appearance.previewGlass, isSelected: appearanceController.glassEnabled)
                     }
                 }
                 .padding(16)
@@ -72,7 +72,7 @@ struct AppearanceSettingsScene: View {
 
     private var resetSection: some View {
         Section {
-            Button("Reset Appearance Settings", role: .destructive) {
+            Button(AppStrings.Settings.Appearance.reset, role: .destructive) {
                 appearanceController.resetToDefaults()
             }
         }
@@ -80,11 +80,17 @@ struct AppearanceSettingsScene: View {
 
     private var previewSummary: String {
         let appearance = appearanceController.selectedAppearance.title
-        let glass = appearanceController.glassEnabled ? "glass surfaces on" : "glass surfaces reduced"
-        return "\(appearance) mode with \(glass)."
+        let glass = appearanceController.glassEnabled
+            ? String(localized: AppStrings.Settings.Appearance.previewGlassEnabled)
+            : String(localized: AppStrings.Settings.Appearance.previewGlassReduced)
+        let format = NSLocalizedString(
+            AppStrings.Settings.Appearance.previewSummaryFormat,
+            comment: "Appearance preview summary"
+        )
+        return String(format: format, locale: Locale.current, appearance, glass)
     }
 
-    private func previewPill(title: String, isSelected: Bool) -> some View {
+    private func previewPill(title: LocalizedStringResource, isSelected: Bool) -> some View {
         Text(title)
             .font(.caption.weight(.semibold))
             .foregroundStyle(isSelected ? theme.primaryText : theme.secondaryText)

@@ -6,42 +6,42 @@ struct DataSettingsScene: View {
             datasetSection
             loadingSection
         }
-        .navigationTitle("Data")
+        .navigationTitle(AppStrings.Settings.Data.title)
     }
 
     private var datasetSection: some View {
         Section {
-            LabeledContent("Source") {
-                Text("Bundled")
+            LabeledContent(AppStrings.Settings.Data.source) {
+                Text(AppStrings.Settings.Data.bundled)
                     .foregroundStyle(.secondary)
             }
 
-            LabeledContent("Format") {
-                Text("GeoJSON + Gzip")
+            LabeledContent(AppStrings.Settings.Data.format) {
+                Text(AppStrings.Settings.Data.geoJSONGzip)
                     .foregroundStyle(.secondary)
             }
         } header: {
-            Text("Dataset")
+            Text(AppStrings.Settings.Data.datasetTitle)
         } footer: {
-            Text("Historical border data is currently shipped with the app. There is no external sync or download configuration yet.")
+            Text(AppStrings.Settings.Data.datasetFooter)
         }
     }
 
     private var loadingSection: some View {
         Section {
-            LabeledContent("Caching") {
-                Text("Automatic")
+            LabeledContent(AppStrings.Settings.Data.caching) {
+                Text(AppStrings.Settings.Data.automatic)
                     .foregroundStyle(.secondary)
             }
 
-            LabeledContent("Year Index") {
-                Text("Cached In Memory")
+            LabeledContent(AppStrings.Settings.Data.yearIndex) {
+                Text(AppStrings.Settings.Data.cachedInMemory)
                     .foregroundStyle(.secondary)
             }
         } header: {
-            Text("Loading")
+            Text(AppStrings.Settings.Data.loadingTitle)
         } footer: {
-            Text("Data loading and caching are managed automatically. When real data preferences exist, they should be added here instead of using placeholder controls.")
+            Text(AppStrings.Settings.Data.loadingFooter)
         }
     }
 }

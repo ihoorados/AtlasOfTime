@@ -8,11 +8,11 @@ struct RootTabScreen: View {
 
     var body: some View {
         TabView {
-            Tab("Home", systemImage: "house") {
+            Tab(AppStrings.Tabs.home, systemImage: "house") {
                 HomeScene(viewModel: viewModel)
             }
 
-            Tab("Settings", systemImage: "gearshape") {
+            Tab(AppStrings.Tabs.settings, systemImage: "gearshape") {
                 SettingsScene(
                     appearanceController: appearanceController,
                     preferencesController: preferencesController
