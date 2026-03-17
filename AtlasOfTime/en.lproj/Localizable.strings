@@ -1,4 +1,5 @@
 "common.appName" = "Atlas of Time";
+"common.unavailableValue" = "--";
 
 "tabs.home" = "Home";
 "tabs.settings" = "Settings";
@@ -51,3 +52,15 @@
 "settings.data.loading.yearIndex" = "Year Index";
 "settings.data.loading.cachedInMemory" = "Cached In Memory";
 "settings.data.loading.footer" = "Data loading and caching are managed automatically. When real data preferences exist, they should be added here instead of using placeholder controls.";
+
+"errors.resourceNotFound" = "Resource not found: %1$@";
+"errors.fileReadFailed" = "Unable to read file: %1$@";
+"errors.invalidIndexFormat" = "Invalid index.json format: %1$@";
+"errors.invalidGeoJSON" = "Invalid GeoJSON: %1$@";
+"errors.yearUnavailable" = "No border data available for year %1$lld.";
+"errors.yearIndexNotLoaded" = "Year index is not loaded.";
+"errors.decompressionFailed" = "Gzip decompression failed: %1$@";
+"errors.cancelled" = "Operation cancelled.";
+"errors.unexpectedError" = "Unexpected error: %1$@";
+"errors.loadingMapBorders" = "Something went wrong while loading map borders.";
+"errors.unexpectedFallback" = "An unexpected error occurred.";

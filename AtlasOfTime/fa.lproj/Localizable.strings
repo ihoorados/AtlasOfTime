@@ -1,4 +1,5 @@
 "common.appName" = "اطلس زمان";
+"common.unavailableValue" = "--";
 
 "tabs.home" = "خانه";
 "tabs.settings" = "تنظیمات";
@@ -51,3 +52,15 @@
 "settings.data.loading.yearIndex" = "فهرست سال‌ها";
 "settings.data.loading.cachedInMemory" = "کش‌شده در حافظه";
 "settings.data.loading.footer" = "بارگذاری و کش داده‌ها به صورت خودکار مدیریت می‌شوند. وقتی تنظیمات واقعی داده اضافه شوند، باید به جای کنترل‌های نمایشی در اینجا قرار بگیرند.";
+
+"errors.resourceNotFound" = "منبع پیدا نشد: %1$@";
+"errors.fileReadFailed" = "خواندن فایل ممکن نشد: %1$@";
+"errors.invalidIndexFormat" = "قالب index.json نامعتبر است: %1$@";
+"errors.invalidGeoJSON" = "GeoJSON نامعتبر است: %1$@";
+"errors.yearUnavailable" = "داده مرز برای سال %1$lld در دسترس نیست.";
+"errors.yearIndexNotLoaded" = "فهرست سال‌ها بارگذاری نشده است.";
+"errors.decompressionFailed" = "فشرده‌گشایی Gzip ناموفق بود: %1$@";
+"errors.cancelled" = "عملیات لغو شد.";
+"errors.unexpectedError" = "خطای غیرمنتظره: %1$@";
+"errors.loadingMapBorders" = "هنگام بارگذاری مرزهای نقشه مشکلی رخ داد.";
+"errors.unexpectedFallback" = "یک خطای غیرمنتظره رخ داد.";

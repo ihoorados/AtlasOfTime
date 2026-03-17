@@ -12,7 +12,7 @@ struct AtlasScreen: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text(viewModel.displayYear == 0 ? "--" : "\(viewModel.displayYear)")
+                    Text(viewModel.displayYear == 0 ? String(localized: AppStrings.Common.unavailableValue) : "\(viewModel.displayYear)")
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(theme.primaryText)

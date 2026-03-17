@@ -3,6 +3,7 @@ import Foundation
 enum AppStrings {
     enum Common {
         static let appName: LocalizedStringResource = "common.appName"
+        static let unavailableValue: LocalizedStringResource = "common.unavailableValue"
     }
 
     enum Tabs {
@@ -69,5 +70,19 @@ enum AppStrings {
         static let systemSummary: LocalizedStringResource = "appearance.option.system.summary"
         static let lightSummary: LocalizedStringResource = "appearance.option.light.summary"
         static let darkSummary: LocalizedStringResource = "appearance.option.dark.summary"
+    }
+
+    enum Errors {
+        static let resourceNotFoundFormat: String = "errors.resourceNotFound"
+        static let fileReadFailedFormat: String = "errors.fileReadFailed"
+        static let invalidIndexFormatFormat: String = "errors.invalidIndexFormat"
+        static let invalidGeoJSONFormat: String = "errors.invalidGeoJSON"
+        static let yearUnavailableFormat: String = "errors.yearUnavailable"
+        static let yearIndexNotLoaded: LocalizedStringResource = "errors.yearIndexNotLoaded"
+        static let decompressionFailedFormat: String = "errors.decompressionFailed"
+        static let cancelled: LocalizedStringResource = "errors.cancelled"
+        static let unexpectedErrorFormat: String = "errors.unexpectedError"
+        static let loadingMapBorders: LocalizedStringResource = "errors.loadingMapBorders"
+        static let unexpectedFallback: LocalizedStringResource = "errors.unexpectedFallback"
     }
 }
