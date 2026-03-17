@@ -64,3 +64,13 @@
 "errors.unexpectedError" = "Unexpected error: %1$@";
 "errors.loadingMapBorders" = "Something went wrong while loading map borders.";
 "errors.unexpectedFallback" = "An unexpected error occurred.";
+
+"accessibility.common.on" = "On";
+"accessibility.common.off" = "Off";
+"accessibility.timeline.yearSlider.label" = "Year";
+"accessibility.timeline.yearSlider.hint" = "Adjust to change the displayed historical year.";
+"accessibility.timeline.selectedYear" = "Selected year %1$lld";
+"accessibility.appearance.appAppearance.value" = "Current selection: %1$@";
+"accessibility.appearance.glassSurfaces.value" = "Glass surfaces %1$@";
+"accessibility.map.yearRangeLabels.value" = "Year range labels %1$@";
+"accessibility.map.loadingIndicator.value" = "Loading indicator %1$@";

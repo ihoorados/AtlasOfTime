@@ -22,6 +22,7 @@ struct AppearanceSettingsScene: View {
                         .tag(option)
                 }
             }
+            .accessibilityValue(appearanceSelectionAccessibilityValue)
         } header: {
             Text(AppStrings.Settings.Appearance.sectionTitle)
         } footer: {
@@ -34,6 +35,7 @@ struct AppearanceSettingsScene: View {
             Toggle(isOn: $appearanceController.glassEnabled) {
                 Label(AppStrings.Settings.Appearance.glassSurfaces, systemImage: "sparkles")
             }
+            .accessibilityValue(glassSurfacesAccessibilityValue)
         } header: {
             Text(AppStrings.Settings.Appearance.liquidGlassTitle)
         } footer: {
@@ -102,6 +104,26 @@ struct AppearanceSettingsScene: View {
                 Capsule(style: .continuous)
                     .fill(isSelected ? theme.selectionFill : theme.subtleFill)
             )
+    }
+
+    private var appearanceSelectionAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.AppearanceSettings.appAppearanceValueFormat,
+            locale: .current,
+            appearanceController.selectedAppearance.title
+        )
+    }
+
+    private var glassSurfacesAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.AppearanceSettings.glassSurfacesValueFormat,
+            locale: .current,
+            accessibilityOnOffValue(for: appearanceController.glassEnabled)
+        )
+    }
+
+    private func accessibilityOnOffValue(for isEnabled: Bool) -> String {
+        String(localized: isEnabled ? AppStrings.Accessibility.Common.on : AppStrings.Accessibility.Common.off)
     }
 }
 

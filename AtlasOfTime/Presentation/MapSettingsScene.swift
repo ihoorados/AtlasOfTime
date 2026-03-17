@@ -16,10 +16,12 @@ struct MapSettingsScene: View {
             Toggle(isOn: $preferencesController.showYearRangeLabels) {
                 Label(AppStrings.Settings.Map.showYearRangeLabels, systemImage: "textformat.123")
             }
+            .accessibilityValue(yearRangeLabelsAccessibilityValue)
 
             Toggle(isOn: $preferencesController.showLoadingIndicator) {
                 Label(AppStrings.Settings.Map.showLoadingIndicator, systemImage: "progress.indicator")
             }
+            .accessibilityValue(loadingIndicatorAccessibilityValue)
         } header: {
             Text(AppStrings.Settings.Map.presentationTitle)
         } footer: {
@@ -33,6 +35,26 @@ struct MapSettingsScene: View {
                 preferencesController.resetToDefaults()
             }
         }
+    }
+
+    private var yearRangeLabelsAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.MapSettings.yearRangeLabelsValueFormat,
+            locale: .current,
+            accessibilityOnOffValue(for: preferencesController.showYearRangeLabels)
+        )
+    }
+
+    private var loadingIndicatorAccessibilityValue: String {
+        LocalizedStringFormat.resolve(
+            AppStrings.Accessibility.MapSettings.loadingIndicatorValueFormat,
+            locale: .current,
+            accessibilityOnOffValue(for: preferencesController.showLoadingIndicator)
+        )
+    }
+
+    private func accessibilityOnOffValue(for isEnabled: Bool) -> String {
+        String(localized: isEnabled ? AppStrings.Accessibility.Common.on : AppStrings.Accessibility.Common.off)
     }
 }
 

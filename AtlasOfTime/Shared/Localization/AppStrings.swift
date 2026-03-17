@@ -85,4 +85,27 @@ enum AppStrings {
         static let loadingMapBorders: LocalizedStringResource = "errors.loadingMapBorders"
         static let unexpectedFallback: LocalizedStringResource = "errors.unexpectedFallback"
     }
+
+    enum Accessibility {
+        enum Common {
+            static let on: LocalizedStringResource = "accessibility.common.on"
+            static let off: LocalizedStringResource = "accessibility.common.off"
+        }
+
+        enum Timeline {
+            static let yearSliderLabel: LocalizedStringResource = "accessibility.timeline.yearSlider.label"
+            static let yearSliderHint: LocalizedStringResource = "accessibility.timeline.yearSlider.hint"
+            static let selectedYearFormat: String = "accessibility.timeline.selectedYear"
+        }
+
+        enum AppearanceSettings {
+            static let appAppearanceValueFormat: String = "accessibility.appearance.appAppearance.value"
+            static let glassSurfacesValueFormat: String = "accessibility.appearance.glassSurfaces.value"
+        }
+
+        enum MapSettings {
+            static let yearRangeLabelsValueFormat: String = "accessibility.map.yearRangeLabels.value"
+            static let loadingIndicatorValueFormat: String = "accessibility.map.loadingIndicator.value"
+        }
+    }
 }

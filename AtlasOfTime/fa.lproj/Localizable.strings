@@ -64,3 +64,13 @@
 "errors.unexpectedError" = "خطای غیرمنتظره: %1$@";
 "errors.loadingMapBorders" = "هنگام بارگذاری مرزهای نقشه مشکلی رخ داد.";
 "errors.unexpectedFallback" = "یک خطای غیرمنتظره رخ داد.";
+
+"accessibility.common.on" = "روشن";
+"accessibility.common.off" = "خاموش";
+"accessibility.timeline.yearSlider.label" = "سال";
+"accessibility.timeline.yearSlider.hint" = "برای تغییر سال تاریخی نمایش‌داده‌شده تنظیم کنید.";
+"accessibility.timeline.selectedYear" = "سال انتخاب‌شده %1$lld";
+"accessibility.appearance.appAppearance.value" = "انتخاب فعلی: %1$@";
+"accessibility.appearance.glassSurfaces.value" = "سطوح شیشه‌ای %1$@";
+"accessibility.map.yearRangeLabels.value" = "برچسب‌های بازه سال %1$@";
+"accessibility.map.loadingIndicator.value" = "نشانگر بارگذاری %1$@";
