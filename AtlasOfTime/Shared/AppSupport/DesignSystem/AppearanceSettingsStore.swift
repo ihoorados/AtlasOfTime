@@ -1,6 +1,6 @@
 import Foundation
 
-protocol AppearanceSettingsStore: Sendable {
+protocol AppearanceSettingsStore {
     func loadAppearanceSettings() -> AppAppearanceSettings
     func saveAppearanceSettings(_ settings: AppAppearanceSettings)
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol LanguageSettingsStore: Sendable {
+protocol LanguageSettingsStore {
     func loadSelectedLanguage() -> AppLanguageOption
     func saveSelectedLanguage(_ language: AppLanguageOption)
 }
