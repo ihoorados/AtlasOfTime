@@ -22,6 +22,19 @@ enum AppStrings {
         static let confidenceMedium: LocalizedStringResource = "home.selectedCountry.confidence.medium"
         static let confidenceLow: LocalizedStringResource = "home.selectedCountry.confidence.low"
         static let confidenceUnknown: LocalizedStringResource = "home.selectedCountry.confidence.unknown"
+
+        enum Detail {
+            static let loadingTitle: LocalizedStringResource = "home.detail.loading.title"
+            static let loadingMessage: LocalizedStringResource = "home.detail.loading.message"
+            static let keyFactsTitle: LocalizedStringResource = "home.detail.keyFacts.title"
+            static let confidenceNoteTitle: LocalizedStringResource = "home.detail.confidenceNote.title"
+            static let errorTitle: LocalizedStringResource = "home.detail.error.title"
+            static let retryButtonTitle: LocalizedStringResource = "home.detail.retry"
+            static let emptyTitle: LocalizedStringResource = "home.detail.empty.title"
+            static let emptyMessage: LocalizedStringResource = "home.detail.empty.message"
+            static let nameConfidenceTitle: LocalizedStringResource = "home.detail.nameConfidence.title"
+            static let borderConfidenceTitle: LocalizedStringResource = "home.detail.borderConfidence.title"
+        }
     }
 
     enum Settings {

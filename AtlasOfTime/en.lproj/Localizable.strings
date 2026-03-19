@@ -14,6 +14,16 @@
 "home.selectedCountry.confidence.unknown" = "Unknown";
 "home.countries.title" = "Countries";
 "home.countries.more" = "+ %1$lld more";
+"home.detail.loading.title" = "Generating Summary";
+"home.detail.loading.message" = "The country summary is being prepared from the selected year context.";
+"home.detail.keyFacts.title" = "Key Facts";
+"home.detail.confidenceNote.title" = "Confidence Note";
+"home.detail.error.title" = "Summary Unavailable";
+"home.detail.retry" = "Try Again";
+"home.detail.empty.title" = "No Summary Yet";
+"home.detail.empty.message" = "No summary content is available for this country.";
+"home.detail.nameConfidence.title" = "Name";
+"home.detail.borderConfidence.title" = "Border";
 
 "appearance.option.system.title" = "System";
 "appearance.option.light.title" = "Light";
