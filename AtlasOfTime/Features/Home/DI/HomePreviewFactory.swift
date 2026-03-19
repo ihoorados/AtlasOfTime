@@ -6,17 +6,15 @@ enum HomePreviewFactory {
         makeFeatureContainer().makeAtlasViewModel()
     }
 
+    static func makeFeatureContainer() -> AtlasFeatureDIContainer {
+        makeFeatureContainerInternal()
+    }
+
     static func makeDestinationFactory() -> AppDestinationFactory {
-        AppDestinationFactory(atlasFeatureContainer: makeFeatureContainer())
+        AppDestinationFactory(countryDetailFeatureContainer: CountryDetailPreviewFactory.makeFeatureContainer())
     }
 
-    static func makeCountryDetailScene(
-        snapshot: HistoricalCountrySnapshot
-    ) -> CountryDetailScene {
-        makeFeatureContainer().makeCountryDetailScene(snapshot: snapshot)
-    }
-
-    private static func makeFeatureContainer() -> AtlasFeatureDIContainer {
+    private static func makeFeatureContainerInternal() -> AtlasFeatureDIContainer {
         let year1900 = 1900
         let year1914 = 1914
 
@@ -54,9 +52,6 @@ enum HomePreviewFactory {
         return AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
-            generateCountrySummary: GenerateCountrySummary(
-                generator: PreviewCountrySummaryGenerator()
-            ),
             debounceNanoseconds: 50_000_000
         )
     }
@@ -86,20 +81,5 @@ private actor PreviewBorderRepository: BorderRepository {
             throw AppError.yearUnavailable(year)
         }
         return snapshot
-    }
-}
-
-private struct PreviewCountrySummaryGenerator: CountrySummaryGenerating {
-    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
-        CountrySummaryResult(
-            title: request.displayName,
-            summary: "\(request.displayName) is presented for \(request.year) using preview summary content from the feature DI container.",
-            keyFacts: [
-                "Border confidence: \(request.borderConfidence.rawValue)",
-                "Relationship count: \(request.relationships.count)",
-                "Source count: \(request.sourceReferences.count)"
-            ],
-            confidenceNote: "Preview content only."
-        )
     }
 }

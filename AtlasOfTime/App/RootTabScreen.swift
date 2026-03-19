@@ -2,7 +2,7 @@ import SwiftUI
 
 struct RootTabScreen: View {
     @ObservedObject var navigationStore: AppNavigationStore
-    @ObservedObject var viewModel: AtlasViewModel
+    let atlasFeatureContainer: AtlasFeatureDIContainer
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
@@ -14,7 +14,7 @@ struct RootTabScreen: View {
             Tab(AppStrings.Tabs.home, systemImage: "house", value: AppTab.home) {
                 HomeTabContainer(
                     navigationStore: navigationStore,
-                    viewModel: viewModel,
+                    atlasFeatureContainer: atlasFeatureContainer,
                     destinationFactory: destinationFactory
                 )
             }
@@ -24,7 +24,8 @@ struct RootTabScreen: View {
                     navigationStore: navigationStore,
                     appearanceController: appearanceController,
                     languageController: languageController,
-                    preferencesController: preferencesController
+                    preferencesController: preferencesController,
+                    destinationFactory: destinationFactory
                 )
             }
         }
@@ -59,7 +60,7 @@ struct RootTabScreen_Previews: PreviewProvider {
     ) -> some View {
         RootTabScreen(
             navigationStore: AppNavigationStore(),
-            viewModel: HomePreviewFactory.makeViewModel(),
+            atlasFeatureContainer: HomePreviewFactory.makeFeatureContainer(),
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
             preferencesController: SettingsPreviewFactory.makePreferencesController(),

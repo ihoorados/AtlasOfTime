@@ -200,13 +200,12 @@ struct CountryDetailScene_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
         NavigationStack {
-            CountryDetailScene(viewModel: makeViewModel())
+            CountryDetailPreviewFactory.makeScene(snapshot: previewSnapshot)
         }
     }
 
-    @MainActor
-    private static func makeViewModel() -> CountryDetailViewModel {
-        let snapshot = HistoricalCountrySnapshot(
+    private static var previewSnapshot: HistoricalCountrySnapshot {
+        HistoricalCountrySnapshot(
             id: "preview:ottoman",
             entityID: "entity:ottoman",
             year: 1683,
@@ -240,25 +239,6 @@ struct CountryDetailScene_Previews: PreviewProvider {
                     title: "Preview Historical Dataset"
                 )
             ]
-        )
-
-        let generator = PreviewCountrySummaryGenerator()
-        let useCase = GenerateCountrySummary(generator: generator)
-        return CountryDetailViewModel(snapshot: snapshot, generateCountrySummary: useCase)
-    }
-}
-
-private struct PreviewCountrySummaryGenerator: CountrySummaryGenerating {
-    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
-        CountrySummaryResult(
-            title: request.displayName,
-            summary: "\(request.displayName) is shown here for \(request.year). This preview summary is generated through the same app-owned boundary that the real foundation-model adapter will use.",
-            keyFacts: [
-                "Name confidence: \(request.nameConfidence.rawValue)",
-                "Border confidence: \(request.borderConfidence.rawValue)",
-                "Relationships included: \(request.relationships.count)"
-            ],
-            confidenceNote: "Preview content only."
         )
     }
 }

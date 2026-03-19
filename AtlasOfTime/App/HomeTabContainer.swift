@@ -2,20 +2,19 @@ import SwiftUI
 
 struct HomeTabContainer: View {
     @ObservedObject var navigationStore: AppNavigationStore
-    @ObservedObject var viewModel: AtlasViewModel
+    @StateObject private var viewModel: AtlasViewModel
     let destinationFactory: AppDestinationFactory
-    let routeResolver: HomeRouteResolver
 
     init(
         navigationStore: AppNavigationStore,
-        viewModel: AtlasViewModel,
-        destinationFactory: AppDestinationFactory,
-        routeResolver: HomeRouteResolver = HomeRouteResolver()
+        atlasFeatureContainer: AtlasFeatureDIContainer,
+        destinationFactory: AppDestinationFactory
     ) {
         self.navigationStore = navigationStore
-        self.viewModel = viewModel
         self.destinationFactory = destinationFactory
-        self.routeResolver = routeResolver
+        _viewModel = StateObject(
+            wrappedValue: atlasFeatureContainer.makeAtlasViewModel()
+        )
     }
 
     var body: some View {
@@ -23,28 +22,13 @@ struct HomeTabContainer: View {
             HomeScene(
                 viewModel: viewModel,
                 onSelectedCountryTapped: { snapshot in
-                    navigationStore.push(.countryDetail(countryID: snapshot.id))
+                    navigationStore.push(.countryDetail(.init(snapshot: snapshot)))
                 }
             )
             .navigationDestination(for: HomeRoute.self) { route in
-                if let snapshot = routeResolver.snapshot(
-                    for: route,
-                    visibleSnapshots: viewModel.visibleSnapshots
-                ) {
-                    destinationFactory.makeCountryDetailScene(snapshot: snapshot)
-                } else {
-                    missingCountryDetailScene
-                }
+                destinationFactory.makeHomeDestination(for: route)
             }
         }
-    }
-
-    private var missingCountryDetailScene: some View {
-        ContentUnavailableView(
-            String(localized: AppStrings.Common.unavailableValue),
-            systemImage: "exclamationmark.triangle",
-            description: Text(String(localized: AppStrings.Home.Detail.emptyMessage))
-        )
     }
 }
 
@@ -54,7 +38,7 @@ struct HomeTabContainer_Previews: PreviewProvider {
     static var previews: some View {
         HomeTabContainer(
             navigationStore: AppNavigationStore(),
-            viewModel: HomePreviewFactory.makeViewModel(),
+            atlasFeatureContainer: HomePreviewFactory.makeFeatureContainer(),
             destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
     }

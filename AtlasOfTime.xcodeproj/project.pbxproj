@@ -202,13 +202,13 @@
 			);
 			mainGroup = 7060DD202F4615C900572583;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7060DD2A2F4615C900572583 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			packageReferences = (
-				70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */,
-			);
 			targets = (
 				7060DD282F4615C900572583 /* AtlasOfTime */,
 				7060DD352F4615CB00572583 /* AtlasOfTimeTests */,
@@ -277,21 +277,6 @@
 			targetProxy = 7060DD412F4615CB00572583 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/CoreAtlasNavigation;
-		};
-/* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		70A100032F4A000100572583 /* CoreAtlasNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */;
-			productName = CoreAtlasNavigation;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7060DD482F4615CB00572583 /* Debug */ = {
@@ -634,6 +619,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasNavigation;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70A100032F4A000100572583 /* CoreAtlasNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */;
+			productName = CoreAtlasNavigation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7060DD212F4615C900572583 /* Project object */;
 }
