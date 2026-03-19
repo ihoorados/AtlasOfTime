@@ -121,7 +121,7 @@ struct AtlasViewModelDITests {
 }
 
 @MainActor
-private struct TestAppDIContainer: AtlasDIProviding {
+private struct TestAppDIContainer {
     private let featureContainer: AtlasFeatureDIContainer
 
     init(
@@ -140,6 +140,9 @@ private struct TestAppDIContainer: AtlasDIProviding {
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            generateCountrySummary: GenerateCountrySummary(
+                generator: TestCountrySummaryGenerator()
+            ),
             debounceNanoseconds: 0
         )
     }
@@ -158,12 +161,26 @@ private struct TestAppDIContainer: AtlasDIProviding {
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            generateCountrySummary: GenerateCountrySummary(
+                generator: TestCountrySummaryGenerator()
+            ),
             debounceNanoseconds: 0
         )
     }
 
     func makeAtlasViewModel() -> AtlasViewModel {
         featureContainer.makeAtlasViewModel()
+    }
+}
+
+private struct TestCountrySummaryGenerator: CountrySummaryGenerating {
+    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
+        CountrySummaryResult(
+            title: request.displayName,
+            summary: request.displayName,
+            keyFacts: [],
+            confidenceNote: nil
+        )
     }
 }
 
