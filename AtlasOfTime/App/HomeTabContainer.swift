@@ -4,17 +4,14 @@ struct HomeTabContainer: View {
     @ObservedObject var navigationStore: AppNavigationStore
     @StateObject private var viewModel: AtlasViewModel
     let destinationFactory: AppDestinationFactory
-    let routeResolver: HomeRouteResolver
 
     init(
         navigationStore: AppNavigationStore,
         atlasFeatureContainer: AtlasFeatureDIContainer,
-        destinationFactory: AppDestinationFactory,
-        routeResolver: HomeRouteResolver = HomeRouteResolver()
+        destinationFactory: AppDestinationFactory
     ) {
         self.navigationStore = navigationStore
         self.destinationFactory = destinationFactory
-        self.routeResolver = routeResolver
         _viewModel = StateObject(
             wrappedValue: atlasFeatureContainer.makeAtlasViewModel()
         )
@@ -25,28 +22,16 @@ struct HomeTabContainer: View {
             HomeScene(
                 viewModel: viewModel,
                 onSelectedCountryTapped: { snapshot in
-                    navigationStore.push(.countryDetail(countryID: snapshot.id))
+                    navigationStore.push(.countryDetail(.init(snapshot: snapshot)))
                 }
             )
             .navigationDestination(for: HomeRoute.self) { route in
-                if let snapshot = routeResolver.snapshot(
-                    for: route,
-                    visibleSnapshots: viewModel.visibleSnapshots
-                ) {
-                    destinationFactory.makeCountryDetailScene(snapshot: snapshot)
-                } else {
-                    missingCountryDetailScene
+                switch route {
+                case .countryDetail(let context):
+                    destinationFactory.makeCountryDetailScene(snapshot: context.snapshot)
                 }
             }
         }
-    }
-
-    private var missingCountryDetailScene: some View {
-        ContentUnavailableView(
-            String(localized: AppStrings.Common.unavailableValue),
-            systemImage: "exclamationmark.triangle",
-            description: Text(String(localized: AppStrings.Home.Detail.emptyMessage))
-        )
     }
 }
 
