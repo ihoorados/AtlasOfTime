@@ -1,6 +1,6 @@
 import Foundation
 
-struct HistoricalRelationship: Identifiable, Equatable, Sendable, Codable {
+struct HistoricalRelationship: Identifiable, Equatable, Hashable, Sendable, Codable {
     let id: String
     let type: HistoricalRelationshipType
     let targetEntityID: String

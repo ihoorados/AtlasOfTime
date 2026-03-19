@@ -14,6 +14,16 @@
 "home.selectedCountry.confidence.unknown" = "نامشخص";
 "home.countries.title" = "کشورها";
 "home.countries.more" = "+ %1$lld مورد دیگر";
+"home.detail.loading.title" = "در حال تولید خلاصه";
+"home.detail.loading.message" = "خلاصه کشور بر اساس اطلاعات سال انتخاب‌شده آماده می‌شود.";
+"home.detail.keyFacts.title" = "نکات کلیدی";
+"home.detail.confidenceNote.title" = "یادداشت اطمینان";
+"home.detail.error.title" = "خلاصه در دسترس نیست";
+"home.detail.retry" = "تلاش دوباره";
+"home.detail.empty.title" = "هنوز خلاصه‌ای وجود ندارد";
+"home.detail.empty.message" = "برای این کشور محتوای خلاصه‌ای موجود نیست.";
+"home.detail.nameConfidence.title" = "نام";
+"home.detail.borderConfidence.title" = "مرز";
 
 "appearance.option.system.title" = "سیستم";
 "appearance.option.light.title" = "روشن";

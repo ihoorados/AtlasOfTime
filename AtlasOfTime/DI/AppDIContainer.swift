@@ -21,6 +21,12 @@ final class AppDIContainer {
         atlasFeatureContainer.makeAtlasViewModel()
     }
 
+    func makeCountryDetailScene(
+        snapshot: HistoricalCountrySnapshot
+    ) -> CountryDetailScene {
+        atlasFeatureContainer.makeCountryDetailScene(snapshot: snapshot)
+    }
+
     // Extension points for additional features follow the same pattern.
     private static func makeDataContainer() -> DataDIContainer {
         DataDIContainer()
@@ -37,6 +43,10 @@ final class AppDIContainer {
         AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear()
+            ,
+            generateCountrySummary: GenerateCountrySummary(
+                generator: FoundationModelCountrySummaryGenerator()
+            )
         )
     }
 }

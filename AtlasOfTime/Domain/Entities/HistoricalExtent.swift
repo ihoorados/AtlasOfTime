@@ -1,6 +1,6 @@
 import Foundation
 
-struct HistoricalExtent: Identifiable, Equatable, Sendable, Codable {
+struct HistoricalExtent: Identifiable, Equatable, Hashable, Sendable, Codable {
     let id: String
     let extentType: HistoricalExtentType
     let borderModel: HistoricalBorderModel

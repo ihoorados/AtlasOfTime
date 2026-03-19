@@ -1,6 +1,6 @@
 import Foundation
 
-struct HistoricalSourceReference: Identifiable, Equatable, Sendable, Codable {
+struct HistoricalSourceReference: Identifiable, Equatable, Hashable, Sendable, Codable {
     let id: String
     let title: String
     let locator: String?

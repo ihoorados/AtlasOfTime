@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
+    let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
     @Environment(\.atlasTheme) private var theme
     @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
 
@@ -65,12 +66,26 @@ struct AtlasScreen: View {
                         .font(.caption)
                         .foregroundStyle(theme.secondaryText)
 
-                    Text(selectedCountry.displayName)
-                        .font(.headline)
-                        .foregroundStyle(theme.primaryText)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(theme.selectionFill, in: Capsule())
+                    if let selectedSnapshot = viewModel.selectedCountrySnapshot {
+                        Button {
+                            onSelectedCountryTapped(selectedSnapshot)
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text(selectedCountry.displayName)
+                                    .font(.headline)
+                                    .foregroundStyle(theme.primaryText)
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(theme.secondaryText)
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(theme.selectionFill, in: Capsule())
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
 
                     HStack(spacing: 12) {
                         LabeledContent {
@@ -151,7 +166,10 @@ struct AtlasScreen_Previews: PreviewProvider {
         localeIdentifier: String,
         layoutDirection: LayoutDirection
     ) -> some View {
-        AtlasScreen(viewModel: HomePreviewFactory.makeViewModel())
+        AtlasScreen(
+            viewModel: HomePreviewFactory.makeViewModel(),
+            onSelectedCountryTapped: { _ in }
+        )
             .environment(\.locale, Locale(identifier: localeIdentifier))
             .environment(\.layoutDirection, layoutDirection)
     }
