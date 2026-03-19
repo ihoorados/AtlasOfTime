@@ -3,6 +3,8 @@ import SwiftUI
 @main
 struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
+    private let destinationFactory: AppDestinationFactory
+    @StateObject private var navigationStore = AppNavigationStore()
     @StateObject private var viewModel: AtlasViewModel
     @StateObject private var appearanceController = AppearanceController()
     @StateObject private var languageController = AppLanguageController()
@@ -11,6 +13,7 @@ struct AtlasOfTimeApp: App {
     init() {
         let appContainer = AppDIContainer()
         self.appContainer = appContainer
+        self.destinationFactory = appContainer.makeDestinationFactory()
         _viewModel = StateObject(
             wrappedValue: appContainer.makeAtlasViewModel()
         )
@@ -33,11 +36,12 @@ struct AtlasOfTimeApp: App {
 
     private var rootContent: some View {
         RootTabScreen(
+            navigationStore: navigationStore,
             viewModel: viewModel,
             appearanceController: appearanceController,
             languageController: languageController,
             preferencesController: preferencesController,
-            makeCountryDetailScene: appContainer.makeCountryDetailScene(snapshot:)
+            destinationFactory: destinationFactory
         )
         .preferredColorScheme(appearanceController.preferredColorScheme)
         .environment(\.atlasAppearance, appearanceController.selectedAppearance)

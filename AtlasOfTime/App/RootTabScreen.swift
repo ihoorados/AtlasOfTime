@@ -1,24 +1,27 @@
 import SwiftUI
 
 struct RootTabScreen: View {
+    @ObservedObject var navigationStore: AppNavigationStore
     @ObservedObject var viewModel: AtlasViewModel
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
-    let makeCountryDetailScene: (HistoricalCountrySnapshot) -> CountryDetailScene
+    let destinationFactory: AppDestinationFactory
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        TabView {
-            Tab(AppStrings.Tabs.home, systemImage: "house") {
-                HomeScene(
+        TabView(selection: $navigationStore.selectedTab) {
+            Tab(AppStrings.Tabs.home, systemImage: "house", value: AppTab.home) {
+                HomeTabContainer(
+                    navigationStore: navigationStore,
                     viewModel: viewModel,
-                    makeCountryDetailScene: makeCountryDetailScene
+                    destinationFactory: destinationFactory
                 )
             }
 
-            Tab(AppStrings.Tabs.settings, systemImage: "gearshape") {
-                SettingsScene(
+            Tab(AppStrings.Tabs.settings, systemImage: "gearshape", value: AppTab.settings) {
+                SettingsTabContainer(
+                    navigationStore: navigationStore,
                     appearanceController: appearanceController,
                     languageController: languageController,
                     preferencesController: preferencesController
@@ -55,11 +58,12 @@ struct RootTabScreen_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         RootTabScreen(
+            navigationStore: AppNavigationStore(),
             viewModel: HomePreviewFactory.makeViewModel(),
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
             preferencesController: SettingsPreviewFactory.makePreferencesController(),
-            makeCountryDetailScene: HomePreviewFactory.makeCountryDetailScene(snapshot:)
+            destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)

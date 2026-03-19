@@ -6,6 +6,10 @@ enum HomePreviewFactory {
         makeFeatureContainer().makeAtlasViewModel()
     }
 
+    static func makeDestinationFactory() -> AppDestinationFactory {
+        AppDestinationFactory(atlasFeatureContainer: makeFeatureContainer())
+    }
+
     static func makeCountryDetailScene(
         snapshot: HistoricalCountrySnapshot
     ) -> CountryDetailScene {

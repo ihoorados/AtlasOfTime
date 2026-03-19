@@ -6,6 +6,7 @@ final class AppDIContainer {
     private let dataContainer: DataDIContainer
     private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
+    private let destinationFactory: AppDestinationFactory
 
     init() {
         let dataContainer = Self.makeDataContainer()
@@ -14,17 +15,17 @@ final class AppDIContainer {
         let domainContainer = Self.makeDomainContainer(dataContainer: dataContainer)
         self.domainContainer = domainContainer
 
-        self.atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
+        let atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
+        self.atlasFeatureContainer = atlasFeatureContainer
+        self.destinationFactory = AppDestinationFactory(atlasFeatureContainer: atlasFeatureContainer)
     }
 
     func makeAtlasViewModel() -> AtlasViewModel {
         atlasFeatureContainer.makeAtlasViewModel()
     }
 
-    func makeCountryDetailScene(
-        snapshot: HistoricalCountrySnapshot
-    ) -> CountryDetailScene {
-        atlasFeatureContainer.makeCountryDetailScene(snapshot: snapshot)
+    func makeDestinationFactory() -> AppDestinationFactory {
+        destinationFactory
     }
 
     // Extension points for additional features follow the same pattern.
@@ -42,8 +43,7 @@ final class AppDIContainer {
     private static func makeAtlasFeatureContainer(domainContainer: DomainDIContainer) -> AtlasFeatureDIContainer {
         AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
-            loadBordersForYear: domainContainer.makeLoadBordersForYear()
-            ,
+            loadBordersForYear: domainContainer.makeLoadBordersForYear(),
             generateCountrySummary: GenerateCountrySummary(
                 generator: FoundationModelCountrySummaryGenerator()
             )
