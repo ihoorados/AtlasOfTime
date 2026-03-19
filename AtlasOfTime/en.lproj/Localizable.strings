@@ -4,6 +4,17 @@
 "tabs.home" = "Home";
 "tabs.settings" = "Settings";
 
+"home.selectedCountry.title" = "Selected Country";
+"home.selectedCountry.borderConfidence" = "Border Confidence";
+"home.selectedCountry.sources" = "Sources";
+"home.selectedCountry.sourceCount" = "%1$lld references";
+"home.selectedCountry.confidence.high" = "High";
+"home.selectedCountry.confidence.medium" = "Medium";
+"home.selectedCountry.confidence.low" = "Low";
+"home.selectedCountry.confidence.unknown" = "Unknown";
+"home.countries.title" = "Countries";
+"home.countries.more" = "+ %1$lld more";
+
 "appearance.option.system.title" = "System";
 "appearance.option.light.title" = "Light";
 "appearance.option.dark.title" = "Dark";

@@ -28,9 +28,9 @@ struct DefaultBorderSnapshotLoader: BorderSnapshotLoading {
         let geoJSONData = try gzipDecoder.gunzip(compressedData)
         try Task.checkCancellation()
 
-        let polygons = try borderDecoder.decodeBorders(from: geoJSONData)
+        let snapshots = try borderDecoder.decodeSnapshots(from: geoJSONData, year: year)
         try Task.checkCancellation()
 
-        return YearSnapshot(year: year, polygons: polygons)
+        return YearSnapshot(year: year, snapshots: snapshots)
     }
 }

@@ -4,6 +4,17 @@
 "tabs.home" = "خانه";
 "tabs.settings" = "تنظیمات";
 
+"home.selectedCountry.title" = "کشور انتخاب‌شده";
+"home.selectedCountry.borderConfidence" = "اطمینان مرز";
+"home.selectedCountry.sources" = "منابع";
+"home.selectedCountry.sourceCount" = "%1$lld مرجع";
+"home.selectedCountry.confidence.high" = "زیاد";
+"home.selectedCountry.confidence.medium" = "متوسط";
+"home.selectedCountry.confidence.low" = "کم";
+"home.selectedCountry.confidence.unknown" = "نامشخص";
+"home.countries.title" = "کشورها";
+"home.countries.more" = "+ %1$lld مورد دیگر";
+
 "appearance.option.system.title" = "سیستم";
 "appearance.option.light.title" = "روشن";
 "appearance.option.dark.title" = "تیره";

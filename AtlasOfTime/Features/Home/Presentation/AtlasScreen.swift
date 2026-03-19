@@ -7,7 +7,11 @@ struct AtlasScreen: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AtlasMapView(snapshot: viewModel.renderSnapshot)
+            AtlasMapView(
+                snapshot: viewModel.renderSnapshot,
+                selectedCountryID: viewModel.selectedCountryID,
+                onCountrySelectionChanged: viewModel.selectCountry(id:)
+            )
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 12) {
@@ -33,6 +37,10 @@ struct AtlasScreen: View {
                     availableYears: viewModel.availableYears
                 )
 
+                if viewModel.selectedCountry != nil || !viewModel.visibleSnapshots.isEmpty {
+                    countrySummarySection
+                }
+
                 if let message = viewModel.errorMessage, !message.isEmpty {
                     Text(message)
                         .font(.footnote)
@@ -46,6 +54,81 @@ struct AtlasScreen: View {
         }
         .onAppear {
             viewModel.onAppear()
+        }
+    }
+
+    private var countrySummarySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let selectedCountry = viewModel.selectedCountry {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(AppStrings.Home.selectedCountryTitle)
+                        .font(.caption)
+                        .foregroundStyle(theme.secondaryText)
+
+                    Text(selectedCountry.displayName)
+                        .font(.headline)
+                        .foregroundStyle(theme.primaryText)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(theme.selectionFill, in: Capsule())
+
+                    HStack(spacing: 12) {
+                        LabeledContent {
+                            Text(viewModel.selectedCountryBorderConfidenceText)
+                                .foregroundStyle(theme.primaryText)
+                        } label: {
+                            Text(AppStrings.Home.borderConfidenceTitle)
+                                .foregroundStyle(theme.secondaryText)
+                        }
+
+                        if viewModel.selectedCountrySourceCount > 0 {
+                            LabeledContent {
+                                Text(
+                                    LocalizedStringFormat.resolve(
+                                        AppStrings.Home.sourceCountFormat,
+                                        locale: .current,
+                                        viewModel.selectedCountrySourceCount
+                                    )
+                                )
+                                .foregroundStyle(theme.primaryText)
+                            } label: {
+                                Text(AppStrings.Home.sourcesTitle)
+                                    .foregroundStyle(theme.secondaryText)
+                            }
+                        }
+                    }
+                    .font(.caption)
+                }
+            }
+
+            Text(AppStrings.Home.countriesTitle)
+                .font(.caption)
+                .foregroundStyle(theme.secondaryText)
+
+            let remainingCountries = viewModel.visibleSnapshots.filter { $0.id != viewModel.selectedCountryID }
+            let visibleNames = Array(remainingCountries.prefix(3)).map(\.displayName)
+            let remainingCount = max(0, remainingCountries.count - visibleNames.count)
+
+            if !visibleNames.isEmpty {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(visibleNames.joined(separator: ", "))
+                        .font(.subheadline)
+                        .foregroundStyle(theme.primaryText)
+                        .lineLimit(2)
+
+                    if remainingCount > 0 {
+                        Text(
+                            LocalizedStringFormat.resolve(
+                                AppStrings.Home.countriesMoreFormat,
+                                locale: .current,
+                                remainingCount
+                            )
+                        )
+                        .font(.caption)
+                        .foregroundStyle(theme.secondaryText)
+                    }
+                }
+            }
         }
     }
 }

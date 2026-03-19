@@ -11,6 +11,19 @@ enum AppStrings {
         static let settings: LocalizedStringResource = "tabs.settings"
     }
 
+    enum Home {
+        static let selectedCountryTitle: LocalizedStringResource = "home.selectedCountry.title"
+        static let borderConfidenceTitle: LocalizedStringResource = "home.selectedCountry.borderConfidence"
+        static let sourcesTitle: LocalizedStringResource = "home.selectedCountry.sources"
+        static let countriesTitle: LocalizedStringResource = "home.countries.title"
+        static let countriesMoreFormat: String = "home.countries.more"
+        static let sourceCountFormat: String = "home.selectedCountry.sourceCount"
+        static let confidenceHigh: LocalizedStringResource = "home.selectedCountry.confidence.high"
+        static let confidenceMedium: LocalizedStringResource = "home.selectedCountry.confidence.medium"
+        static let confidenceLow: LocalizedStringResource = "home.selectedCountry.confidence.low"
+        static let confidenceUnknown: LocalizedStringResource = "home.selectedCountry.confidence.unknown"
+    }
+
     enum Settings {
         enum Root {
             static let title: LocalizedStringResource = "settings.root.title"

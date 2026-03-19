@@ -6,6 +6,8 @@ final class AtlasViewModel: ObservableObject {
     @Published var availableYears: [Int] = []
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
+    @Published private(set) var visibleSnapshots: [HistoricalCountrySnapshot] = []
+    @Published private(set) var selectedCountryID: String?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
@@ -47,7 +49,60 @@ final class AtlasViewModel: ObservableObject {
 
         let snappedYear = nearestAvailableYear(to: year)
         displayYear = snappedYear
+        selectedCountryID = nil
         scheduleDebouncedLoad(for: snappedYear)
+    }
+
+    var selectedCountry: HistoricalCountry? {
+        guard let selectedCountryID else { return nil }
+        guard let snapshot = visibleSnapshots.first(where: { $0.id == selectedCountryID }) else { return nil }
+        return HistoricalCountry(
+            id: snapshot.id,
+            displayName: snapshot.displayName,
+            shortName: snapshot.shortDisplayName,
+            sovereignName: nil,
+            parentName: nil,
+            borderPrecision: snapshot.extents.first?.borderPrecisionRank,
+            infoURL: snapshot.sourceReferences.first?.url ?? snapshot.extents.first?.sourceReferences.first?.url,
+            polygons: snapshot.extents.flatMap(\.polygons)
+        )
+    }
+
+    var selectedCountrySnapshot: HistoricalCountrySnapshot? {
+        guard let selectedCountryID else { return nil }
+        return visibleSnapshots.first { $0.id == selectedCountryID }
+    }
+
+    var selectedPrimaryExtent: HistoricalExtent? {
+        selectedCountrySnapshot?.extents.first
+    }
+
+    var selectedCountryBorderConfidenceText: LocalizedStringResource {
+        switch selectedPrimaryExtent?.borderConfidence ?? .unknown {
+        case .high:
+            AppStrings.Home.confidenceHigh
+        case .medium:
+            AppStrings.Home.confidenceMedium
+        case .low:
+            AppStrings.Home.confidenceLow
+        case .unknown:
+            AppStrings.Home.confidenceUnknown
+        }
+    }
+
+    var selectedCountrySourceCount: Int {
+        let extentReferences = selectedPrimaryExtent?.sourceReferences ?? []
+        let snapshotReferences = selectedCountrySnapshot?.sourceReferences ?? []
+        return Set(extentReferences.map(\.id) + snapshotReferences.map(\.id)).count
+    }
+
+    func selectCountry(id: String?) {
+        guard let id else {
+            selectedCountryID = nil
+            return
+        }
+
+        selectedCountryID = visibleSnapshots.contains(where: { $0.id == id }) ? id : nil
     }
 
     private func bootstrap() async {
@@ -63,11 +118,17 @@ final class AtlasViewModel: ObservableObject {
 
             availableYears = years
             displayYear = initialYear
+            renderSnapshot = nil
+            visibleSnapshots = []
+            selectedCountryID = nil
             errorMessage = nil
             isLoading = false
 
             loadImmediately(for: initialYear)
         } catch {
+            renderSnapshot = nil
+            visibleSnapshots = []
+            selectedCountryID = nil
             isLoading = false
             errorMessage = AppError.wrap(error).userMessage
         }
@@ -107,11 +168,21 @@ final class AtlasViewModel: ObservableObject {
 
             guard token == latestRequestToken else { return }
             renderSnapshot = snapshot
+            visibleSnapshots = snapshot.snapshots
+            if let selectedCountryID,
+               snapshot.snapshots.contains(where: { $0.id == selectedCountryID }) {
+                self.selectedCountryID = selectedCountryID
+            } else {
+                selectedCountryID = nil
+            }
             errorMessage = nil
         } catch is CancellationError {
             // Newer request replaced this one.
         } catch {
             guard token == latestRequestToken else { return }
+            renderSnapshot = nil
+            visibleSnapshots = []
+            selectedCountryID = nil
             errorMessage = AppError.wrap(error).userMessage
         }
 
