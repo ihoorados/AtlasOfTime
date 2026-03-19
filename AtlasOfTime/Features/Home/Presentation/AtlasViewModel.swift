@@ -11,16 +11,7 @@ final class AtlasViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
-    private let loadYearIndex: LoadYearIndex
-    private let loadBordersForYear: LoadBordersForYear
-    private let debouncer: Debouncer
-    private let debounceNanoseconds: UInt64
-
-    private var didAppear = false
-    private var latestRequestToken: UInt64 = 0
-    private var requestCounter: UInt64 = 0
-    private var bootstrapTask: Task<Void, Never>?
-    private var loadTask: Task<Void, Never>?
+    private let yearLoader: AtlasYearLoader
 
     init(
         loadYearIndex: LoadYearIndex,
@@ -28,20 +19,17 @@ final class AtlasViewModel: ObservableObject {
         debouncer: Debouncer,
         debounceNanoseconds: UInt64 = 150_000_000
     ) {
-        self.loadYearIndex = loadYearIndex
-        self.loadBordersForYear = loadBordersForYear
-        self.debouncer = debouncer
-        self.debounceNanoseconds = debounceNanoseconds
+        self.yearLoader = AtlasYearLoader(
+            loadYearIndex: loadYearIndex,
+            loadBordersForYear: loadBordersForYear,
+            debouncer: debouncer,
+            debounceNanoseconds: debounceNanoseconds
+        )
+        self.yearLoader.bind(self)
     }
 
     func onAppear() {
-        guard !didAppear else { return }
-        didAppear = true
-
-        bootstrapTask?.cancel()
-        bootstrapTask = Task { [weak self] in
-            await self?.bootstrap()
-        }
+        yearLoader.onAppear()
     }
 
     func onYearChanged(year: Int) {
@@ -50,7 +38,7 @@ final class AtlasViewModel: ObservableObject {
         let snappedYear = nearestAvailableYear(to: year)
         displayYear = snappedYear
         selectedCountryID = nil
-        scheduleDebouncedLoad(for: snappedYear)
+        yearLoader.requestYear(snappedYear)
     }
 
     var selectedCountrySnapshot: HistoricalCountrySnapshot? {
@@ -90,42 +78,151 @@ final class AtlasViewModel: ObservableObject {
         selectedCountryID = visibleSnapshots.contains(where: { $0.id == id }) ? id : nil
     }
 
-    private func bootstrap() async {
-        isLoading = true
+    private func nearestAvailableYear(to year: Int) -> Int {
+        guard let first = availableYears.first else { return year }
 
-        do {
-            let index = try await loadYearIndex.execute()
+        var nearest = first
+        var nearestDistance = abs(first - year)
 
-            let years = index.availableYears.sorted()
-            guard let initialYear = years.first else {
-                throw AppError.invalidIndexFormat("availableYears is empty.")
+        for candidate in availableYears {
+            let distance = abs(candidate - year)
+            if distance < nearestDistance {
+                nearestDistance = distance
+                nearest = candidate
             }
+        }
 
-            availableYears = years
-            displayYear = initialYear
-            renderSnapshot = nil
-            visibleSnapshots = []
-            selectedCountryID = nil
-            errorMessage = nil
-            isLoading = false
+        return nearest
+    }
+}
 
-            loadImmediately(for: initialYear)
-        } catch {
-            renderSnapshot = nil
-            visibleSnapshots = []
+@MainActor
+private protocol AtlasYearLoadingOutput: AnyObject {
+    func setLoading(_ isLoading: Bool)
+    func applyIndex(_ index: YearIndex, initialYear: Int)
+    func applySnapshot(_ snapshot: YearSnapshot)
+    func applyBootstrapFailure(_ error: AppError)
+    func applySnapshotFailure(_ error: AppError)
+}
+
+@MainActor
+extension AtlasViewModel: AtlasYearLoadingOutput {
+    fileprivate func setLoading(_ isLoading: Bool) {
+        self.isLoading = isLoading
+    }
+
+    fileprivate func applyIndex(_ index: YearIndex, initialYear: Int) {
+        availableYears = index.availableYears.sorted()
+        displayYear = initialYear
+        renderSnapshot = nil
+        visibleSnapshots = []
+        selectedCountryID = nil
+        errorMessage = nil
+    }
+
+    fileprivate func applySnapshot(_ snapshot: YearSnapshot) {
+        renderSnapshot = snapshot
+        visibleSnapshots = snapshot.snapshots
+        if let selectedCountryID,
+           snapshot.snapshots.contains(where: { $0.id == selectedCountryID }) {
+            self.selectedCountryID = selectedCountryID
+        } else {
             selectedCountryID = nil
-            isLoading = false
-            errorMessage = AppError.wrap(error).userMessage
+        }
+        errorMessage = nil
+    }
+
+    fileprivate func applyBootstrapFailure(_ error: AppError) {
+        renderSnapshot = nil
+        visibleSnapshots = []
+        selectedCountryID = nil
+        errorMessage = error.userMessage
+    }
+
+    fileprivate func applySnapshotFailure(_ error: AppError) {
+        renderSnapshot = nil
+        visibleSnapshots = []
+        selectedCountryID = nil
+        errorMessage = error.userMessage
+    }
+}
+
+@MainActor
+private final class AtlasYearLoader {
+    private weak var output: (any AtlasYearLoadingOutput)?
+
+    private let loadYearIndex: LoadYearIndex
+    private let loadBordersForYear: LoadBordersForYear
+    private let debouncer: Debouncer
+    private let debounceNanoseconds: UInt64
+
+    private var didAppear = false
+    private var latestRequestToken: UInt64 = 0
+    private var requestCounter: UInt64 = 0
+    private var bootstrapTask: Task<Void, Never>?
+    private var loadTask: Task<Void, Never>?
+
+    init(
+        loadYearIndex: LoadYearIndex,
+        loadBordersForYear: LoadBordersForYear,
+        debouncer: Debouncer,
+        debounceNanoseconds: UInt64
+    ) {
+        self.loadYearIndex = loadYearIndex
+        self.loadBordersForYear = loadBordersForYear
+        self.debouncer = debouncer
+        self.debounceNanoseconds = debounceNanoseconds
+    }
+
+    func bind(_ output: any AtlasYearLoadingOutput) {
+        self.output = output
+    }
+
+    func onAppear() {
+        guard !didAppear else { return }
+        didAppear = true
+
+        bootstrapTask?.cancel()
+        bootstrapTask = Task { [weak self] in
+            await self?.bootstrap()
         }
     }
 
-    private func scheduleDebouncedLoad(for year: Int) {
+    func requestYear(_ year: Int) {
         let token = nextRequestToken()
 
         Task { [debouncer, debounceNanoseconds] in
             await debouncer.schedule(token: token, delayNanoseconds: debounceNanoseconds) { [weak self] in
                 await self?.replaceLoadTask(for: year, token: token)
             }
+        }
+    }
+
+    deinit {
+        bootstrapTask?.cancel()
+        loadTask?.cancel()
+        Task { [debouncer] in
+            await debouncer.cancelAll()
+        }
+    }
+
+    private func bootstrap() async {
+        output?.setLoading(true)
+
+        do {
+            let index = try await loadYearIndex.execute()
+            let years = index.availableYears.sorted()
+
+            guard let initialYear = years.first else {
+                throw AppError.invalidIndexFormat("availableYears is empty.")
+            }
+
+            output?.applyIndex(index, initialYear: initialYear)
+            output?.setLoading(false)
+            loadImmediately(for: initialYear)
+        } catch {
+            output?.applyBootstrapFailure(AppError.wrap(error))
+            output?.setLoading(false)
         }
     }
 
@@ -145,34 +242,23 @@ final class AtlasViewModel: ObservableObject {
 
     private func executeLoad(for year: Int, token: UInt64) async {
         guard token == latestRequestToken else { return }
-        isLoading = true
+        output?.setLoading(true)
 
         do {
             let snapshot = try await loadBordersForYear.execute(year: year)
             try Task.checkCancellation()
 
             guard token == latestRequestToken else { return }
-            renderSnapshot = snapshot
-            visibleSnapshots = snapshot.snapshots
-            if let selectedCountryID,
-               snapshot.snapshots.contains(where: { $0.id == selectedCountryID }) {
-                self.selectedCountryID = selectedCountryID
-            } else {
-                selectedCountryID = nil
-            }
-            errorMessage = nil
+            output?.applySnapshot(snapshot)
         } catch is CancellationError {
             // Newer request replaced this one.
         } catch {
             guard token == latestRequestToken else { return }
-            renderSnapshot = nil
-            visibleSnapshots = []
-            selectedCountryID = nil
-            errorMessage = AppError.wrap(error).userMessage
+            output?.applySnapshotFailure(AppError.wrap(error))
         }
 
         if token == latestRequestToken {
-            isLoading = false
+            output?.setLoading(false)
         }
     }
 
@@ -180,30 +266,5 @@ final class AtlasViewModel: ObservableObject {
         requestCounter &+= 1
         latestRequestToken = requestCounter
         return requestCounter
-    }
-
-    private func nearestAvailableYear(to year: Int) -> Int {
-        guard let first = availableYears.first else { return year }
-
-        var nearest = first
-        var nearestDistance = abs(first - year)
-
-        for candidate in availableYears {
-            let distance = abs(candidate - year)
-            if distance < nearestDistance {
-                nearestDistance = distance
-                nearest = candidate
-            }
-        }
-
-        return nearest
-    }
-
-    deinit {
-        bootstrapTask?.cancel()
-        loadTask?.cancel()
-        Task { [debouncer] in
-            await debouncer.cancelAll()
-        }
     }
 }

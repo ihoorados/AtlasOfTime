@@ -3,7 +3,6 @@ import SwiftUI
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
-    @Environment(\.atlasTheme) private var theme
     @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
 
     var body: some View {
@@ -15,133 +14,23 @@ struct AtlasScreen: View {
             )
                 .ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(viewModel.displayYear == 0 ? String(localized: AppStrings.Common.unavailableValue) : "\(viewModel.displayYear)")
-                        .font(.system(size: 34, weight: .bold, design: .rounded))
-                        .monospacedDigit()
-                        .foregroundStyle(theme.primaryText)
-
-                    Spacer()
-
-                    if viewModel.isLoading && showLoadingIndicator {
-                        ProgressView()
-                            .controlSize(.small)
-                    }
-                }
-
-                YearSliderView(
-                    selectedYear: Binding(
-                        get: { viewModel.displayYear },
-                        set: { viewModel.onYearChanged(year: $0) }
-                    ),
-                    availableYears: viewModel.availableYears
-                )
-
-                if viewModel.selectedCountrySnapshot != nil || !viewModel.visibleSnapshots.isEmpty {
-                    countrySummarySection
-                }
-
-                if let message = viewModel.errorMessage, !message.isEmpty {
-                    Text(message)
-                        .font(.footnote)
-                        .foregroundStyle(.red)
-                }
-            }
-            .padding(16)
-            .atlasCardSurface(cornerRadius: 16)
-            .padding(.horizontal, 16)
-            .padding(.bottom, 20)
+            AtlasControlPanelView(
+                displayYear: viewModel.displayYear,
+                availableYears: viewModel.availableYears,
+                isLoading: viewModel.isLoading,
+                showLoadingIndicator: showLoadingIndicator,
+                selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
+                selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
+                selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
+                visibleSnapshots: viewModel.visibleSnapshots,
+                selectedCountryID: viewModel.selectedCountryID,
+                errorMessage: viewModel.errorMessage,
+                onYearChanged: viewModel.onYearChanged(year:),
+                onSelectedCountryTapped: onSelectedCountryTapped
+            )
         }
         .onAppear {
             viewModel.onAppear()
-        }
-    }
-
-    private var countrySummarySection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let selectedSnapshot = viewModel.selectedCountrySnapshot {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(AppStrings.Home.selectedCountryTitle)
-                        .font(.caption)
-                        .foregroundStyle(theme.secondaryText)
-
-                    Button {
-                        onSelectedCountryTapped(selectedSnapshot)
-                    } label: {
-                        HStack(spacing: 8) {
-                            Text(selectedSnapshot.displayName)
-                                .font(.headline)
-                                .foregroundStyle(theme.primaryText)
-
-                            Image(systemName: "chevron.right")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(theme.secondaryText)
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(theme.selectionFill, in: Capsule())
-                        .contentShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
-
-                    HStack(spacing: 12) {
-                        LabeledContent {
-                            Text(viewModel.selectedCountryBorderConfidenceText)
-                                .foregroundStyle(theme.primaryText)
-                        } label: {
-                            Text(AppStrings.Home.borderConfidenceTitle)
-                                .foregroundStyle(theme.secondaryText)
-                        }
-
-                        if viewModel.selectedCountrySourceCount > 0 {
-                            LabeledContent {
-                                Text(
-                                    LocalizedStringFormat.resolve(
-                                        AppStrings.Home.sourceCountFormat,
-                                        locale: .current,
-                                        viewModel.selectedCountrySourceCount
-                                    )
-                                )
-                                .foregroundStyle(theme.primaryText)
-                            } label: {
-                                Text(AppStrings.Home.sourcesTitle)
-                                    .foregroundStyle(theme.secondaryText)
-                            }
-                        }
-                    }
-                    .font(.caption)
-                }
-            }
-
-            Text(AppStrings.Home.countriesTitle)
-                .font(.caption)
-                .foregroundStyle(theme.secondaryText)
-
-            let remainingCountries = viewModel.visibleSnapshots.filter { $0.id != viewModel.selectedCountryID }
-            let visibleNames = Array(remainingCountries.prefix(3)).map(\.displayName)
-            let remainingCount = max(0, remainingCountries.count - visibleNames.count)
-
-            if !visibleNames.isEmpty {
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(visibleNames.joined(separator: ", "))
-                        .font(.subheadline)
-                        .foregroundStyle(theme.primaryText)
-                        .lineLimit(2)
-
-                    if remainingCount > 0 {
-                        Text(
-                            LocalizedStringFormat.resolve(
-                                AppStrings.Home.countriesMoreFormat,
-                                locale: .current,
-                                remainingCount
-                            )
-                        )
-                        .font(.caption)
-                        .foregroundStyle(theme.secondaryText)
-                    }
-                }
-            }
         }
     }
 }
