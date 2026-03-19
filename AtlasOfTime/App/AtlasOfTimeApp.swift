@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
+    @StateObject private var navigationStore = AppNavigationStore()
     @StateObject private var viewModel: AtlasViewModel
     @StateObject private var appearanceController = AppearanceController()
     @StateObject private var languageController = AppLanguageController()
@@ -33,6 +34,7 @@ struct AtlasOfTimeApp: App {
 
     private var rootContent: some View {
         RootTabScreen(
+            navigationStore: navigationStore,
             viewModel: viewModel,
             appearanceController: appearanceController,
             languageController: languageController,

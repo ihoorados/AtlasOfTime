@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RootTabScreen: View {
+    @ObservedObject var navigationStore: AppNavigationStore
     @ObservedObject var viewModel: AtlasViewModel
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
@@ -55,6 +56,7 @@ struct RootTabScreen_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         RootTabScreen(
+            navigationStore: AppNavigationStore(),
             viewModel: HomePreviewFactory.makeViewModel(),
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
