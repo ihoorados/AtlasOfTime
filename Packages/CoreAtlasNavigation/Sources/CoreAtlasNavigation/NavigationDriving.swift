@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-protocol NavigationDriving {
+public protocol NavigationDriving {
     associatedtype Route: Hashable
 
     var path: [Route] { get set }

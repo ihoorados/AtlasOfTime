@@ -1,4 +1,5 @@
 import Combine
+import CoreAtlasNavigation
 import Foundation
 
 @MainActor
