@@ -53,21 +53,6 @@ final class AtlasViewModel: ObservableObject {
         scheduleDebouncedLoad(for: snappedYear)
     }
 
-    var selectedCountry: HistoricalCountry? {
-        guard let selectedCountryID else { return nil }
-        guard let snapshot = visibleSnapshots.first(where: { $0.id == selectedCountryID }) else { return nil }
-        return HistoricalCountry(
-            id: snapshot.id,
-            displayName: snapshot.displayName,
-            shortName: snapshot.shortDisplayName,
-            sovereignName: nil,
-            parentName: nil,
-            borderPrecision: snapshot.extents.first?.borderPrecisionRank,
-            infoURL: snapshot.sourceReferences.first?.url ?? snapshot.extents.first?.sourceReferences.first?.url,
-            polygons: snapshot.extents.flatMap(\.polygons)
-        )
-    }
-
     var selectedCountrySnapshot: HistoricalCountrySnapshot? {
         guard let selectedCountryID else { return nil }
         return visibleSnapshots.first { $0.id == selectedCountryID }

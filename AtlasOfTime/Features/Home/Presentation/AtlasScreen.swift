@@ -38,7 +38,7 @@ struct AtlasScreen: View {
                     availableYears: viewModel.availableYears
                 )
 
-                if viewModel.selectedCountry != nil || !viewModel.visibleSnapshots.isEmpty {
+                if viewModel.selectedCountrySnapshot != nil || !viewModel.visibleSnapshots.isEmpty {
                     countrySummarySection
                 }
 
@@ -60,32 +60,30 @@ struct AtlasScreen: View {
 
     private var countrySummarySection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            if let selectedCountry = viewModel.selectedCountry {
+            if let selectedSnapshot = viewModel.selectedCountrySnapshot {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(AppStrings.Home.selectedCountryTitle)
                         .font(.caption)
                         .foregroundStyle(theme.secondaryText)
 
-                    if let selectedSnapshot = viewModel.selectedCountrySnapshot {
-                        Button {
-                            onSelectedCountryTapped(selectedSnapshot)
-                        } label: {
-                            HStack(spacing: 8) {
-                                Text(selectedCountry.displayName)
-                                    .font(.headline)
-                                    .foregroundStyle(theme.primaryText)
+                    Button {
+                        onSelectedCountryTapped(selectedSnapshot)
+                    } label: {
+                        HStack(spacing: 8) {
+                            Text(selectedSnapshot.displayName)
+                                .font(.headline)
+                                .foregroundStyle(theme.primaryText)
 
-                                Image(systemName: "chevron.right")
-                                    .font(.caption.weight(.semibold))
-                                    .foregroundStyle(theme.secondaryText)
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.selectionFill, in: Capsule())
-                            .contentShape(Capsule())
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(theme.secondaryText)
                         }
-                        .buttonStyle(.plain)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(theme.selectionFill, in: Capsule())
+                        .contentShape(Capsule())
                     }
+                    .buttonStyle(.plain)
 
                     HStack(spacing: 12) {
                         LabeledContent {
