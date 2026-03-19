@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeTabContainer: View {
     @ObservedObject var navigationStore: AppNavigationStore
     @ObservedObject var viewModel: AtlasViewModel
-    let makeCountryDetailScene: (HistoricalCountrySnapshot) -> CountryDetailScene
+    let destinationFactory: AppDestinationFactory
 
     var body: some View {
         NavigationStack(path: $navigationStore.homePath) {
@@ -17,7 +17,7 @@ struct HomeTabContainer: View {
                 switch route {
                 case let .countryDetail(countryID):
                     if let snapshot = resolvedSnapshot(for: countryID) {
-                        makeCountryDetailScene(snapshot)
+                        destinationFactory.makeCountryDetailScene(snapshot: snapshot)
                     } else {
                         missingCountryDetailScene
                     }
@@ -46,7 +46,7 @@ struct HomeTabContainer_Previews: PreviewProvider {
         HomeTabContainer(
             navigationStore: AppNavigationStore(),
             viewModel: HomePreviewFactory.makeViewModel(),
-            makeCountryDetailScene: HomePreviewFactory.makeCountryDetailScene(snapshot:)
+            destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
     }
 }

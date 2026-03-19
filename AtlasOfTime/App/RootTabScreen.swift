@@ -6,7 +6,7 @@ struct RootTabScreen: View {
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
-    let makeCountryDetailScene: (HistoricalCountrySnapshot) -> CountryDetailScene
+    let destinationFactory: AppDestinationFactory
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
@@ -15,7 +15,7 @@ struct RootTabScreen: View {
                 HomeTabContainer(
                     navigationStore: navigationStore,
                     viewModel: viewModel,
-                    makeCountryDetailScene: makeCountryDetailScene
+                    destinationFactory: destinationFactory
                 )
             }
 
@@ -63,7 +63,7 @@ struct RootTabScreen_Previews: PreviewProvider {
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
             preferencesController: SettingsPreviewFactory.makePreferencesController(),
-            makeCountryDetailScene: HomePreviewFactory.makeCountryDetailScene(snapshot:)
+            destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)
