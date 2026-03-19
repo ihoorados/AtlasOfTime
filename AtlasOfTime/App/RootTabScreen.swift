@@ -24,7 +24,8 @@ struct RootTabScreen: View {
                     navigationStore: navigationStore,
                     appearanceController: appearanceController,
                     languageController: languageController,
-                    preferencesController: preferencesController
+                    preferencesController: preferencesController,
+                    destinationFactory: destinationFactory
                 )
             }
         }

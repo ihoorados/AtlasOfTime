@@ -26,10 +26,7 @@ struct HomeTabContainer: View {
                 }
             )
             .navigationDestination(for: HomeRoute.self) { route in
-                switch route {
-                case .countryDetail(let context):
-                    destinationFactory.makeCountryDetailScene(snapshot: context.snapshot)
-                }
+                destinationFactory.makeHomeDestination(for: route)
             }
         }
     }
