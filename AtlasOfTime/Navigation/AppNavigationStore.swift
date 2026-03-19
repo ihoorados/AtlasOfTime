@@ -4,8 +4,8 @@ import Foundation
 @MainActor
 final class AppNavigationStore: ObservableObject {
     @Published var selectedTab: AppTab
-    @Published var homePath: [HomeRoute]
-    @Published var settingsPath: [SettingsRoute]
+    @Published var homeNavigation: NavigationPathState<HomeRoute>
+    @Published var settingsNavigation: NavigationPathState<SettingsRoute>
 
     init(
         selectedTab: AppTab = .home,
@@ -13,41 +13,39 @@ final class AppNavigationStore: ObservableObject {
         settingsPath: [SettingsRoute] = []
     ) {
         self.selectedTab = selectedTab
-        self.homePath = homePath
-        self.settingsPath = settingsPath
+        self.homeNavigation = NavigationPathState(path: homePath)
+        self.settingsNavigation = NavigationPathState(path: settingsPath)
     }
 
     func push(_ route: HomeRoute) {
         selectedTab = .home
-        homePath.append(route)
+        homeNavigation.push(route)
     }
 
     func push(_ route: SettingsRoute) {
         selectedTab = .settings
-        settingsPath.append(route)
+        settingsNavigation.push(route)
     }
 
     func popHome() {
-        guard !homePath.isEmpty else { return }
-        homePath.removeLast()
+        homeNavigation.pop()
     }
 
     func popSettings() {
-        guard !settingsPath.isEmpty else { return }
-        settingsPath.removeLast()
+        settingsNavigation.pop()
     }
 
     func popToHomeRoot() {
-        homePath.removeAll()
+        homeNavigation.popToRoot()
     }
 
     func popToSettingsRoot() {
-        settingsPath.removeAll()
+        settingsNavigation.popToRoot()
     }
 
     func reset() {
         selectedTab = .home
-        homePath.removeAll()
-        settingsPath.removeAll()
+        homeNavigation.popToRoot()
+        settingsNavigation.popToRoot()
     }
 }

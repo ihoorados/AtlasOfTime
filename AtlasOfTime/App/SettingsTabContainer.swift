@@ -7,7 +7,7 @@ struct SettingsTabContainer: View {
     @ObservedObject var preferencesController: AppPreferencesController
 
     var body: some View {
-        NavigationStack(path: $navigationStore.settingsPath) {
+        NavigationStack(path: $navigationStore.settingsNavigation.path) {
             SettingsScene(
                 onRouteSelected: { route in
                     navigationStore.push(route)
