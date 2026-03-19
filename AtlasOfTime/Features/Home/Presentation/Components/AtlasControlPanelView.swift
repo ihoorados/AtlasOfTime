@@ -15,6 +15,7 @@ struct AtlasControlPanelView: View {
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
 
     @Environment(\.atlasTheme) private var theme
+    @Environment(\.atlasGlassEnabled) private var glassEnabled
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -39,7 +40,18 @@ struct AtlasControlPanelView: View {
             }
         }
         .padding(16)
-        .atlasCardSurface(cornerRadius: 16)
+        .atlasCardSurface(cornerRadius: 20)
+        .overlay {
+            if glassEnabled {
+                glassHighlightOverlay
+            }
+        }
+        .shadow(
+            color: glassEnabled ? Color.black.opacity(0.10) : .clear,
+            radius: glassEnabled ? 18 : 0,
+            x: 0,
+            y: glassEnabled ? 10 : 0
+        )
         .padding(.horizontal, 16)
         .padding(.bottom, 20)
     }
@@ -145,5 +157,39 @@ struct AtlasControlPanelView: View {
                 }
             }
         }
+    }
+
+    private var glassHighlightOverlay: some View {
+        RoundedRectangle(cornerRadius: 20, style: .continuous)
+            .strokeBorder(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.34),
+                        Color.white.opacity(0.14),
+                        Color.white.opacity(0.06)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                lineWidth: 1
+            )
+            .overlay(alignment: .top) {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.18),
+                                Color.white.opacity(0.05),
+                                .clear
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(height: 64)
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .allowsHitTesting(false)
+            }
+            .allowsHitTesting(false)
     }
 }
