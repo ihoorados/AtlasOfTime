@@ -3,43 +3,38 @@ import SwiftUI
 
 @MainActor
 final class AppPreferencesController: ObservableObject {
-    private enum StorageKey {
-        static let showYearRangeLabels = "atlas.showYearRangeLabels"
-        static let showLoadingIndicator = "atlas.showLoadingIndicator"
-    }
-
     @Published var showYearRangeLabels: Bool {
         didSet {
-            defaults.set(showYearRangeLabels, forKey: StorageKey.showYearRangeLabels)
+            persist()
         }
     }
 
     @Published var showLoadingIndicator: Bool {
         didSet {
-            defaults.set(showLoadingIndicator, forKey: StorageKey.showLoadingIndicator)
+            persist()
         }
     }
 
-    private let defaults: UserDefaults
+    private let store: any AppPreferencesStore
 
-    init(defaults: UserDefaults = .standard) {
-        self.defaults = defaults
-
-        if defaults.object(forKey: StorageKey.showYearRangeLabels) == nil {
-            self.showYearRangeLabels = true
-        } else {
-            self.showYearRangeLabels = defaults.bool(forKey: StorageKey.showYearRangeLabels)
-        }
-
-        if defaults.object(forKey: StorageKey.showLoadingIndicator) == nil {
-            self.showLoadingIndicator = true
-        } else {
-            self.showLoadingIndicator = defaults.bool(forKey: StorageKey.showLoadingIndicator)
-        }
+    init(store: any AppPreferencesStore = UserDefaultsAppPreferencesStore()) {
+        self.store = store
+        let preferences = store.loadPreferences()
+        self.showYearRangeLabels = preferences.showYearRangeLabels
+        self.showLoadingIndicator = preferences.showLoadingIndicator
     }
 
     func resetToDefaults() {
-        showYearRangeLabels = true
-        showLoadingIndicator = true
+        showYearRangeLabels = AppPreferences.default.showYearRangeLabels
+        showLoadingIndicator = AppPreferences.default.showLoadingIndicator
+    }
+
+    private func persist() {
+        store.savePreferences(
+            AppPreferences(
+                showYearRangeLabels: showYearRangeLabels,
+                showLoadingIndicator: showLoadingIndicator
+            )
+        )
     }
 }
