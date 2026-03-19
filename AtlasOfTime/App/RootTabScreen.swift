@@ -20,7 +20,8 @@ struct RootTabScreen: View {
             }
 
             Tab(AppStrings.Tabs.settings, systemImage: "gearshape", value: AppTab.settings) {
-                SettingsScene(
+                SettingsTabContainer(
+                    navigationStore: navigationStore,
                     appearanceController: appearanceController,
                     languageController: languageController,
                     preferencesController: preferencesController

@@ -1,46 +1,61 @@
 import SwiftUI
 
 struct SettingsScene: View {
-    @ObservedObject var appearanceController: AppearanceController
-    @ObservedObject var languageController: AppLanguageController
-    @ObservedObject var preferencesController: AppPreferencesController
+    let onRouteSelected: (SettingsRoute) -> Void
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    NavigationLink {
-                        AppearanceSettingsScene(
-                            appearanceController: appearanceController,
-                            languageController: languageController
-                        )
-                    } label: {
-                        settingsRow(title: AppStrings.Settings.Root.appearance, systemImage: "circle.lefthalf.filled")
-                    }
+        Form {
+            Section {
+                settingsButton(
+                    title: AppStrings.Settings.Root.appearance,
+                    systemImage: "circle.lefthalf.filled",
+                    route: .appearance
+                )
 
-                    NavigationLink {
-                        MapSettingsScene(preferencesController: preferencesController)
-                    } label: {
-                        settingsRow(title: AppStrings.Settings.Root.map, systemImage: "map")
-                    }
+                settingsButton(
+                    title: AppStrings.Settings.Root.map,
+                    systemImage: "map",
+                    route: .map
+                )
 
-                    NavigationLink {
-                        DataSettingsScene()
-                    } label: {
-                        settingsRow(title: AppStrings.Settings.Root.data, systemImage: "internaldrive")
-                    }
-                }
+                settingsButton(
+                    title: AppStrings.Settings.Root.data,
+                    systemImage: "internaldrive",
+                    route: .data
+                )
             }
-            .navigationTitle(AppStrings.Settings.Root.title)
         }
+        .navigationTitle(AppStrings.Settings.Root.title)
+    }
+
+    private func settingsButton(
+        title: LocalizedStringResource,
+        systemImage: String,
+        route: SettingsRoute
+    ) -> some View {
+        Button {
+            onRouteSelected(route)
+        } label: {
+            settingsRow(title: title, systemImage: systemImage)
+        }
+        .buttonStyle(.plain)
     }
 
     private func settingsRow(
         title: LocalizedStringResource,
         systemImage: String
     ) -> some View {
-        Label(title, systemImage: systemImage)
-            .font(.body)
+        HStack(spacing: 12) {
+            Label(title, systemImage: systemImage)
+                .font(.body)
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .contentShape(Rectangle())
     }
 }
 
@@ -61,8 +76,8 @@ struct SettingsScene_Previews: PreviewProvider {
         layoutDirection: LayoutDirection
     ) -> some View {
         SettingsPreviewFactory.makeSettingsScene()
-        .environment(\.locale, Locale(identifier: localeIdentifier))
-        .environment(\.layoutDirection, layoutDirection)
+            .environment(\.locale, Locale(identifier: localeIdentifier))
+            .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

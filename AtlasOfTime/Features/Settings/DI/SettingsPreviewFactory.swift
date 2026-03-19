@@ -16,9 +16,7 @@ enum SettingsPreviewFactory {
 
     static func makeSettingsScene() -> SettingsScene {
         SettingsScene(
-            appearanceController: makeAppearanceController(),
-            languageController: makeLanguageController(),
-            preferencesController: makePreferencesController()
+            onRouteSelected: { _ in }
         )
     }
 
