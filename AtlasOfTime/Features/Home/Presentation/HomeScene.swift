@@ -2,9 +2,21 @@ import SwiftUI
 
 struct HomeScene: View {
     @ObservedObject var viewModel: AtlasViewModel
+    let makeCountryDetailScene: (HistoricalCountrySnapshot) -> CountryDetailScene
+    @State private var selectedDetailSnapshot: HistoricalCountrySnapshot?
 
     var body: some View {
-        AtlasScreen(viewModel: viewModel)
+        NavigationStack {
+            AtlasScreen(
+                viewModel: viewModel,
+                onSelectedCountryTapped: { snapshot in
+                    selectedDetailSnapshot = snapshot
+                }
+            )
+            .navigationDestination(item: $selectedDetailSnapshot) { snapshot in
+                makeCountryDetailScene(snapshot)
+            }
+        }
     }
 }
 
@@ -12,7 +24,10 @@ struct HomeScene: View {
 struct HomeScene_Previews: PreviewProvider {
     @MainActor
     static var previews: some View {
-        HomeScene(viewModel: HomePreviewFactory.makeViewModel())
+        HomeScene(
+            viewModel: HomePreviewFactory.makeViewModel(),
+            makeCountryDetailScene: HomePreviewFactory.makeCountryDetailScene(snapshot:)
+        )
     }
 }
 #endif

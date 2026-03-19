@@ -5,12 +5,16 @@ struct RootTabScreen: View {
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
+    let makeCountryDetailScene: (HistoricalCountrySnapshot) -> CountryDetailScene
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         TabView {
             Tab(AppStrings.Tabs.home, systemImage: "house") {
-                HomeScene(viewModel: viewModel)
+                HomeScene(
+                    viewModel: viewModel,
+                    makeCountryDetailScene: makeCountryDetailScene
+                )
             }
 
             Tab(AppStrings.Tabs.settings, systemImage: "gearshape") {
@@ -54,7 +58,8 @@ struct RootTabScreen_Previews: PreviewProvider {
             viewModel: HomePreviewFactory.makeViewModel(),
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
-            preferencesController: SettingsPreviewFactory.makePreferencesController()
+            preferencesController: SettingsPreviewFactory.makePreferencesController(),
+            makeCountryDetailScene: HomePreviewFactory.makeCountryDetailScene(snapshot:)
         )
         .environment(\.locale, Locale(identifier: localeIdentifier))
         .environment(\.layoutDirection, layoutDirection)

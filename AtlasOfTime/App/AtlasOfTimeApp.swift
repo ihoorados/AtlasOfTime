@@ -36,7 +36,8 @@ struct AtlasOfTimeApp: App {
             viewModel: viewModel,
             appearanceController: appearanceController,
             languageController: languageController,
-            preferencesController: preferencesController
+            preferencesController: preferencesController,
+            makeCountryDetailScene: appContainer.makeCountryDetailScene(snapshot:)
         )
         .preferredColorScheme(appearanceController.preferredColorScheme)
         .environment(\.atlasAppearance, appearanceController.selectedAppearance)

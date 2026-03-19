@@ -1,6 +1,6 @@
 import Foundation
 
-struct HistoricalCountrySnapshot: Identifiable, Equatable, Sendable, Codable {
+struct HistoricalCountrySnapshot: Identifiable, Equatable, Hashable, Sendable, Codable {
     let id: String
     let entityID: String
     let year: Int

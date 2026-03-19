@@ -3,6 +3,16 @@ import Foundation
 @MainActor
 enum HomePreviewFactory {
     static func makeViewModel() -> AtlasViewModel {
+        makeFeatureContainer().makeAtlasViewModel()
+    }
+
+    static func makeCountryDetailScene(
+        snapshot: HistoricalCountrySnapshot
+    ) -> CountryDetailScene {
+        makeFeatureContainer().makeCountryDetailScene(snapshot: snapshot)
+    }
+
+    private static func makeFeatureContainer() -> AtlasFeatureDIContainer {
         let year1900 = 1900
         let year1914 = 1914
 
@@ -37,13 +47,14 @@ enum HomePreviewFactory {
             borderRepository: PreviewBorderRepository(snapshots: snapshots)
         )
 
-        let featureContainer = AtlasFeatureDIContainer(
+        return AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            generateCountrySummary: GenerateCountrySummary(
+                generator: PreviewCountrySummaryGenerator()
+            ),
             debounceNanoseconds: 50_000_000
         )
-
-        return featureContainer.makeAtlasViewModel()
     }
 }
 
@@ -71,5 +82,20 @@ private actor PreviewBorderRepository: BorderRepository {
             throw AppError.yearUnavailable(year)
         }
         return snapshot
+    }
+}
+
+private struct PreviewCountrySummaryGenerator: CountrySummaryGenerating {
+    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
+        CountrySummaryResult(
+            title: request.displayName,
+            summary: "\(request.displayName) is presented for \(request.year) using preview summary content from the feature DI container.",
+            keyFacts: [
+                "Border confidence: \(request.borderConfidence.rawValue)",
+                "Relationship count: \(request.relationships.count)",
+                "Source count: \(request.sourceReferences.count)"
+            ],
+            confidenceNote: "Preview content only."
+        )
     }
 }
