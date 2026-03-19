@@ -10,15 +10,15 @@ struct RootTabScreen: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        TabView {
-            Tab(AppStrings.Tabs.home, systemImage: "house") {
+        TabView(selection: $navigationStore.selectedTab) {
+            Tab(AppStrings.Tabs.home, systemImage: "house", value: AppTab.home) {
                 HomeScene(
                     viewModel: viewModel,
                     makeCountryDetailScene: makeCountryDetailScene
                 )
             }
 
-            Tab(AppStrings.Tabs.settings, systemImage: "gearshape") {
+            Tab(AppStrings.Tabs.settings, systemImage: "gearshape", value: AppTab.settings) {
                 SettingsScene(
                     appearanceController: appearanceController,
                     languageController: languageController,
