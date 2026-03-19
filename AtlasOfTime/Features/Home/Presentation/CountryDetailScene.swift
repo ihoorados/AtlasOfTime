@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct CountryDetailScene: View {
-    @ObservedObject var viewModel: CountryDetailViewModel
+    @StateObject private var viewModel: CountryDetailViewModel
     @Environment(\.atlasTheme) private var theme
+
+    init(viewModel: CountryDetailViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         ScrollView {
