@@ -2,16 +2,16 @@ import SwiftUI
 
 @MainActor
 final class AppDestinationFactory {
-    private let atlasFeatureContainer: AtlasFeatureDIContainer
+    private let countryDetailFeatureContainer: CountryDetailFeatureDIContainer
 
-    init(atlasFeatureContainer: AtlasFeatureDIContainer) {
-        self.atlasFeatureContainer = atlasFeatureContainer
+    init(countryDetailFeatureContainer: CountryDetailFeatureDIContainer) {
+        self.countryDetailFeatureContainer = countryDetailFeatureContainer
     }
 
     func makeCountryDetailScene(
         snapshot: HistoricalCountrySnapshot
     ) -> CountryDetailScene {
-        atlasFeatureContainer.makeCountryDetailScene(snapshot: snapshot)
+        countryDetailFeatureContainer.makeCountryDetailScene(snapshot: snapshot)
     }
 
     @ViewBuilder

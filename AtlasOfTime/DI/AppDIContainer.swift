@@ -6,6 +6,7 @@ final class AppDIContainer {
     private let dataContainer: DataDIContainer
     private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
+    private let countryDetailFeatureContainer: CountryDetailFeatureDIContainer
     private let destinationFactory: AppDestinationFactory
 
     init() {
@@ -15,9 +16,18 @@ final class AppDIContainer {
         let domainContainer = Self.makeDomainContainer(dataContainer: dataContainer)
         self.domainContainer = domainContainer
 
+        let generateCountrySummary = Self.makeGenerateCountrySummary()
+
         let atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
         self.atlasFeatureContainer = atlasFeatureContainer
-        self.destinationFactory = AppDestinationFactory(atlasFeatureContainer: atlasFeatureContainer)
+
+        let countryDetailFeatureContainer = Self.makeCountryDetailFeatureContainer(
+            generateCountrySummary: generateCountrySummary
+        )
+        self.countryDetailFeatureContainer = countryDetailFeatureContainer
+        self.destinationFactory = AppDestinationFactory(
+            countryDetailFeatureContainer: countryDetailFeatureContainer
+        )
     }
 
     func makeAtlasViewModel() -> AtlasViewModel {
@@ -26,6 +36,10 @@ final class AppDIContainer {
 
     func makeAtlasFeatureContainer() -> AtlasFeatureDIContainer {
         atlasFeatureContainer
+    }
+
+    func makeCountryDetailFeatureContainer() -> CountryDetailFeatureDIContainer {
+        countryDetailFeatureContainer
     }
 
     func makeDestinationFactory() -> AppDestinationFactory {
@@ -47,10 +61,19 @@ final class AppDIContainer {
     private static func makeAtlasFeatureContainer(domainContainer: DomainDIContainer) -> AtlasFeatureDIContainer {
         AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
-            loadBordersForYear: domainContainer.makeLoadBordersForYear(),
-            generateCountrySummary: GenerateCountrySummary(
-                generator: FoundationModelCountrySummaryGenerator()
-            )
+            loadBordersForYear: domainContainer.makeLoadBordersForYear()
+        )
+    }
+
+    private static func makeCountryDetailFeatureContainer(
+        generateCountrySummary: GenerateCountrySummary
+    ) -> CountryDetailFeatureDIContainer {
+        CountryDetailFeatureDIContainer(generateCountrySummary: generateCountrySummary)
+    }
+
+    private static func makeGenerateCountrySummary() -> GenerateCountrySummary {
+        GenerateCountrySummary(
+            generator: FoundationModelCountrySummaryGenerator()
         )
     }
 }

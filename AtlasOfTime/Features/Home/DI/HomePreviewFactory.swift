@@ -11,13 +11,7 @@ enum HomePreviewFactory {
     }
 
     static func makeDestinationFactory() -> AppDestinationFactory {
-        AppDestinationFactory(atlasFeatureContainer: makeFeatureContainerInternal())
-    }
-
-    static func makeCountryDetailScene(
-        snapshot: HistoricalCountrySnapshot
-    ) -> CountryDetailScene {
-        makeFeatureContainerInternal().makeCountryDetailScene(snapshot: snapshot)
+        AppDestinationFactory(countryDetailFeatureContainer: CountryDetailPreviewFactory.makeFeatureContainer())
     }
 
     private static func makeFeatureContainerInternal() -> AtlasFeatureDIContainer {
@@ -58,9 +52,6 @@ enum HomePreviewFactory {
         return AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
-            generateCountrySummary: GenerateCountrySummary(
-                generator: PreviewCountrySummaryGenerator()
-            ),
             debounceNanoseconds: 50_000_000
         )
     }
@@ -90,20 +81,5 @@ private actor PreviewBorderRepository: BorderRepository {
             throw AppError.yearUnavailable(year)
         }
         return snapshot
-    }
-}
-
-private struct PreviewCountrySummaryGenerator: CountrySummaryGenerating {
-    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
-        CountrySummaryResult(
-            title: request.displayName,
-            summary: "\(request.displayName) is presented for \(request.year) using preview summary content from the feature DI container.",
-            keyFacts: [
-                "Border confidence: \(request.borderConfidence.rawValue)",
-                "Relationship count: \(request.relationships.count)",
-                "Source count: \(request.sourceReferences.count)"
-            ],
-            confidenceNote: "Preview content only."
-        )
     }
 }
