@@ -12,7 +12,8 @@ struct RootTabScreen: View {
     var body: some View {
         TabView(selection: $navigationStore.selectedTab) {
             Tab(AppStrings.Tabs.home, systemImage: "house", value: AppTab.home) {
-                HomeScene(
+                HomeTabContainer(
+                    navigationStore: navigationStore,
                     viewModel: viewModel,
                     makeCountryDetailScene: makeCountryDetailScene
                 )
