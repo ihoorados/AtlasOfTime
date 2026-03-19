@@ -2,20 +2,22 @@ import SwiftUI
 
 struct HomeTabContainer: View {
     @ObservedObject var navigationStore: AppNavigationStore
-    @ObservedObject var viewModel: AtlasViewModel
+    @StateObject private var viewModel: AtlasViewModel
     let destinationFactory: AppDestinationFactory
     let routeResolver: HomeRouteResolver
 
     init(
         navigationStore: AppNavigationStore,
-        viewModel: AtlasViewModel,
+        atlasFeatureContainer: AtlasFeatureDIContainer,
         destinationFactory: AppDestinationFactory,
         routeResolver: HomeRouteResolver = HomeRouteResolver()
     ) {
         self.navigationStore = navigationStore
-        self.viewModel = viewModel
         self.destinationFactory = destinationFactory
         self.routeResolver = routeResolver
+        _viewModel = StateObject(
+            wrappedValue: atlasFeatureContainer.makeAtlasViewModel()
+        )
     }
 
     var body: some View {
@@ -54,7 +56,7 @@ struct HomeTabContainer_Previews: PreviewProvider {
     static var previews: some View {
         HomeTabContainer(
             navigationStore: AppNavigationStore(),
-            viewModel: HomePreviewFactory.makeViewModel(),
+            atlasFeatureContainer: HomePreviewFactory.makeFeatureContainer(),
             destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
     }

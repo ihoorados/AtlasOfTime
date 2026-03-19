@@ -6,17 +6,21 @@ enum HomePreviewFactory {
         makeFeatureContainer().makeAtlasViewModel()
     }
 
+    static func makeFeatureContainer() -> AtlasFeatureDIContainer {
+        makeFeatureContainerInternal()
+    }
+
     static func makeDestinationFactory() -> AppDestinationFactory {
-        AppDestinationFactory(atlasFeatureContainer: makeFeatureContainer())
+        AppDestinationFactory(atlasFeatureContainer: makeFeatureContainerInternal())
     }
 
     static func makeCountryDetailScene(
         snapshot: HistoricalCountrySnapshot
     ) -> CountryDetailScene {
-        makeFeatureContainer().makeCountryDetailScene(snapshot: snapshot)
+        makeFeatureContainerInternal().makeCountryDetailScene(snapshot: snapshot)
     }
 
-    private static func makeFeatureContainer() -> AtlasFeatureDIContainer {
+    private static func makeFeatureContainerInternal() -> AtlasFeatureDIContainer {
         let year1900 = 1900
         let year1914 = 1914
 

@@ -24,6 +24,10 @@ final class AppDIContainer {
         atlasFeatureContainer.makeAtlasViewModel()
     }
 
+    func makeAtlasFeatureContainer() -> AtlasFeatureDIContainer {
+        atlasFeatureContainer
+    }
+
     func makeDestinationFactory() -> AppDestinationFactory {
         destinationFactory
     }

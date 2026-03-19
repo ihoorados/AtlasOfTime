@@ -3,9 +3,9 @@ import SwiftUI
 @main
 struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
+    private let atlasFeatureContainer: AtlasFeatureDIContainer
     private let destinationFactory: AppDestinationFactory
     @StateObject private var navigationStore = AppNavigationStore()
-    @StateObject private var viewModel: AtlasViewModel
     @StateObject private var appearanceController = AppearanceController()
     @StateObject private var languageController = AppLanguageController()
     @StateObject private var preferencesController = AppPreferencesController()
@@ -13,10 +13,8 @@ struct AtlasOfTimeApp: App {
     init() {
         let appContainer = AppDIContainer()
         self.appContainer = appContainer
+        self.atlasFeatureContainer = appContainer.makeAtlasFeatureContainer()
         self.destinationFactory = appContainer.makeDestinationFactory()
-        _viewModel = StateObject(
-            wrappedValue: appContainer.makeAtlasViewModel()
-        )
     }
 
     var body: some Scene {
@@ -37,7 +35,7 @@ struct AtlasOfTimeApp: App {
     private var rootContent: some View {
         RootTabScreen(
             navigationStore: navigationStore,
-            viewModel: viewModel,
+            atlasFeatureContainer: atlasFeatureContainer,
             appearanceController: appearanceController,
             languageController: languageController,
             preferencesController: preferencesController,
