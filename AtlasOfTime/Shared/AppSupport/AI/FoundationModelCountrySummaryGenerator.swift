@@ -31,7 +31,9 @@ struct FoundationModelCountrySummaryGenerator: CountrySummaryGenerating, Sendabl
 
         return CountrySummaryResult(
             title: response.content.title,
-            summary: response.content.summary,
+            overview: response.content.overview,
+            territorialContext: response.content.territorialContext,
+            politicalContext: response.content.politicalContext,
             keyFacts: response.content.keyFacts,
             confidenceNote: response.content.confidenceNote
         )
@@ -74,7 +76,9 @@ private enum CountrySummaryGenerationError: LocalizedError, Sendable {
 @Generable
 private struct CountrySummaryPayload {
     let title: String
-    let summary: String
+    let overview: String
+    let territorialContext: String?
+    let politicalContext: String?
     let keyFacts: [String]
     let confidenceNote: String?
 }

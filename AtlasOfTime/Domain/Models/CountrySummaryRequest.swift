@@ -9,6 +9,12 @@ struct CountrySummaryRequest: Equatable, Sendable {
     let formalName: String?
     let nameConfidence: HistoricalConfidence
     let borderConfidence: HistoricalConfidence
+    let extentCount: Int
+    let extentTypes: [HistoricalExtentType]
+    let borderModels: [HistoricalBorderModel]
+    let hasMultipleExtents: Bool
+    let relationshipCount: Int
+    let sourceCount: Int
     let relationships: [RelationshipContext]
     let sourceReferences: [SourceContext]
 
@@ -21,6 +27,12 @@ struct CountrySummaryRequest: Equatable, Sendable {
         formalName: String? = nil,
         nameConfidence: HistoricalConfidence = .unknown,
         borderConfidence: HistoricalConfidence = .unknown,
+        extentCount: Int = 0,
+        extentTypes: [HistoricalExtentType] = [],
+        borderModels: [HistoricalBorderModel] = [],
+        hasMultipleExtents: Bool = false,
+        relationshipCount: Int = 0,
+        sourceCount: Int = 0,
         relationships: [RelationshipContext] = [],
         sourceReferences: [SourceContext] = []
     ) {
@@ -32,6 +44,12 @@ struct CountrySummaryRequest: Equatable, Sendable {
         self.formalName = formalName
         self.nameConfidence = nameConfidence
         self.borderConfidence = borderConfidence
+        self.extentCount = extentCount
+        self.extentTypes = extentTypes
+        self.borderModels = borderModels
+        self.hasMultipleExtents = hasMultipleExtents
+        self.relationshipCount = relationshipCount
+        self.sourceCount = sourceCount
         self.relationships = relationships
         self.sourceReferences = sourceReferences
     }

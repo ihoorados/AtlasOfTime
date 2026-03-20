@@ -90,9 +90,26 @@ struct CountryDetailScene: View {
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(theme.primaryText)
 
-            Text(result.summary)
-                .font(.body)
-                .foregroundStyle(theme.primaryText)
+            detailSection(
+                title: String(localized: AppStrings.Home.Detail.overviewTitle),
+                body: result.overview
+            )
+
+            if let territorialContext = result.territorialContext,
+               !territorialContext.isEmpty {
+                detailSection(
+                    title: String(localized: AppStrings.Home.Detail.territorialContextTitle),
+                    body: territorialContext
+                )
+            }
+
+            if let politicalContext = result.politicalContext,
+               !politicalContext.isEmpty {
+                detailSection(
+                    title: String(localized: AppStrings.Home.Detail.politicalContextTitle),
+                    body: politicalContext
+                )
+            }
 
             if !result.keyFacts.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
@@ -129,6 +146,18 @@ struct CountryDetailScene: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .atlasCardSurface(cornerRadius: 20)
+    }
+
+    private func detailSection(title: String, body: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(theme.primaryText)
+
+            Text(body)
+                .font(.body)
+                .foregroundStyle(theme.primaryText)
+        }
     }
 
     private func errorSection(_ errorMessage: String) -> some View {

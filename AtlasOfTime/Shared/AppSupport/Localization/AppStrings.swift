@@ -26,6 +26,9 @@ enum AppStrings {
         enum Detail {
             static let loadingTitle: LocalizedStringResource = "home.detail.loading.title"
             static let loadingMessage: LocalizedStringResource = "home.detail.loading.message"
+            static let overviewTitle: LocalizedStringResource = "home.detail.overview.title"
+            static let territorialContextTitle: LocalizedStringResource = "home.detail.territorialContext.title"
+            static let politicalContextTitle: LocalizedStringResource = "home.detail.politicalContext.title"
             static let keyFactsTitle: LocalizedStringResource = "home.detail.keyFacts.title"
             static let confidenceNoteTitle: LocalizedStringResource = "home.detail.confidenceNote.title"
             static let errorTitle: LocalizedStringResource = "home.detail.error.title"
