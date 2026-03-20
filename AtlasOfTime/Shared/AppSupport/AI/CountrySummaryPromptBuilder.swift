@@ -21,11 +21,9 @@ struct CountrySummaryPromptBuilder: Sendable {
         sections.append(
             """
             Identity
-            Country ID: \(request.countryID)
-            Entity ID: \(request.entityID)
-            Display Name: \(request.displayName)
-            Short Name: \(request.shortDisplayName ?? "None")
-            Formal Name: \(request.formalName ?? "None")
+            Display Name: \(sanitizePromptValue(request.displayName) ?? "Unknown")
+            Short Name: \(sanitizePromptValue(request.shortDisplayName) ?? "None")
+            Formal Name: \(sanitizePromptValue(request.formalName) ?? "None")
             Name Confidence: \(request.nameConfidence.rawValue)
             """
         )
@@ -44,38 +42,39 @@ struct CountrySummaryPromptBuilder: Sendable {
         if request.relationships.isEmpty {
             sections.append("Political Relationships\n- None provided")
         } else {
-            let relationshipLines = request.relationships.map { relationship in
-                "- \(relationship.type.rawValue): \(relationship.targetDisplayName) [confidence: \(relationship.confidence.rawValue)]"
+            let relationshipLines = request.relationships.compactMap { relationship -> String? in
+                guard let targetName = sanitizePromptValue(relationship.targetDisplayName) else { return nil }
+                return "- \(relationship.type.rawValue): \(targetName) [confidence: \(relationship.confidence.rawValue)]"
             }
-            sections.append(
-                """
-                Political Relationships
-                Relationship Count: \(request.relationshipCount)
-                \(relationshipLines.joined(separator: "\n"))
-                """
-            )
+
+            if relationshipLines.isEmpty {
+                sections.append("Political Relationships\n- No usable relationship text provided")
+            } else {
+                sections.append(
+                    """
+                    Political Relationships
+                    Relationship Count: \(request.relationshipCount)
+                    \(relationshipLines.joined(separator: "\n"))
+                    """
+                )
+            }
         }
 
         if request.sourceReferences.isEmpty {
             sections.append("Sources\n- No explicit sources provided")
         } else {
-            let sourceLines = request.sourceReferences.map { source in
-                var line = "- \(source.title)"
-                if let locator = source.locator, !locator.isEmpty {
-                    line += " (\(locator))"
-                }
-                if let note = source.note, !note.isEmpty {
-                    line += " - \(note)"
-                }
-                return line
+            let sourceLines = request.sourceReferences.compactMap(makeSourceLine)
+            if sourceLines.isEmpty {
+                sections.append("Sources\n- No usable source text provided")
+            } else {
+                sections.append(
+                    """
+                    Sources
+                    Source Count: \(request.sourceCount)
+                    \(sourceLines.joined(separator: "\n"))
+                    """
+                )
             }
-            sections.append(
-                """
-                Sources
-                Source Count: \(request.sourceCount)
-                \(sourceLines.joined(separator: "\n"))
-                """
-            )
         }
 
         sections.append(
@@ -109,9 +108,51 @@ struct CountrySummaryPromptBuilder: Sendable {
         return sections.joined(separator: "\n\n")
     }
 
+    private func makeSourceLine(from source: CountrySummaryRequest.SourceContext) -> String? {
+        guard let title = sanitizePromptValue(source.title) else { return nil }
+
+        var line = "- \(title)"
+
+        if let note = sanitizePromptValue(source.note) {
+            line += " - \(note)"
+        }
+
+        return line
+    }
+
     private func joinedRawValues<T: RawRepresentable>(_ values: [T]) -> String where T.RawValue == String {
         let rawValues = values.map(\.rawValue)
         return rawValues.isEmpty ? "None" : rawValues.joined(separator: ", ")
+    }
+
+    private func sanitizePromptValue(_ value: String?) -> String? {
+        guard let value else { return nil }
+
+        let collapsed = value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+
+        guard !collapsed.isEmpty else { return nil }
+        guard !looksLikeMachineIdentifier(collapsed) else { return nil }
+
+        return collapsed
+    }
+
+    private func looksLikeMachineIdentifier(_ value: String) -> Bool {
+        if value.contains("://") || value.contains("/") || value.contains("\\") {
+            return true
+        }
+
+        let punctuationCount = value.filter { "|:_#@[]{}<>".contains($0) }.count
+        if punctuationCount >= 2 {
+            return true
+        }
+
+        let letters = value.filter(\.isLetter).count
+        let digits = value.filter(\.isNumber).count
+        let separators = value.filter { !$0.isLetter && !$0.isNumber && !$0.isWhitespace }.count
+
+        return letters > 0 && digits == 0 && separators > letters / 2
     }
 }
 
