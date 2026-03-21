@@ -35,13 +35,14 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         mapView.addGestureRecognizer(tapGesture)
         context.coordinator.mapView = mapView
         context.coordinator.tapGestureRecognizer = tapGesture
+        context.coordinator.applyCameraIfNeeded(state.camera, to: mapView, animated: false)
 
         return mapView
     }
 
     public func updateUIView(_ mapView: MKMapView, context: Context) {
         applyOptions(state.options, to: mapView)
-        mapView.setRegion(state.camera.mkCoordinateRegion, animated: false)
+        context.coordinator.applyCameraIfNeeded(state.camera, to: mapView, animated: false)
         context.coordinator.tapGestureRecognizer?.isEnabled = state.options.allowsSelection
         context.coordinator.render(
             snapshot: state.snapshot,
@@ -93,6 +94,7 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
 
     public final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastRenderIdentifier: String?
+        private var lastAppliedCamera: AtlasMapCameraState?
         private var selectedFeatureID: String?
         private let onSelectionChanged: @MainActor @Sendable (String?) -> Void
 
@@ -101,6 +103,16 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
 
         init(onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void) {
             self.onSelectionChanged = onSelectionChanged
+        }
+
+        func applyCameraIfNeeded(
+            _ camera: AtlasMapCameraState,
+            to mapView: MKMapView,
+            animated: Bool
+        ) {
+            guard camera != lastAppliedCamera else { return }
+            mapView.setRegion(camera.mkCoordinateRegion, animated: animated)
+            lastAppliedCamera = camera
         }
 
         func render(
