@@ -5,12 +5,11 @@ import SwiftUI
 public struct MapKitAtlasMapView: UIViewRepresentable {
     private static let featureLabelReuseIdentifier = "MapKitAtlasFeatureLabel"
 
-    let snapshot: AtlasMapSnapshot?
-    let camera: AtlasMapCameraState
-    let interaction: AtlasMapInteraction
+    let state: AtlasMapViewState
+    let onSelectionChanged: @MainActor @Sendable (String?) -> Void
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator(interaction: interaction)
+        Coordinator(onSelectionChanged: onSelectionChanged)
     }
 
     public func makeUIView(context: Context) -> MKMapView {
@@ -24,27 +23,37 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         mapView.showsBuildings = false
         mapView.showsUserLocation = false
         mapView.isRotateEnabled = false
-        mapView.isScrollEnabled = true
-        mapView.isZoomEnabled = true
-        mapView.setRegion(camera.mkCoordinateRegion, animated: false)
+        applyOptions(state.options, to: mapView)
+        mapView.setRegion(state.camera.mkCoordinateRegion, animated: false)
 
         let tapGesture = UITapGestureRecognizer(
             target: context.coordinator,
             action: #selector(Coordinator.handleMapTap(_:))
         )
         tapGesture.cancelsTouchesInView = false
+        tapGesture.isEnabled = state.options.allowsSelection
         mapView.addGestureRecognizer(tapGesture)
         context.coordinator.mapView = mapView
+        context.coordinator.tapGestureRecognizer = tapGesture
 
         return mapView
     }
 
     public func updateUIView(_ mapView: MKMapView, context: Context) {
+        applyOptions(state.options, to: mapView)
+        mapView.setRegion(state.camera.mkCoordinateRegion, animated: false)
+        context.coordinator.tapGestureRecognizer?.isEnabled = state.options.allowsSelection
         context.coordinator.render(
-            snapshot: snapshot,
-            selectedFeatureID: interaction.selectedFeatureID,
+            snapshot: state.snapshot,
+            selectedFeatureID: state.selection.selectedFeatureID,
+            showsLabels: state.options.showsLabels,
             on: mapView
         )
+    }
+
+    private func applyOptions(_ options: AtlasMapViewOptions, to mapView: MKMapView) {
+        mapView.isScrollEnabled = options.allowsPan
+        mapView.isZoomEnabled = options.allowsZoom
     }
 
     private func configureBaseMap(for mapView: MKMapView) {
@@ -85,23 +94,26 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
     public final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastRenderIdentifier: String?
         private var selectedFeatureID: String?
-        private let interaction: AtlasMapInteraction
+        private let onSelectionChanged: @MainActor @Sendable (String?) -> Void
 
         weak var mapView: MKMapView?
+        weak var tapGestureRecognizer: UITapGestureRecognizer?
 
-        init(interaction: AtlasMapInteraction) {
-            self.interaction = interaction
+        init(onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void) {
+            self.onSelectionChanged = onSelectionChanged
         }
 
         func render(
             snapshot: AtlasMapSnapshot?,
             selectedFeatureID: String?,
+            showsLabels: Bool,
             on mapView: MKMapView
         ) {
             self.selectedFeatureID = selectedFeatureID
             let identifier = renderIdentifier(
                 for: snapshot,
-                selectedFeatureID: selectedFeatureID
+                selectedFeatureID: selectedFeatureID,
+                showsLabels: showsLabels
             )
             guard identifier != lastRenderIdentifier else { return }
 
@@ -109,7 +121,9 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
             mapView.removeAnnotations(mapView.annotations.filter { $0 is FeatureLabelAnnotation })
 
             let overlays = MapKitFeatureOverlayAdapter.makeOverlays(from: snapshot)
-            let annotations = MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeFeatureLabelAnnotation)
+            let annotations = showsLabels
+                ? MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeFeatureLabelAnnotation)
+                : []
             mapView.addOverlays(overlays)
             mapView.addAnnotations(annotations)
             lastRenderIdentifier = identifier
@@ -133,12 +147,12 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
 
                 let rendererPoint = renderer.point(for: mapPoint)
                 if path.contains(rendererPoint) {
-                    interaction.onSelectionChanged(featureID == selectedFeatureID ? nil : featureID)
+                    onSelectionChanged(featureID == selectedFeatureID ? nil : featureID)
                     return
                 }
             }
 
-            interaction.onSelectionChanged(nil)
+            onSelectionChanged(nil)
         }
 
         public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -211,10 +225,11 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
 
         private func renderIdentifier(
             for snapshot: AtlasMapSnapshot?,
-            selectedFeatureID: String?
+            selectedFeatureID: String?,
+            showsLabels: Bool
         ) -> String {
             guard let snapshot else { return "nil" }
-            return "\(snapshot.features.count)-\(snapshot.labels.count)-\(selectedFeatureID ?? "none")"
+            return "\(snapshot.features.count)-\(showsLabels ? snapshot.labels.count : 0)-\(selectedFeatureID ?? "none")"
         }
 
         private func makeFeatureLabelAnnotation(from point: MapKitFeatureLabelPoint) -> FeatureLabelAnnotation {

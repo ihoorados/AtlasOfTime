@@ -11,15 +11,23 @@ struct AtlasScreen: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             mapViewFactory.makeMapView(
-                snapshot: mapSnapshotMapper.makeSnapshot(
-                    from: viewModel.renderSnapshot,
-                    selectedCountryID: viewModel.selectedCountryID
+                state: AtlasMapViewState(
+                    snapshot: mapSnapshotMapper.makeSnapshot(
+                        from: viewModel.renderSnapshot,
+                        selectedCountryID: viewModel.selectedCountryID
+                    ),
+                    camera: .world,
+                    selection: AtlasMapSelectionState(
+                        selectedFeatureID: viewModel.selectedCountryID
+                    ),
+                    options: AtlasMapViewOptions(
+                        showsLabels: true,
+                        allowsSelection: true,
+                        allowsZoom: true,
+                        allowsPan: true
+                    )
                 ),
-                camera: .world,
-                interaction: AtlasMapInteraction(
-                    selectedFeatureID: viewModel.selectedCountryID,
-                    onSelectionChanged: viewModel.selectCountry(id:)
-                )
+                onSelectionChanged: viewModel.selectCountry(id:)
             )
                 .ignoresSafeArea()
 

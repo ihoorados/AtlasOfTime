@@ -6,15 +6,13 @@ public struct MapKitAtlasMapViewFactory: AtlasMapViewFactory {
     public init() {}
 
     public func makeMapView(
-        snapshot: AtlasMapSnapshot?,
-        camera: AtlasMapCameraState,
-        interaction: AtlasMapInteraction
+        state: AtlasMapViewState,
+        onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void
     ) -> AnyView {
         AnyView(
             MapKitAtlasMapView(
-                snapshot: snapshot,
-                camera: camera,
-                interaction: interaction
+                state: state,
+                onSelectionChanged: onSelectionChanged
             )
         )
     }
