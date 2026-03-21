@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 70A100032F4A000100572583 /* CoreAtlasNavigation */; };
+		70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */ = {isa = PBXBuildFile; productRef = 70EEA5132F6F579B009A91DA /* CoreAtlasMap */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */,
 				70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = AtlasOfTime;
 			packageProductDependencies = (
 				70A100032F4A000100572583 /* CoreAtlasNavigation */,
+				70EEA5132F6F579B009A91DA /* CoreAtlasMap */,
 			);
 			productName = AtlasOfTime;
 			productReference = 7060DD292F4615C900572583 /* AtlasOfTime.app */;
@@ -204,6 +207,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */,
+				70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7060DD2A2F4615C900572583 /* Products */;
@@ -625,6 +629,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CoreAtlasNavigation;
 		};
+		70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasMap;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -632,6 +640,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */;
 			productName = CoreAtlasNavigation;
+		};
+		70EEA5132F6F579B009A91DA /* CoreAtlasMap */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreAtlasMap;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
