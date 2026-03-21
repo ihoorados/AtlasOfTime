@@ -1,9 +1,11 @@
+import CoreAtlasMap
 import SwiftUI
 
 @main
 struct AtlasOfTimeApp: App {
     private let appContainer: AppDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
+    private let mapViewFactory: any AtlasMapViewFactory
     private let destinationFactory: AppDestinationFactory
     @StateObject private var navigationStore = AppNavigationStore()
     @StateObject private var appearanceController = AppearanceController()
@@ -14,6 +16,7 @@ struct AtlasOfTimeApp: App {
         let appContainer = AppDIContainer()
         self.appContainer = appContainer
         self.atlasFeatureContainer = appContainer.makeAtlasFeatureContainer()
+        self.mapViewFactory = appContainer.makeMapViewFactory()
         self.destinationFactory = appContainer.makeDestinationFactory()
     }
 
@@ -36,6 +39,7 @@ struct AtlasOfTimeApp: App {
         RootTabScreen(
             navigationStore: navigationStore,
             atlasFeatureContainer: atlasFeatureContainer,
+            mapViewFactory: mapViewFactory,
             appearanceController: appearanceController,
             languageController: languageController,
             preferencesController: preferencesController,

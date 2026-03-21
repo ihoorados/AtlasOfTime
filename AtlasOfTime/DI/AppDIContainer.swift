@@ -1,3 +1,5 @@
+import CoreAtlasMap
+import CoreAtlasMapMapKit
 import Foundation
 
 // App composition root container. Keeps assembly logic out of App entry file.
@@ -44,6 +46,10 @@ final class AppDIContainer {
 
     func makeDestinationFactory() -> AppDestinationFactory {
         destinationFactory
+    }
+
+    func makeMapViewFactory() -> any AtlasMapViewFactory {
+        MapKitAtlasMapViewFactory()
     }
 
     // Extension points for additional features follow the same pattern.

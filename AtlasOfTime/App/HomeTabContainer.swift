@@ -10,11 +10,12 @@ struct HomeTabContainer: View {
     init(
         navigationStore: AppNavigationStore,
         atlasFeatureContainer: AtlasFeatureDIContainer,
+        mapViewFactory: any AtlasMapViewFactory,
         destinationFactory: AppDestinationFactory
     ) {
         self.navigationStore = navigationStore
         self.destinationFactory = destinationFactory
-        self.mapViewFactory = atlasFeatureContainer.makeMapViewFactory()
+        self.mapViewFactory = mapViewFactory
         _viewModel = StateObject(
             wrappedValue: atlasFeatureContainer.makeAtlasViewModel()
         )
@@ -43,6 +44,7 @@ struct HomeTabContainer_Previews: PreviewProvider {
         HomeTabContainer(
             navigationStore: AppNavigationStore(),
             atlasFeatureContainer: HomePreviewFactory.makeFeatureContainer(),
+            mapViewFactory: HomePreviewFactory.makeMapViewFactory(),
             destinationFactory: HomePreviewFactory.makeDestinationFactory()
         )
     }

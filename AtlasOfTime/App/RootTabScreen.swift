@@ -1,8 +1,10 @@
+import CoreAtlasMap
 import SwiftUI
 
 struct RootTabScreen: View {
     @ObservedObject var navigationStore: AppNavigationStore
     let atlasFeatureContainer: AtlasFeatureDIContainer
+    let mapViewFactory: any AtlasMapViewFactory
     @ObservedObject var appearanceController: AppearanceController
     @ObservedObject var languageController: AppLanguageController
     @ObservedObject var preferencesController: AppPreferencesController
@@ -15,6 +17,7 @@ struct RootTabScreen: View {
                 HomeTabContainer(
                     navigationStore: navigationStore,
                     atlasFeatureContainer: atlasFeatureContainer,
+                    mapViewFactory: mapViewFactory,
                     destinationFactory: destinationFactory
                 )
             }
@@ -61,6 +64,7 @@ struct RootTabScreen_Previews: PreviewProvider {
         RootTabScreen(
             navigationStore: AppNavigationStore(),
             atlasFeatureContainer: HomePreviewFactory.makeFeatureContainer(),
+            mapViewFactory: HomePreviewFactory.makeMapViewFactory(),
             appearanceController: SettingsPreviewFactory.makeAppearanceController(),
             languageController: SettingsPreviewFactory.makeLanguageController(),
             preferencesController: SettingsPreviewFactory.makePreferencesController(),

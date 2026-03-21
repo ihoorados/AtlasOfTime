@@ -1,5 +1,3 @@
-import CoreAtlasMap
-import CoreAtlasMapMapKit
 import Foundation
 
 // Atlas feature container: assembles feature-level presentation objects.
@@ -26,9 +24,5 @@ final class AtlasFeatureDIContainer {
             debouncer: Debouncer(),
             debounceNanoseconds: debounceNanoseconds
         )
-    }
-
-    func makeMapViewFactory() -> any AtlasMapViewFactory {
-        MapKitAtlasMapViewFactory()
     }
 }
