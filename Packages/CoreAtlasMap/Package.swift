@@ -11,11 +11,19 @@ let package = Package(
         .library(
             name: "CoreAtlasMap",
             targets: ["CoreAtlasMap"]
+        ),
+        .library(
+            name: "CoreAtlasMapMapKit",
+            targets: ["CoreAtlasMapMapKit"]
         )
     ],
     targets: [
         .target(
             name: "CoreAtlasMap"
+        ),
+        .target(
+            name: "CoreAtlasMapMapKit",
+            dependencies: ["CoreAtlasMap"]
         ),
         .testTarget(
             name: "CoreAtlasMapTests",

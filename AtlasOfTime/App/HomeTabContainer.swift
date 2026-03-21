@@ -1,8 +1,10 @@
+import CoreAtlasMap
 import SwiftUI
 
 struct HomeTabContainer: View {
     @ObservedObject var navigationStore: AppNavigationStore
     @StateObject private var viewModel: AtlasViewModel
+    private let mapViewFactory: any AtlasMapViewFactory
     let destinationFactory: AppDestinationFactory
 
     init(
@@ -12,6 +14,7 @@ struct HomeTabContainer: View {
     ) {
         self.navigationStore = navigationStore
         self.destinationFactory = destinationFactory
+        self.mapViewFactory = atlasFeatureContainer.makeMapViewFactory()
         _viewModel = StateObject(
             wrappedValue: atlasFeatureContainer.makeAtlasViewModel()
         )
@@ -21,6 +24,7 @@ struct HomeTabContainer: View {
         NavigationStack(path: $navigationStore.homeNavigation.path) {
             HomeScene(
                 viewModel: viewModel,
+                mapViewFactory: mapViewFactory,
                 onSelectedCountryTapped: { snapshot in
                     navigationStore.push(.countryDetail(.init(snapshot: snapshot)))
                 }

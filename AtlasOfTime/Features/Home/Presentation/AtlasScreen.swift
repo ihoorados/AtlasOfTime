@@ -1,16 +1,25 @@
+import CoreAtlasMap
 import SwiftUI
 
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel
+    let mapViewFactory: any AtlasMapViewFactory
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
     @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
+    private let mapSnapshotMapper = AtlasMapSnapshotMapper()
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AtlasMapView(
-                snapshot: viewModel.renderSnapshot,
-                selectedCountryID: viewModel.selectedCountryID,
-                onCountrySelectionChanged: viewModel.selectCountry(id:)
+            mapViewFactory.makeMapView(
+                snapshot: mapSnapshotMapper.makeSnapshot(
+                    from: viewModel.renderSnapshot,
+                    selectedCountryID: viewModel.selectedCountryID
+                ),
+                camera: .world,
+                interaction: AtlasMapInteraction(
+                    selectedFeatureID: viewModel.selectedCountryID,
+                    onSelectionChanged: viewModel.selectCountry(id:)
+                )
             )
                 .ignoresSafeArea()
 
@@ -55,6 +64,7 @@ struct AtlasScreen_Previews: PreviewProvider {
     ) -> some View {
         AtlasScreen(
             viewModel: HomePreviewFactory.makeViewModel(),
+            mapViewFactory: HomePreviewFactory.makeMapViewFactory(),
             onSelectedCountryTapped: { _ in }
         )
             .environment(\.locale, Locale(identifier: localeIdentifier))

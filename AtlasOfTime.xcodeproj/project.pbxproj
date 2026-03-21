@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 70A100032F4A000100572583 /* CoreAtlasNavigation */; };
 		70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */ = {isa = PBXBuildFile; productRef = 70EEA5132F6F579B009A91DA /* CoreAtlasMap */; };
+		70F0C2012F71A001009A91DA /* CoreAtlasMapMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70F0C2002F71A001009A91DA /* CoreAtlasMapMapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70F0C2012F71A001009A91DA /* CoreAtlasMapMapKit in Frameworks */,
 				70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */,
 				70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */,
 			);
@@ -121,6 +123,7 @@
 			packageProductDependencies = (
 				70A100032F4A000100572583 /* CoreAtlasNavigation */,
 				70EEA5132F6F579B009A91DA /* CoreAtlasMap */,
+				70F0C2002F71A001009A91DA /* CoreAtlasMapMapKit */,
 			);
 			productName = AtlasOfTime;
 			productReference = 7060DD292F4615C900572583 /* AtlasOfTime.app */;
@@ -643,7 +646,13 @@
 		};
 		70EEA5132F6F579B009A91DA /* CoreAtlasMap */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */;
 			productName = CoreAtlasMap;
+		};
+		70F0C2002F71A001009A91DA /* CoreAtlasMapMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */;
+			productName = CoreAtlasMapMapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
