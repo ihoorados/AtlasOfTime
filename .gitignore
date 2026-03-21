@@ -1,3 +1,9 @@
 .derivedData/
 
+/.build/
+**/.build/
+/.swiftpm/
+**/.swiftpm/
+xcuserdata/
 *.xcuserdatad/
+*.xcuserstate
