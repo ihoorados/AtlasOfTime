@@ -16,6 +16,9 @@
 "home.countries.more" = "+ %1$lld مورد دیگر";
 "home.detail.loading.title" = "در حال تولید خلاصه";
 "home.detail.loading.message" = "خلاصه کشور بر اساس اطلاعات سال انتخاب‌شده آماده می‌شود.";
+"home.detail.overview.title" = "نمای کلی";
+"home.detail.territorialContext.title" = "زمینه سرزمینی";
+"home.detail.politicalContext.title" = "زمینه سیاسی";
 "home.detail.keyFacts.title" = "نکات کلیدی";
 "home.detail.confidenceNote.title" = "یادداشت اطمینان";
 "home.detail.error.title" = "خلاصه در دسترس نیست";

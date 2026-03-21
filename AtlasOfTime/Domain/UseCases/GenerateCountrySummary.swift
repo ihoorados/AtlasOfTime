@@ -13,7 +13,9 @@ struct GenerateCountrySummary: Sendable {
     }
 
     func makeRequest(for snapshot: HistoricalCountrySnapshot) -> CountrySummaryRequest {
-        CountrySummaryRequest(
+        let mergedSources = mergedSourceContexts(for: snapshot)
+
+        return CountrySummaryRequest(
             year: snapshot.year,
             countryID: snapshot.id,
             entityID: snapshot.entityID,
@@ -22,8 +24,14 @@ struct GenerateCountrySummary: Sendable {
             formalName: snapshot.formalName,
             nameConfidence: snapshot.nameConfidence,
             borderConfidence: primaryBorderConfidence(for: snapshot),
+            extentCount: snapshot.extents.count,
+            extentTypes: Array(Set(snapshot.extents.map(\.extentType))).sorted { $0.rawValue < $1.rawValue },
+            borderModels: Array(Set(snapshot.extents.map(\.borderModel))).sorted { $0.rawValue < $1.rawValue },
+            hasMultipleExtents: snapshot.extents.count > 1,
+            relationshipCount: snapshot.relationships.count,
+            sourceCount: mergedSources.count,
             relationships: snapshot.relationships.map(makeRelationshipContext),
-            sourceReferences: mergedSourceContexts(for: snapshot)
+            sourceReferences: mergedSources
         )
     }
 

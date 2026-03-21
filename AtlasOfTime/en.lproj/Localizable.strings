@@ -16,6 +16,9 @@
 "home.countries.more" = "+ %1$lld more";
 "home.detail.loading.title" = "Generating Summary";
 "home.detail.loading.message" = "The country summary is being prepared from the selected year context.";
+"home.detail.overview.title" = "Overview";
+"home.detail.territorialContext.title" = "Territorial Context";
+"home.detail.politicalContext.title" = "Political Context";
 "home.detail.keyFacts.title" = "Key Facts";
 "home.detail.confidenceNote.title" = "Confidence Note";
 "home.detail.error.title" = "Summary Unavailable";
