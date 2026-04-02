@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 enum AppError: Error, LocalizedError, Sendable {
     case resourceNotFound(String)
@@ -14,6 +15,12 @@ enum AppError: Error, LocalizedError, Sendable {
     static func wrap(_ error: Error) -> AppError {
         if let appError = error as? AppError {
             return appError
+        }
+        if let domainError = error as? AtlasDomainError {
+            switch domainError {
+            case .yearUnavailable(let year):
+                return .yearUnavailable(year)
+            }
         }
         if error is CancellationError {
             return .cancelled

@@ -29,7 +29,7 @@ actor DefaultBorderRepository: BorderRepository {
 
         let index = try await currentYearIndex()
         guard let relativePath = index.path(for: year) else {
-            throw AppError.yearUnavailable(year)
+            throw AtlasDomainError.yearUnavailable(year)
         }
 
         let task = Task<YearSnapshot, Error> { [loader] in
