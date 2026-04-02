@@ -32,7 +32,7 @@ final class DataDIContainer {
         self.gzipDecoder = gzipDecoder
         self.borderDecoder = borderDecoder
         self.borderSnapshotLoader = DefaultBorderSnapshotLoader(
-            dataSource: dataSource,
+            yearFileReader: dataSource,
             gzipDecoder: gzipDecoder,
             borderDecoder: borderDecoder
         )

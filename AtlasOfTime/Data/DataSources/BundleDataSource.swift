@@ -80,3 +80,5 @@ struct BundleDataSource {
         }
     }
 }
+
+extension BundleDataSource: YearFileReading {}

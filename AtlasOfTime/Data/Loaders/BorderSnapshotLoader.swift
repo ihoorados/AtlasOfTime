@@ -6,16 +6,16 @@ protocol BorderSnapshotLoading: Sendable {
 }
 
 struct DefaultBorderSnapshotLoader: BorderSnapshotLoading {
-    private let dataSource: BundleDataSource
+    private let yearFileReader: any YearFileReading
     private let gzipDecoder: any GzipDecoding
     private let borderDecoder: any BorderDecoding
 
     init(
-        dataSource: BundleDataSource,
+        yearFileReader: any YearFileReading,
         gzipDecoder: any GzipDecoding,
         borderDecoder: any BorderDecoding
     ) {
-        self.dataSource = dataSource
+        self.yearFileReader = yearFileReader
         self.gzipDecoder = gzipDecoder
         self.borderDecoder = borderDecoder
     }
@@ -23,7 +23,7 @@ struct DefaultBorderSnapshotLoader: BorderSnapshotLoading {
     func loadSnapshot(year: Int, relativePath: String) async throws -> YearSnapshot {
         try Task.checkCancellation()
 
-        let compressedData = try dataSource.readYearFile(relativePath: relativePath)
+        let compressedData = try yearFileReader.readYearFile(relativePath: relativePath)
         try Task.checkCancellation()
 
         let geoJSONData = try gzipDecoder.gunzip(compressedData)
