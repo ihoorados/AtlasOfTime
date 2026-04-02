@@ -1,5 +1,4 @@
 import CoreAtlasMap
-import CoreAtlasMapMapKit
 import Foundation
 
 @MainActor
@@ -13,7 +12,7 @@ enum HomePreviewFactory {
     }
 
     static func makeMapViewFactory() -> any AtlasMapViewFactory {
-        MapKitAtlasMapViewFactory()
+        AppDIContainer(mapProvider: .mapKit).makeMapViewFactory()
     }
 
     static func makeDestinationFactory() -> AppDestinationFactory {
