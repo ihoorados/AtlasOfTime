@@ -10,11 +10,11 @@ enum GeoJSONBorderDecoder {
         do {
             collection = try JSONDecoder().decode(FeatureCollection.self, from: data)
         } catch {
-            throw AppError.invalidGeoJSON(error.localizedDescription)
+            throw AtlasDataError.invalidGeoJSON(error.localizedDescription)
         }
 
         guard collection.type == "FeatureCollection" else {
-            throw AppError.invalidGeoJSON("Root type must be FeatureCollection.")
+            throw AtlasDataError.invalidGeoJSON("Root type must be FeatureCollection.")
         }
 
         var groupedCountries: [CountryGroupingKey: HistoricalCountryAccumulator] = [:]

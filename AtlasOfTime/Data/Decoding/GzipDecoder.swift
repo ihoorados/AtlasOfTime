@@ -22,7 +22,7 @@ enum GzipDecoder {
     private static func validateInflatedSize(_ inflated: Data, expectedISize: UInt32) throws {
         let actual = UInt32(truncatingIfNeeded: inflated.count)
         guard actual == expectedISize else {
-            throw AppError.decompressionFailed(
+            throw AtlasDataError.decompressionFailed(
                 reason: "Trailer size mismatch (expected \(expectedISize), got \(actual))."
             )
         }
@@ -41,7 +41,7 @@ enum GzipDecoder {
         )
         let initStatus = compression_stream_init(&stream, COMPRESSION_STREAM_DECODE, COMPRESSION_ZLIB)
         guard initStatus != COMPRESSION_STATUS_ERROR else {
-            throw AppError.decompressionFailed(reason: "compression_stream_init failed.")
+            throw AtlasDataError.decompressionFailed(reason: "compression_stream_init failed.")
         }
         defer { compression_stream_destroy(&stream) }
 
@@ -65,7 +65,7 @@ enum GzipDecoder {
                 streamStatus = compression_stream_process(&stream, Int32(COMPRESSION_STREAM_FINALIZE.rawValue))
 
                 if streamStatus == COMPRESSION_STATUS_ERROR {
-                    throw AppError.decompressionFailed(reason: "compression_stream_process failed.")
+                    throw AtlasDataError.decompressionFailed(reason: "compression_stream_process failed.")
                 }
 
                 let produced = outputChunkSize - stream.dst_size
@@ -75,7 +75,7 @@ enum GzipDecoder {
             } while streamStatus == COMPRESSION_STATUS_OK
 
             guard streamStatus == COMPRESSION_STATUS_END else {
-                throw AppError.decompressionFailed(reason: "Unexpected stream status.")
+                throw AtlasDataError.decompressionFailed(reason: "Unexpected stream status.")
             }
 
             return result
@@ -86,13 +86,13 @@ enum GzipDecoder {
         let bytes = [UInt8](data)
 
         guard bytes.count >= 18 else {
-            throw AppError.decompressionFailed(reason: "Gzip payload is too small.")
+            throw AtlasDataError.decompressionFailed(reason: "Gzip payload is too small.")
         }
         guard bytes[0] == 0x1f, bytes[1] == 0x8b else {
-            throw AppError.decompressionFailed(reason: "Invalid gzip magic bytes.")
+            throw AtlasDataError.decompressionFailed(reason: "Invalid gzip magic bytes.")
         }
         guard bytes[2] == 8 else {
-            throw AppError.decompressionFailed(reason: "Unsupported compression method.")
+            throw AtlasDataError.decompressionFailed(reason: "Unsupported compression method.")
         }
 
         let flags = bytes[3]
@@ -101,12 +101,12 @@ enum GzipDecoder {
 
         if flags & 0x04 != 0 {
             guard index + 2 <= trailerStart else {
-                throw AppError.decompressionFailed(reason: "Corrupt FEXTRA header.")
+                throw AtlasDataError.decompressionFailed(reason: "Corrupt FEXTRA header.")
             }
             let xlen = Int(UInt16(bytes[index]) | (UInt16(bytes[index + 1]) << 8))
             index += 2
             guard index + xlen <= trailerStart else {
-                throw AppError.decompressionFailed(reason: "Corrupt FEXTRA payload.")
+                throw AtlasDataError.decompressionFailed(reason: "Corrupt FEXTRA payload.")
             }
             index += xlen
         }
@@ -114,7 +114,7 @@ enum GzipDecoder {
         if flags & 0x08 != 0 {
             while index < trailerStart, bytes[index] != 0 { index += 1 }
             guard index < trailerStart else {
-                throw AppError.decompressionFailed(reason: "Corrupt FNAME field.")
+                throw AtlasDataError.decompressionFailed(reason: "Corrupt FNAME field.")
             }
             index += 1
         }
@@ -122,20 +122,20 @@ enum GzipDecoder {
         if flags & 0x10 != 0 {
             while index < trailerStart, bytes[index] != 0 { index += 1 }
             guard index < trailerStart else {
-                throw AppError.decompressionFailed(reason: "Corrupt FCOMMENT field.")
+                throw AtlasDataError.decompressionFailed(reason: "Corrupt FCOMMENT field.")
             }
             index += 1
         }
 
         if flags & 0x02 != 0 {
             guard index + 2 <= trailerStart else {
-                throw AppError.decompressionFailed(reason: "Corrupt FHCRC field.")
+                throw AtlasDataError.decompressionFailed(reason: "Corrupt FHCRC field.")
             }
             index += 2
         }
 
         guard index < trailerStart else {
-            throw AppError.decompressionFailed(reason: "Gzip deflate payload is empty.")
+            throw AtlasDataError.decompressionFailed(reason: "Gzip deflate payload is empty.")
         }
 
         let isize = UInt32(bytes[trailerStart + 4])

@@ -23,11 +23,11 @@ actor DefaultYearIndexRepository: YearIndexRepository {
         do {
             dto = try decoder.decode(IndexDTO.self, from: rawData)
         } catch {
-            throw AppError.invalidIndexFormat(error.localizedDescription)
+            throw AtlasDataError.invalidIndexFormat(error.localizedDescription)
         }
 
         guard dto.minYear <= dto.maxYear else {
-            throw AppError.invalidIndexFormat("minYear must be <= maxYear.")
+            throw AtlasDataError.invalidIndexFormat("minYear must be <= maxYear.")
         }
 
         var filesByYear: [Int: String] = [:]
@@ -37,7 +37,7 @@ actor DefaultYearIndexRepository: YearIndexRepository {
         }
 
         guard !filesByYear.isEmpty else {
-            throw AppError.invalidIndexFormat("files dictionary is empty or keys are invalid.")
+            throw AtlasDataError.invalidIndexFormat("files dictionary is empty or keys are invalid.")
         }
 
         let years = dto.availableYears.isEmpty

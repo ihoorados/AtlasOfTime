@@ -16,6 +16,20 @@ enum AppError: Error, LocalizedError, Sendable {
         if let appError = error as? AppError {
             return appError
         }
+        if let dataError = error as? AtlasDataError {
+            switch dataError {
+            case .resourceNotFound(let path):
+                return .resourceNotFound(path)
+            case .fileReadFailed(let path):
+                return .fileReadFailed(path)
+            case .invalidIndexFormat(let details):
+                return .invalidIndexFormat(details)
+            case .invalidGeoJSON(let details):
+                return .invalidGeoJSON(details)
+            case .decompressionFailed(let reason):
+                return .decompressionFailed(reason: reason)
+            }
+        }
         if let domainError = error as? AtlasDomainError {
             switch domainError {
             case .yearUnavailable(let year):
