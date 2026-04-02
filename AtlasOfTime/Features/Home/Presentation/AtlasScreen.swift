@@ -1,5 +1,6 @@
 import CoreAtlasMap
 import SwiftUI
+import CoreAtlasDomain
 
 struct AtlasScreen: View {
     @ObservedObject var viewModel: AtlasViewModel

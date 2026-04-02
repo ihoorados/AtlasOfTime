@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 // Data module container: owns app-scoped infrastructure and repository implementations.
 final class DataDIContainer {

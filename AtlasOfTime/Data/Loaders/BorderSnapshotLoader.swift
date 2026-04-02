@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 protocol BorderSnapshotLoading: Sendable {
     func loadSnapshot(year: Int, relativePath: String) async throws -> YearSnapshot

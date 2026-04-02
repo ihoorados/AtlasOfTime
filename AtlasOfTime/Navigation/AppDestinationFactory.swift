@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreAtlasDomain
 
 @MainActor
 final class AppDestinationFactory {

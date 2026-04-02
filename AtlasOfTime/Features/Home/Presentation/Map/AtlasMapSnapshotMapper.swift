@@ -1,5 +1,6 @@
 import CoreAtlasMap
 import Foundation
+import CoreAtlasDomain
 
 struct AtlasMapSnapshotMapper {
     private let snapshotBuilder: AtlasMapSnapshotBuilder

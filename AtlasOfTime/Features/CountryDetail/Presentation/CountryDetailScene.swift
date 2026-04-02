@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreAtlasDomain
 
 struct CountryDetailScene: View {
     @StateObject private var viewModel: CountryDetailViewModel

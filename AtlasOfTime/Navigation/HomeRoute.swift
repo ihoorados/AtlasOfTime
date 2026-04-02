@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 enum HomeRoute: Hashable {
     case countryDetail(CountryDetailContext)

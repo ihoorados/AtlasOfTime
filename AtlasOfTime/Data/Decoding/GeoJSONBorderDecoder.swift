@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import CoreAtlasDomain
 
 enum GeoJSONBorderDecoder {
     private static let logger = Logger(subsystem: "AtlasOfTime", category: "GeoJSONBorderDecoder")

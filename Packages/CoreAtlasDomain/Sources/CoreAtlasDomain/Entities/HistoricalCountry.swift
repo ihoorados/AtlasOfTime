@@ -1,16 +1,16 @@
 import Foundation
 
-struct HistoricalCountry: Identifiable, Equatable, Sendable {
-    let id: String
-    let displayName: String
-    let shortName: String?
-    let sovereignName: String?
-    let parentName: String?
-    let borderPrecision: Int?
-    let infoURL: URL?
-    let polygons: [GeoPolygon]
+public struct HistoricalCountry: Identifiable, Equatable, Sendable {
+    public let id: String
+    public let displayName: String
+    public let shortName: String?
+    public let sovereignName: String?
+    public let parentName: String?
+    public let borderPrecision: Int?
+    public let infoURL: URL?
+    public let polygons: [GeoPolygon]
 
-    init(
+    public init(
         id: String,
         displayName: String,
         shortName: String? = nil,

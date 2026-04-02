@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 actor DefaultBorderRepository: BorderRepository {
     private let cache: LRUCache<Int, YearSnapshot>

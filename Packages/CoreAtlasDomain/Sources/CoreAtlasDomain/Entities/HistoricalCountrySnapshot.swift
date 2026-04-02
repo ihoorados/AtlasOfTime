@@ -1,18 +1,18 @@
 import Foundation
 
-struct HistoricalCountrySnapshot: Identifiable, Equatable, Hashable, Sendable, Codable {
-    let id: String
-    let entityID: String
-    let year: Int
-    let displayName: String
-    let shortDisplayName: String?
-    let formalName: String?
-    let nameConfidence: HistoricalConfidence
-    let extents: [HistoricalExtent]
-    let relationships: [HistoricalRelationship]
-    let sourceReferences: [HistoricalSourceReference]
+public struct HistoricalCountrySnapshot: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public let id: String
+    public let entityID: String
+    public let year: Int
+    public let displayName: String
+    public let shortDisplayName: String?
+    public let formalName: String?
+    public let nameConfidence: HistoricalConfidence
+    public let extents: [HistoricalExtent]
+    public let relationships: [HistoricalRelationship]
+    public let sourceReferences: [HistoricalSourceReference]
 
-    init(
+    public init(
         id: String,
         entityID: String,
         year: Int,

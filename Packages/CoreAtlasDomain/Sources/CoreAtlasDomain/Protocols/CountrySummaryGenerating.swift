@@ -1,5 +1,5 @@
 import Foundation
 
-protocol CountrySummaryGenerating: Sendable {
+public protocol CountrySummaryGenerating: Sendable {
     func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult
 }

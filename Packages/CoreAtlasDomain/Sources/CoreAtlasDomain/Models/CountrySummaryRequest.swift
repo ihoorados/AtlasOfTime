@@ -1,24 +1,24 @@
 import Foundation
 
-struct CountrySummaryRequest: Equatable, Sendable {
-    let year: Int
-    let countryID: String
-    let entityID: String
-    let displayName: String
-    let shortDisplayName: String?
-    let formalName: String?
-    let nameConfidence: HistoricalConfidence
-    let borderConfidence: HistoricalConfidence
-    let extentCount: Int
-    let extentTypes: [HistoricalExtentType]
-    let borderModels: [HistoricalBorderModel]
-    let hasMultipleExtents: Bool
-    let relationshipCount: Int
-    let sourceCount: Int
-    let relationships: [RelationshipContext]
-    let sourceReferences: [SourceContext]
+public struct CountrySummaryRequest: Equatable, Sendable {
+    public let year: Int
+    public let countryID: String
+    public let entityID: String
+    public let displayName: String
+    public let shortDisplayName: String?
+    public let formalName: String?
+    public let nameConfidence: HistoricalConfidence
+    public let borderConfidence: HistoricalConfidence
+    public let extentCount: Int
+    public let extentTypes: [HistoricalExtentType]
+    public let borderModels: [HistoricalBorderModel]
+    public let hasMultipleExtents: Bool
+    public let relationshipCount: Int
+    public let sourceCount: Int
+    public let relationships: [RelationshipContext]
+    public let sourceReferences: [SourceContext]
 
-    init(
+    public init(
         year: Int,
         countryID: String,
         entityID: String,
@@ -55,13 +55,13 @@ struct CountrySummaryRequest: Equatable, Sendable {
     }
 }
 
-extension CountrySummaryRequest {
+public extension CountrySummaryRequest {
     struct RelationshipContext: Equatable, Sendable {
-        let type: HistoricalRelationshipType
-        let targetDisplayName: String
-        let confidence: HistoricalConfidence
+        public let type: HistoricalRelationshipType
+        public let targetDisplayName: String
+        public let confidence: HistoricalConfidence
 
-        init(
+        public init(
             type: HistoricalRelationshipType,
             targetDisplayName: String,
             confidence: HistoricalConfidence = .unknown
@@ -73,11 +73,11 @@ extension CountrySummaryRequest {
     }
 
     struct SourceContext: Equatable, Sendable {
-        let title: String
-        let locator: String?
-        let note: String?
+        public let title: String
+        public let locator: String?
+        public let note: String?
 
-        init(
+        public init(
             title: String,
             locator: String? = nil,
             note: String? = nil

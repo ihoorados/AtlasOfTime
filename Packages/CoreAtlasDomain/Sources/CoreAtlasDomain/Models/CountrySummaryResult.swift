@@ -1,14 +1,14 @@
 import Foundation
 
-struct CountrySummaryResult: Equatable, Sendable {
-    let title: String
-    let overview: String
-    let territorialContext: String?
-    let politicalContext: String?
-    let keyFacts: [String]
-    let confidenceNote: String?
+public struct CountrySummaryResult: Equatable, Sendable {
+    public let title: String
+    public let overview: String
+    public let territorialContext: String?
+    public let politicalContext: String?
+    public let keyFacts: [String]
+    public let confidenceNote: String?
 
-    init(
+    public init(
         title: String,
         overview: String,
         territorialContext: String? = nil,

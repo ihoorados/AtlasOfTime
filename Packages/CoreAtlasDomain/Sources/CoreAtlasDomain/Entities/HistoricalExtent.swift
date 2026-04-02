@@ -1,15 +1,15 @@
 import Foundation
 
-struct HistoricalExtent: Identifiable, Equatable, Hashable, Sendable, Codable {
-    let id: String
-    let extentType: HistoricalExtentType
-    let borderModel: HistoricalBorderModel
-    let borderPrecisionRank: Int?
-    let borderConfidence: HistoricalConfidence
-    let polygons: [GeoPolygon]
-    let sourceReferences: [HistoricalSourceReference]
+public struct HistoricalExtent: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public let id: String
+    public let extentType: HistoricalExtentType
+    public let borderModel: HistoricalBorderModel
+    public let borderPrecisionRank: Int?
+    public let borderConfidence: HistoricalConfidence
+    public let polygons: [GeoPolygon]
+    public let sourceReferences: [HistoricalSourceReference]
 
-    init(
+    public init(
         id: String,
         extentType: HistoricalExtentType,
         borderModel: HistoricalBorderModel,

@@ -1,5 +1,6 @@
 import CoreAtlasMap
 import Foundation
+import CoreAtlasDomain
 
 @MainActor
 enum HomePreviewFactory {

@@ -1,6 +1,7 @@
 import CoreAtlasMap
 import CoreAtlasMapMapKit
 import Foundation
+import CoreAtlasDomain
 
 // App composition root container. Keeps assembly logic out of App entry file.
 @MainActor

@@ -1,13 +1,13 @@
 import Foundation
 
-struct HistoricalSourceReference: Identifiable, Equatable, Hashable, Sendable, Codable {
-    let id: String
-    let title: String
-    let locator: String?
-    let url: URL?
-    let note: String?
+public struct HistoricalSourceReference: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public let id: String
+    public let title: String
+    public let locator: String?
+    public let url: URL?
+    public let note: String?
 
-    init(
+    public init(
         id: String,
         title: String,
         locator: String? = nil,

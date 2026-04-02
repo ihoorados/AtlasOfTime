@@ -1,11 +1,11 @@
 import Foundation
 
-struct HistoricalEntity: Identifiable, Equatable, Sendable, Codable {
-    let id: String
-    let canonicalName: String
-    let externalIDs: ExternalIDs
+public struct HistoricalEntity: Identifiable, Equatable, Sendable, Codable {
+    public let id: String
+    public let canonicalName: String
+    public let externalIDs: ExternalIDs
 
-    init(
+    public init(
         id: String,
         canonicalName: String,
         externalIDs: ExternalIDs = .init()
@@ -16,10 +16,10 @@ struct HistoricalEntity: Identifiable, Equatable, Sendable, Codable {
     }
 }
 
-struct ExternalIDs: Equatable, Sendable, Codable {
-    let wikidata: String?
+public struct ExternalIDs: Equatable, Sendable, Codable {
+    public let wikidata: String?
 
-    init(wikidata: String? = nil) {
+    public init(wikidata: String? = nil) {
         self.wikidata = wikidata
     }
 }

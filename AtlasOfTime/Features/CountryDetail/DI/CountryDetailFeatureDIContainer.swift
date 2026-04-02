@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 @MainActor
 final class CountryDetailFeatureDIContainer {

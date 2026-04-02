@@ -1,11 +1,21 @@
 import Foundation
 
-struct Coordinate: Hashable, Equatable, Sendable, Codable {
-    let lat: Double
-    let lon: Double
+public struct Coordinate: Hashable, Equatable, Sendable, Codable {
+    public let lat: Double
+    public let lon: Double
+
+    public init(lat: Double, lon: Double) {
+        self.lat = lat
+        self.lon = lon
+    }
 }
 
-struct GeoPolygon: Hashable, Equatable, Sendable, Codable {
-    let outer: [Coordinate]
-    let holes: [[Coordinate]]
+public struct GeoPolygon: Hashable, Equatable, Sendable, Codable {
+    public let outer: [Coordinate]
+    public let holes: [[Coordinate]]
+
+    public init(outer: [Coordinate], holes: [[Coordinate]] = []) {
+        self.outer = outer
+        self.holes = holes
+    }
 }

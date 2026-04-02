@@ -1,5 +1,6 @@
 import Foundation
 import FoundationModels
+import CoreAtlasDomain
 
 @available(iOS 26.0, *)
 struct FoundationModelCountrySummaryGenerator: CountrySummaryGenerating, Sendable {

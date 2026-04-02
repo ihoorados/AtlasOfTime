@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 struct CountrySummaryPromptBuilder: Sendable {
     let instructions: String

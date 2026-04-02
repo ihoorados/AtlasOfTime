@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 actor DefaultYearIndexRepository: YearIndexRepository {
     private struct IndexDTO: Decodable {

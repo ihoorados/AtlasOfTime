@@ -1,15 +1,15 @@
 import Foundation
 
-struct HistoricalRelationship: Identifiable, Equatable, Hashable, Sendable, Codable {
-    let id: String
-    let type: HistoricalRelationshipType
-    let targetEntityID: String
-    let targetDisplayName: String
-    let basis: HistoricalRelationshipBasis
-    let confidence: HistoricalConfidence
-    let sourceReferences: [HistoricalSourceReference]
+public struct HistoricalRelationship: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public let id: String
+    public let type: HistoricalRelationshipType
+    public let targetEntityID: String
+    public let targetDisplayName: String
+    public let basis: HistoricalRelationshipBasis
+    public let confidence: HistoricalConfidence
+    public let sourceReferences: [HistoricalSourceReference]
 
-    init(
+    public init(
         id: String,
         type: HistoricalRelationshipType,
         targetEntityID: String,

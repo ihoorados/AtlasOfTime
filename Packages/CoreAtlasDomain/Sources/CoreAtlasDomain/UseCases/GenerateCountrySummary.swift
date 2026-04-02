@@ -1,18 +1,18 @@
 import Foundation
 
-struct GenerateCountrySummary: Sendable {
+public struct GenerateCountrySummary: Sendable {
     private let generator: any CountrySummaryGenerating
 
-    init(generator: any CountrySummaryGenerating) {
+    public init(generator: any CountrySummaryGenerating) {
         self.generator = generator
     }
 
-    func execute(for snapshot: HistoricalCountrySnapshot) async throws -> CountrySummaryResult {
+    public func execute(for snapshot: HistoricalCountrySnapshot) async throws -> CountrySummaryResult {
         let request = makeRequest(for: snapshot)
         return try await generator.generateSummary(for: request)
     }
 
-    func makeRequest(for snapshot: HistoricalCountrySnapshot) -> CountrySummaryRequest {
+    public func makeRequest(for snapshot: HistoricalCountrySnapshot) -> CountrySummaryRequest {
         let mergedSources = mergedSourceContexts(for: snapshot)
 
         return CountrySummaryRequest(

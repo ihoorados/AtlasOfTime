@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 protocol GzipDecoding: Sendable {
     func gunzip(_ data: Data) throws -> Data

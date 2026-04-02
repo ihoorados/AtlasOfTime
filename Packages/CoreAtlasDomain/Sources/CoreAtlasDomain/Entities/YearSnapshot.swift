@@ -1,25 +1,25 @@
 import Foundation
 
-struct YearSnapshot: Sendable {
-    let year: Int
-    let snapshots: [HistoricalCountrySnapshot]
+public struct YearSnapshot: Sendable {
+    public let year: Int
+    public let snapshots: [HistoricalCountrySnapshot]
 
-    var countries: [HistoricalCountry] {
+    public var countries: [HistoricalCountry] {
         snapshots.map(HistoricalCountry.init(snapshot:))
     }
 
-    var polygons: [GeoPolygon] {
+    public var polygons: [GeoPolygon] {
         snapshots.flatMap { snapshot in
             snapshot.extents.flatMap(\.polygons)
         }
     }
 
-    init(year: Int, snapshots: [HistoricalCountrySnapshot]) {
+    public init(year: Int, snapshots: [HistoricalCountrySnapshot]) {
         self.year = year
         self.snapshots = snapshots
     }
 
-    init(year: Int, countries: [HistoricalCountry]) {
+    public init(year: Int, countries: [HistoricalCountry]) {
         self.year = year
         self.snapshots = countries.map { country in
             HistoricalCountrySnapshot(
@@ -47,7 +47,7 @@ struct YearSnapshot: Sendable {
         }
     }
 
-    init(year: Int, polygons: [GeoPolygon]) {
+    public init(year: Int, polygons: [GeoPolygon]) {
         self.year = year
         self.snapshots = [
             HistoricalCountrySnapshot(

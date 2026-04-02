@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 // Domain module container: creates use cases from repository abstractions.
 struct DomainDIContainer {
