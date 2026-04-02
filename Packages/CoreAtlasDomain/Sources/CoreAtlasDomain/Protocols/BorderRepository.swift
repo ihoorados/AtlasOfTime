@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol BorderRepository: AnyObject, Sendable {
+public protocol BorderRepository: Sendable {
     func snapshot(for year: Int) async throws -> YearSnapshot
 }

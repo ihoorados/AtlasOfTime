@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol YearIndexRepository: AnyObject, Sendable {
+public protocol YearIndexRepository: Sendable {
     func load() async throws -> YearIndex
 }
