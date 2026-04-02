@@ -81,4 +81,4 @@ struct BundleDataSource {
     }
 }
 
-extension BundleDataSource: YearFileReading {}
+extension BundleDataSource: IndexJSONReading, YearFileReading {}

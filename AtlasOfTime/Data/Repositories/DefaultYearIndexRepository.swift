@@ -9,15 +9,15 @@ actor DefaultYearIndexRepository: YearIndexRepository {
         let files: [String: String]
     }
 
-    private let dataSource: BundleDataSource
+    private let indexJSONReader: any IndexJSONReading
     private let decoder = JSONDecoder()
 
-    init(dataSource: BundleDataSource) {
-        self.dataSource = dataSource
+    init(indexJSONReader: any IndexJSONReading) {
+        self.indexJSONReader = indexJSONReader
     }
 
     func load() async throws -> YearIndex {
-        let rawData = try dataSource.readIndexJSON()
+        let rawData = try indexJSONReader.readIndexJSON()
 
         let dto: IndexDTO
         do {

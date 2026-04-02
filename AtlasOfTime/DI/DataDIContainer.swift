@@ -10,7 +10,7 @@ final class DataDIContainer {
     private let borderSnapshotLoader: any BorderSnapshotLoading
 
     private lazy var yearIndexRepository: any YearIndexRepository = {
-        DefaultYearIndexRepository(dataSource: dataSource)
+        DefaultYearIndexRepository(indexJSONReader: dataSource)
     }()
 
     private lazy var borderRepository: any BorderRepository = {
