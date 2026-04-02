@@ -21,5 +21,10 @@ struct DomainDIContainer {
     func makeLoadBordersForYear() -> LoadBordersForYear {
         LoadBordersForYear(repository: borderRepository)
     }
-}
 
+    func makeGenerateCountrySummary(
+        generator: any CountrySummaryGenerating
+    ) -> GenerateCountrySummary {
+        GenerateCountrySummary(generator: generator)
+    }
+}

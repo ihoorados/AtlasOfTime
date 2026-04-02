@@ -8,7 +8,6 @@ import CoreAtlasDomain
 final class AppDIContainer {
     private let mapProvider: MapProvider
     private let dataContainer: DataDIContainer
-    private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
     private let countryDetailFeatureContainer: CountryDetailFeatureDIContainer
     private let destinationFactory: AppDestinationFactory
@@ -20,9 +19,9 @@ final class AppDIContainer {
         self.dataContainer = dataContainer
 
         let domainContainer = Self.makeDomainContainer(dataContainer: dataContainer)
-        self.domainContainer = domainContainer
-
-        let generateCountrySummary = Self.makeGenerateCountrySummary()
+        let generateCountrySummary = domainContainer.makeGenerateCountrySummary(
+            generator: FoundationModelCountrySummaryGenerator()
+        )
 
         let atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
         self.atlasFeatureContainer = atlasFeatureContainer
@@ -82,11 +81,5 @@ final class AppDIContainer {
         generateCountrySummary: GenerateCountrySummary
     ) -> CountryDetailFeatureDIContainer {
         CountryDetailFeatureDIContainer(generateCountrySummary: generateCountrySummary)
-    }
-
-    private static func makeGenerateCountrySummary() -> GenerateCountrySummary {
-        GenerateCountrySummary(
-            generator: FoundationModelCountrySummaryGenerator()
-        )
     }
 }
