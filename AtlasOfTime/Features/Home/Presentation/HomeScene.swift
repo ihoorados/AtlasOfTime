@@ -1,12 +1,15 @@
+import CoreAtlasMap
 import SwiftUI
 
 struct HomeScene: View {
     @ObservedObject var viewModel: AtlasViewModel
+    let mapViewFactory: any AtlasMapViewFactory
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
 
     var body: some View {
         AtlasScreen(
             viewModel: viewModel,
+            mapViewFactory: mapViewFactory,
             onSelectedCountryTapped: onSelectedCountryTapped
         )
     }
@@ -18,6 +21,7 @@ struct HomeScene_Previews: PreviewProvider {
     static var previews: some View {
         HomeScene(
             viewModel: HomePreviewFactory.makeViewModel(),
+            mapViewFactory: HomePreviewFactory.makeMapViewFactory(),
             onSelectedCountryTapped: { _ in }
         )
     }

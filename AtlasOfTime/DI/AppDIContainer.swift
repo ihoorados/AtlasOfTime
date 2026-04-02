@@ -1,15 +1,20 @@
+import CoreAtlasMap
+import CoreAtlasMapMapKit
 import Foundation
 
 // App composition root container. Keeps assembly logic out of App entry file.
 @MainActor
 final class AppDIContainer {
+    private let mapProvider: MapProvider
     private let dataContainer: DataDIContainer
     private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
     private let countryDetailFeatureContainer: CountryDetailFeatureDIContainer
     private let destinationFactory: AppDestinationFactory
 
-    init() {
+    init(mapProvider: MapProvider = .mapKit) {
+        self.mapProvider = mapProvider
+
         let dataContainer = Self.makeDataContainer()
         self.dataContainer = dataContainer
 
@@ -44,6 +49,13 @@ final class AppDIContainer {
 
     func makeDestinationFactory() -> AppDestinationFactory {
         destinationFactory
+    }
+
+    func makeMapViewFactory() -> any AtlasMapViewFactory {
+        switch mapProvider {
+        case .mapKit:
+            MapKitAtlasMapViewFactory()
+        }
     }
 
     // Extension points for additional features follow the same pattern.
