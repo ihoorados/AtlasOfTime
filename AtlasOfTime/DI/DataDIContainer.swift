@@ -4,7 +4,7 @@ import CoreAtlasDomain
 // Data module container: owns app-scoped infrastructure and repository implementations.
 final class DataDIContainer {
     private let dataSource: BundleDataSource
-    private let borderCache: LRUCache<Int, YearSnapshot>
+    private let borderCache: any YearSnapshotCaching
     private let gzipDecoder: any GzipDecoding
     private let borderDecoder: any BorderDecoding
     private let borderSnapshotLoader: any BorderSnapshotLoading
@@ -23,7 +23,7 @@ final class DataDIContainer {
 
     init(
         dataSource: BundleDataSource = BundleDataSource(),
-        borderCache: LRUCache<Int, YearSnapshot> = LRUCache<Int, YearSnapshot>(capacity: 4),
+        borderCache: any YearSnapshotCaching = LRUCache<Int, YearSnapshot>(capacity: 4),
         gzipDecoder: any GzipDecoding = CompressionGzipDecoderAdapter(),
         borderDecoder: any BorderDecoding = GeoJSONBorderDecoderAdapter()
     ) {

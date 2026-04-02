@@ -2,14 +2,14 @@ import Foundation
 import CoreAtlasDomain
 
 actor DefaultBorderRepository: BorderRepository {
-    private let cache: LRUCache<Int, YearSnapshot>
+    private let cache: any YearSnapshotCaching
     private let yearIndexRepository: any YearIndexRepository
     private let loader: any BorderSnapshotLoading
     private var cachedYearIndex: YearIndex?
     private var inFlightSnapshots: [Int: Task<YearSnapshot, Error>] = [:]
 
     init(
-        cache: LRUCache<Int, YearSnapshot>,
+        cache: any YearSnapshotCaching,
         yearIndexRepository: any YearIndexRepository,
         loader: any BorderSnapshotLoading
     ) {
@@ -19,7 +19,7 @@ actor DefaultBorderRepository: BorderRepository {
     }
 
     func snapshot(for year: Int) async throws -> YearSnapshot {
-        if let cached = await cache.value(for: year) {
+        if let cached = await cache.snapshot(for: year) {
             return cached
         }
 
@@ -40,7 +40,7 @@ actor DefaultBorderRepository: BorderRepository {
 
         let snapshot = try await task.value
         try Task.checkCancellation()
-        await cache.setValue(snapshot, for: year)
+        await cache.store(snapshot, for: year)
         return snapshot
     }
 
