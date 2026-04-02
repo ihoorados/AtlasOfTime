@@ -4,6 +4,7 @@ public struct YearSnapshot: Sendable {
     public let year: Int
     public let snapshots: [HistoricalCountrySnapshot]
 
+    @available(*, deprecated, message: "Use snapshots instead of legacy countries compatibility projection.")
     public var countries: [HistoricalCountry] {
         snapshots.map(HistoricalCountry.init(snapshot:))
     }
@@ -19,6 +20,7 @@ public struct YearSnapshot: Sendable {
         self.snapshots = snapshots
     }
 
+    @available(*, deprecated, message: "Initialize YearSnapshot with snapshots instead of legacy countries.")
     public init(year: Int, countries: [HistoricalCountry]) {
         self.year = year
         self.snapshots = countries.map { country in

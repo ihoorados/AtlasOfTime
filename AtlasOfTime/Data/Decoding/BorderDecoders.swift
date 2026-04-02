@@ -7,11 +7,13 @@ protocol GzipDecoding: Sendable {
 
 protocol BorderDecoding: Sendable {
     func decodeSnapshots(from data: Data, year: Int) throws -> [HistoricalCountrySnapshot]
+    @available(*, deprecated, message: "Use decodeSnapshots(from:year:) instead of legacy HistoricalCountry output.")
     func decodeCountries(from data: Data, year: Int) throws -> [HistoricalCountry]
     func decodeBorders(from data: Data) throws -> [GeoPolygon]
 }
 
 extension BorderDecoding {
+    @available(*, deprecated, message: "Use decodeSnapshots(from:year:) instead of legacy HistoricalCountry output.")
     func decodeCountries(from data: Data, year: Int) throws -> [HistoricalCountry] {
         try decodeSnapshots(from: data, year: year)
             .map { snapshot in
