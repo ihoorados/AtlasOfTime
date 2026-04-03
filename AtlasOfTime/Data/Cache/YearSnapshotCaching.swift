@@ -1,11 +1,7 @@
 import CoreAtlasDomain
+import CoreAtlasData
 
-protocol YearSnapshotCaching: Sendable {
-    func snapshot(for year: Int) async -> YearSnapshot?
-    func store(_ snapshot: YearSnapshot, for year: Int) async
-}
-
-extension LRUCache: YearSnapshotCaching where Key == Int, Value == YearSnapshot {
+extension LRUCache: CoreAtlasData.YearSnapshotCaching where Key == Int, Value == YearSnapshot {
     func snapshot(for year: Int) async -> YearSnapshot? {
         await value(for: year)
     }

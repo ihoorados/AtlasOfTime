@@ -1,15 +1,16 @@
 import Foundation
+import CoreAtlasData
 import CoreAtlasDomain
 
 actor DefaultBorderRepository: BorderRepository {
-    private let cache: any YearSnapshotCaching
+    private let cache: any CoreAtlasData.YearSnapshotCaching
     private let yearIndexRepository: any YearIndexRepository
     private let loader: any BorderSnapshotLoading
     private var cachedYearIndex: YearIndex?
     private var inFlightSnapshots: [Int: Task<YearSnapshot, Error>] = [:]
 
     init(
-        cache: any YearSnapshotCaching,
+        cache: any CoreAtlasData.YearSnapshotCaching,
         yearIndexRepository: any YearIndexRepository,
         loader: any BorderSnapshotLoading
     ) {

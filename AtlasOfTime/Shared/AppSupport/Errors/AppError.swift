@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasData
 import CoreAtlasDomain
 
 enum AppError: Error, LocalizedError, Sendable {
@@ -16,7 +17,7 @@ enum AppError: Error, LocalizedError, Sendable {
         if let appError = error as? AppError {
             return appError
         }
-        if let dataError = error as? AtlasDataError {
+        if let dataError = error as? CoreAtlasData.AtlasDataError {
             switch dataError {
             case .resourceNotFound(let path):
                 return .resourceNotFound(path)
