@@ -1,3 +1,4 @@
+import struct CoreAtlasAI.FoundationModelCountrySummaryGenerator
 import CoreAtlasMap
 import CoreAtlasMapMapKit
 import Foundation
