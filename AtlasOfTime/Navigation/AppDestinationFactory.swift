@@ -9,7 +9,7 @@ final class AppDestinationFactory {
         self.countryDetailFeatureContainer = countryDetailFeatureContainer
     }
 
-    func makeCountryDetailScene(
+    private func makeCountryDetailScene(
         snapshot: HistoricalCountrySnapshot
     ) -> CountryDetailScene {
         countryDetailFeatureContainer.makeCountryDetailScene(snapshot: snapshot)

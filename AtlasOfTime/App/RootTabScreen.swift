@@ -2,14 +2,32 @@ import CoreAtlasMap
 import SwiftUI
 
 struct RootTabScreen: View {
-    @ObservedObject var navigationStore: AppNavigationStore
-    let atlasFeatureContainer: AtlasFeatureDIContainer
-    let mapViewFactory: any AtlasMapViewFactory
-    @ObservedObject var appearanceController: AppearanceController
-    @ObservedObject var languageController: AppLanguageController
-    @ObservedObject var preferencesController: AppPreferencesController
-    let destinationFactory: AppDestinationFactory
+    @ObservedObject private var navigationStore: AppNavigationStore
+    private let atlasFeatureContainer: AtlasFeatureDIContainer
+    private let mapViewFactory: any AtlasMapViewFactory
+    @ObservedObject private var appearanceController: AppearanceController
+    @ObservedObject private var languageController: AppLanguageController
+    @ObservedObject private var preferencesController: AppPreferencesController
+    private let destinationFactory: AppDestinationFactory
     @Environment(\.colorScheme) private var colorScheme
+
+    init(
+        navigationStore: AppNavigationStore,
+        atlasFeatureContainer: AtlasFeatureDIContainer,
+        mapViewFactory: any AtlasMapViewFactory,
+        appearanceController: AppearanceController,
+        languageController: AppLanguageController,
+        preferencesController: AppPreferencesController,
+        destinationFactory: AppDestinationFactory
+    ) {
+        self.navigationStore = navigationStore
+        self.atlasFeatureContainer = atlasFeatureContainer
+        self.mapViewFactory = mapViewFactory
+        self.appearanceController = appearanceController
+        self.languageController = languageController
+        self.preferencesController = preferencesController
+        self.destinationFactory = destinationFactory
+    }
 
     var body: some View {
         TabView(selection: $navigationStore.selectedTab) {
