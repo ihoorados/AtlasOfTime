@@ -3,7 +3,7 @@ import CoreAtlasAppSettings
 import SwiftUI
 
 @MainActor
-final class AppPreferencesController: ObservableObject {
+final class MapPreferencesController: ObservableObject {
     @Published var showYearRangeLabels: Bool {
         didSet {
             persist()

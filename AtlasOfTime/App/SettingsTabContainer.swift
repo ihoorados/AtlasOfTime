@@ -4,14 +4,14 @@ struct SettingsTabContainer: View {
     @ObservedObject private var navigationStore: AppNavigationStore
     @ObservedObject private var appearanceController: AppearanceController
     @ObservedObject private var languageController: AppLanguageController
-    @ObservedObject private var preferencesController: AppPreferencesController
+    @ObservedObject private var preferencesController: MapPreferencesController
     private let destinationFactory: AppDestinationFactory
 
     init(
         navigationStore: AppNavigationStore,
         appearanceController: AppearanceController,
         languageController: AppLanguageController,
-        preferencesController: AppPreferencesController,
+        preferencesController: MapPreferencesController,
         destinationFactory: AppDestinationFactory
     ) {
         self.navigationStore = navigationStore

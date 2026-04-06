@@ -8,7 +8,7 @@ struct AtlasOfTimeApp: App {
     @StateObject private var navigationStore = AppNavigationStore()
     @StateObject private var appearanceController = AppearanceController()
     @StateObject private var languageController = AppLanguageController()
-    @StateObject private var preferencesController = AppPreferencesController()
+    @StateObject private var preferencesController = MapPreferencesController()
 
     init() {
         let appContainer = AppDIContainer()

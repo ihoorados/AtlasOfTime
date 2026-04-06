@@ -7,7 +7,7 @@ struct RootTabScreen: View {
     private let mapViewFactory: any AtlasMapViewFactory
     @ObservedObject private var appearanceController: AppearanceController
     @ObservedObject private var languageController: AppLanguageController
-    @ObservedObject private var preferencesController: AppPreferencesController
+    @ObservedObject private var preferencesController: MapPreferencesController
     private let destinationFactory: AppDestinationFactory
     @Environment(\.colorScheme) private var colorScheme
 
@@ -17,7 +17,7 @@ struct RootTabScreen: View {
         mapViewFactory: any AtlasMapViewFactory,
         appearanceController: AppearanceController,
         languageController: AppLanguageController,
-        preferencesController: AppPreferencesController,
+        preferencesController: MapPreferencesController,
         destinationFactory: AppDestinationFactory
     ) {
         self.navigationStore = navigationStore

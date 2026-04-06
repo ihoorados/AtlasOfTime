@@ -28,7 +28,7 @@ final class AppDestinationFactory {
         for route: SettingsRoute,
         appearanceController: AppearanceController,
         languageController: AppLanguageController,
-        preferencesController: AppPreferencesController
+        preferencesController: MapPreferencesController
     ) -> some View {
         switch route {
         case .appearance:
