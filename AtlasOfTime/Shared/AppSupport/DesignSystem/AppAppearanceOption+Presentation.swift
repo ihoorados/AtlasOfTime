@@ -1,6 +1,7 @@
+import CoreAtlasAppSettings
 import SwiftUI
 
-extension AppAppearanceOption {
+extension CoreAtlasAppSettings.AppAppearanceOption {
     var title: String {
         switch self {
         case .system:

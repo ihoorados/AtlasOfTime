@@ -1,3 +1,4 @@
+import CoreAtlasAppSettings
 import CoreAtlasMap
 import SwiftUI
 

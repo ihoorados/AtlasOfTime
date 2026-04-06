@@ -1,9 +1,10 @@
 import Combine
+import CoreAtlasAppSettings
 import SwiftUI
 
 @MainActor
 final class AppearanceController: ObservableObject {
-    @Published var selectedAppearance: AppAppearanceOption {
+    @Published var selectedAppearance: CoreAtlasAppSettings.AppAppearanceOption {
         didSet {
             persist()
         }
@@ -19,9 +20,11 @@ final class AppearanceController: ObservableObject {
         selectedAppearance.preferredColorScheme
     }
 
-    private let store: any AppearanceSettingsStore
+    private let store: any CoreAtlasAppSettings.AppearanceSettingsStore
 
-    init(store: any AppearanceSettingsStore = UserDefaultsAppearanceSettingsStore()) {
+    init(
+        store: any CoreAtlasAppSettings.AppearanceSettingsStore = CoreAtlasAppSettings.UserDefaultsAppearanceSettingsStore()
+    ) {
         self.store = store
         let settings = store.loadAppearanceSettings()
         self.selectedAppearance = settings.appearance
@@ -29,13 +32,13 @@ final class AppearanceController: ObservableObject {
     }
 
     func resetToDefaults() {
-        selectedAppearance = AppAppearanceSettings.default.appearance
-        glassEnabled = AppAppearanceSettings.default.glassEnabled
+        selectedAppearance = CoreAtlasAppSettings.AppAppearanceSettings.default.appearance
+        glassEnabled = CoreAtlasAppSettings.AppAppearanceSettings.default.glassEnabled
     }
 
     private func persist() {
         store.saveAppearanceSettings(
-            AppAppearanceSettings(
+            CoreAtlasAppSettings.AppAppearanceSettings(
                 appearance: selectedAppearance,
                 glassEnabled: glassEnabled
             )

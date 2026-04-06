@@ -1,7 +1,8 @@
+import CoreAtlasAppSettings
 import SwiftUI
 
 extension EnvironmentValues {
-    var atlasAppearance: AppAppearanceOption {
+    var atlasAppearance: CoreAtlasAppSettings.AppAppearanceOption {
         get { self[AtlasAppearanceKey.self] }
         set { self[AtlasAppearanceKey.self] = newValue }
     }
@@ -18,7 +19,7 @@ extension EnvironmentValues {
 }
 
 private struct AtlasAppearanceKey: EnvironmentKey {
-    static let defaultValue: AppAppearanceOption = .system
+    static let defaultValue: CoreAtlasAppSettings.AppAppearanceOption = .system
 }
 
 private struct AtlasGlassEnabledKey: EnvironmentKey {

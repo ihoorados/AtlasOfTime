@@ -1,4 +1,5 @@
 import Combine
+import CoreAtlasAppSettings
 import SwiftUI
 
 @MainActor
@@ -15,9 +16,11 @@ final class AppPreferencesController: ObservableObject {
         }
     }
 
-    private let store: any AppPreferencesStore
+    private let store: any CoreAtlasAppSettings.AppPreferencesStore
 
-    init(store: any AppPreferencesStore = UserDefaultsAppPreferencesStore()) {
+    init(
+        store: any CoreAtlasAppSettings.AppPreferencesStore = CoreAtlasAppSettings.UserDefaultsAppPreferencesStore()
+    ) {
         self.store = store
         let preferences = store.loadPreferences()
         self.showYearRangeLabels = preferences.showYearRangeLabels
@@ -25,13 +28,13 @@ final class AppPreferencesController: ObservableObject {
     }
 
     func resetToDefaults() {
-        showYearRangeLabels = AppPreferences.default.showYearRangeLabels
-        showLoadingIndicator = AppPreferences.default.showLoadingIndicator
+        showYearRangeLabels = CoreAtlasAppSettings.AppPreferences.default.showYearRangeLabels
+        showLoadingIndicator = CoreAtlasAppSettings.AppPreferences.default.showLoadingIndicator
     }
 
     private func persist() {
         store.savePreferences(
-            AppPreferences(
+            CoreAtlasAppSettings.AppPreferences(
                 showYearRangeLabels: showYearRangeLabels,
                 showLoadingIndicator: showLoadingIndicator
             )

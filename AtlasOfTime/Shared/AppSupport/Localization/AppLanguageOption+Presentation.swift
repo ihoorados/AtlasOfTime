@@ -1,6 +1,7 @@
+import CoreAtlasAppSettings
 import Foundation
 
-extension AppLanguageOption {
+extension CoreAtlasAppSettings.AppLanguageOption {
     var title: LocalizedStringResource {
         switch self {
         case .system:
