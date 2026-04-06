@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		70B601012FB4000100572583 /* CoreAtlasAppSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 70B601002FB4000100572583 /* CoreAtlasAppSettings */; };
 		70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 70A100032F4A000100572583 /* CoreAtlasNavigation */; };
 		70B5E1012FA3000100572583 /* CoreAtlasAI in Frameworks */ = {isa = PBXBuildFile; productRef = 70B5E1002FA3000100572583 /* CoreAtlasAI */; };
+		70B601012FB4000100572583 /* CoreAtlasAppSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 70B601002FB4000100572583 /* CoreAtlasAppSettings */; };
 		70C3D1012FA2000100572583 /* CoreAtlasData in Frameworks */ = {isa = PBXBuildFile; productRef = 70C3D1002FA2000100572583 /* CoreAtlasData */; };
 		70D1A1012F80000100572583 /* CoreAtlasDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 70D1A1002F80000100572583 /* CoreAtlasDomain */; };
 		70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */ = {isa = PBXBuildFile; productRef = 70EEA5132F6F579B009A91DA /* CoreAtlasMap */; };
@@ -644,10 +644,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/CoreAtlasAppSettings;
-		};
 		70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CoreAtlasNavigation;
@@ -655,6 +651,10 @@
 		70B5E0FF2FA3000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CoreAtlasAI;
+		};
+		70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasAppSettings;
 		};
 		70C3D0FF2FA2000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasData" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -671,11 +671,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		70B601002FB4000100572583 /* CoreAtlasAppSettings */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */;
-			productName = CoreAtlasAppSettings;
-		};
 		70A100032F4A000100572583 /* CoreAtlasNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */;
@@ -685,6 +680,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 70B5E0FF2FA3000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAI" */;
 			productName = CoreAtlasAI;
+		};
+		70B601002FB4000100572583 /* CoreAtlasAppSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */;
+			productName = CoreAtlasAppSettings;
 		};
 		70C3D1002FA2000100572583 /* CoreAtlasData */ = {
 			isa = XCSwiftPackageProductDependency;
