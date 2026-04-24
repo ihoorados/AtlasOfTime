@@ -13,7 +13,7 @@ struct CountrySummaryPromptBuilder: Sendable {
 
         sections.append(
             """
-            Historical Atlas Detail Request
+            AtlasOfTime Historical Snapshot Request
 
             Selected Year: \(request.year)
             """
@@ -22,16 +22,16 @@ struct CountrySummaryPromptBuilder: Sendable {
         sections.append(
             """
             Identity
-            Display Name: \(sanitizePromptValue(request.displayName) ?? "Unknown")
-            Short Name: \(sanitizePromptValue(request.shortDisplayName) ?? "None")
-            Formal Name: \(sanitizePromptValue(request.formalName) ?? "None")
+            Display Name: \(sanitizePromptValue(request.displayName) ?? "Not available in current dataset")
+            Short Name: \(sanitizePromptValue(request.shortDisplayName) ?? "Not available in current dataset")
+            Formal Name: \(sanitizePromptValue(request.formalName) ?? "Not available in current dataset")
             Name Confidence: \(request.nameConfidence.rawValue)
             """
         )
 
         sections.append(
             """
-            Territorial Context
+            Territorial Profile
             Border Confidence: \(request.borderConfidence.rawValue)
             Extent Count: \(request.extentCount)
             Extent Types: \(joinedRawValues(request.extentTypes))
@@ -41,15 +41,27 @@ struct CountrySummaryPromptBuilder: Sendable {
         )
 
         if request.relationships.isEmpty {
-            sections.append("Political Relationships\n- None provided")
+            sections.append(
+                """
+                Political Relationships
+                Relationship Count: \(request.relationshipCount)
+                - No recorded relationships in current dataset
+                """
+            )
         } else {
             let relationshipLines = request.relationships.compactMap { relationship -> String? in
                 guard let targetName = sanitizePromptValue(relationship.targetDisplayName) else { return nil }
-                return "- \(relationship.type.rawValue): \(targetName) [confidence: \(relationship.confidence.rawValue)]"
+                return "- \(relationship.type.rawValue) -> \(targetName) [confidence: \(relationship.confidence.rawValue)]"
             }
 
             if relationshipLines.isEmpty {
-                sections.append("Political Relationships\n- No usable relationship text provided")
+                sections.append(
+                    """
+                    Political Relationships
+                    Relationship Count: \(request.relationshipCount)
+                    - No usable relationship text provided
+                    """
+                )
             } else {
                 sections.append(
                     """
@@ -62,15 +74,27 @@ struct CountrySummaryPromptBuilder: Sendable {
         }
 
         if request.sourceReferences.isEmpty {
-            sections.append("Sources\n- No explicit sources provided")
+            sections.append(
+                """
+                Source Basis
+                Source Count: \(request.sourceCount)
+                - Not available in current dataset
+                """
+            )
         } else {
             let sourceLines = request.sourceReferences.compactMap(makeSourceLine)
             if sourceLines.isEmpty {
-                sections.append("Sources\n- No usable source text provided")
+                sections.append(
+                    """
+                    Source Basis
+                    Source Count: \(request.sourceCount)
+                    - No usable source text provided
+                    """
+                )
             } else {
                 sections.append(
                     """
-                    Sources
+                    Source Basis
                     Source Count: \(request.sourceCount)
                     \(sourceLines.joined(separator: "\n"))
                     """
@@ -80,29 +104,37 @@ struct CountrySummaryPromptBuilder: Sendable {
 
         sections.append(
             """
+            Data Confidence
+            Name Confidence: \(request.nameConfidence.rawValue)
+            Border Confidence: \(request.borderConfidence.rawValue)
+            Source Count: \(request.sourceCount)
+            Relationship Count: \(request.relationshipCount)
+
             Task
-            Generate a historically careful atlas detail summary for this polity in the selected year.
+            Generate a historically careful summary for this snapshot using only the supplied dataset fields.
 
             Writing Priorities
-            1. Identify what this polity is in the selected year.
-            2. Describe territorial or border context using only the supplied evidence.
-            3. Mention political relationships only when they materially clarify status.
-            4. State uncertainty clearly when names, borders, or relationships are weakly supported.
+            1. Identify the polity in the selected year using only the supplied identity fields.
+            2. Describe territorial context using extent count, extent types, border models, and border confidence.
+            3. Mention political relationships only when they materially clarify the record.
+            4. Surface source availability and uncertainty clearly.
 
             Hard Constraints
             - Use only the supplied context.
-            - Do not invent rulers, capitals, wars, populations, religions, chronology, or neighboring states.
+            - Do not use external knowledge.
+            - Do not invent rulers, capitals, governments, wars, events, populations, religions, chronology, or neighboring states.
             - Do not modernize or normalize historical status beyond the provided evidence.
-            - If confidence is low or unknown, use restrained wording such as "the available data suggests" or "the source context is limited".
+            - If confidence is medium, low, unknown, disputed, or mixed, explicitly use restrained wording.
             - If the context is sparse, say so plainly rather than filling gaps.
+            - Separate observed dataset facts from cautious interpretation.
 
             Output Rules
             - Title: 2 to 8 words.
-            - Overview: 70 to 130 words, suitable for a production historical atlas screen.
-            - Territorial Context: 1 short paragraph only if there is meaningful territorial or border context to add beyond the overview.
-            - Political Context: 1 short paragraph only if relationships materially clarify status.
-            - Key Facts: 3 to 5 short factual items, each under 16 words.
-            - Confidence Note: 1 short sentence only if uncertainty materially affects interpretation.
+            - Overview: 70 to 130 words, summarizing identity, record scope, and uncertainty using only supplied fields.
+            - Territorial Context: 1 short paragraph only if territorial evidence adds meaningful detail beyond the overview.
+            - Political Context: 1 short paragraph only if relationships materially clarify status or context.
+            - Key Facts: 3 to 5 short factual items based only on extent, relationship, source, and confidence data.
+            - Confidence Note: 1 short sentence when uncertainty, sparse sources, or mixed evidence materially affects interpretation.
             """
         )
 
@@ -159,28 +191,32 @@ struct CountrySummaryPromptBuilder: Sendable {
 
 extension CountrySummaryPromptBuilder {
     static let defaultInstructions = """
-    You are generating a historical atlas detail summary for one polity in one selected year.
+    You are AtlasOfTime Historical Intelligence Engine.
 
+    Generate an accurate, neutral, educational summary for one historical country snapshot at a specific year.
     Use only the supplied structured context.
+    Do not use external knowledge.
     Do not add facts that are not directly supported by the request.
-    Do not infer rulers, capitals, wars, religions, populations, or events unless they are explicitly present in the input.
-    When the context is incomplete, say so plainly and briefly.
+    Do not infer rulers, capitals, governments, wars, religions, populations, events, or chronology unless they are explicitly present in the input.
+    If data is missing, say so plainly and briefly.
+    If confidence is medium, low, unknown, disputed, or mixed, state that uncertainty clearly.
     Prefer precision and restraint over literary language.
 
     Your job is to produce:
     1. a short title,
     2. a historically careful overview,
     3. optional territorial and political context sections when justified by the input,
-    4. concise key facts,
+    4. concise factual key points,
     5. a confidence note when uncertainty materially affects interpretation.
 
     Prioritize:
     - the polity's identity in the selected year,
-    - its territorial or border context,
-    - its political relationships,
-    - uncertainty and source limitations.
+    - territorial evidence from extents and border models,
+    - political relationships from the supplied relationship records,
+    - source availability and uncertainty,
+    - clear separation between observed facts and cautious interpretation.
 
-    If confidence is low or unknown, explicitly avoid definitive wording.
+    If confidence is not high, explicitly avoid definitive wording.
     Write concise English suitable for a production historical atlas UI.
     """
 }
