@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreAtlasDomain
 
 struct AtlasControlPanelView: View {
     let displayYear: Int

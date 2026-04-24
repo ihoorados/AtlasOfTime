@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 // Domain module container: creates use cases from repository abstractions.
 struct DomainDIContainer {
@@ -20,5 +21,10 @@ struct DomainDIContainer {
     func makeLoadBordersForYear() -> LoadBordersForYear {
         LoadBordersForYear(repository: borderRepository)
     }
-}
 
+    func makeGenerateCountrySummary(
+        generator: any CountrySummaryGenerating
+    ) -> GenerateCountrySummary {
+        GenerateCountrySummary(generator: generator)
+    }
+}

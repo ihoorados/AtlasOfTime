@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreAtlasDomain
 
 @MainActor
 final class AppDestinationFactory {
@@ -8,7 +9,7 @@ final class AppDestinationFactory {
         self.countryDetailFeatureContainer = countryDetailFeatureContainer
     }
 
-    func makeCountryDetailScene(
+    private func makeCountryDetailScene(
         snapshot: HistoricalCountrySnapshot
     ) -> CountryDetailScene {
         countryDetailFeatureContainer.makeCountryDetailScene(snapshot: snapshot)
@@ -27,7 +28,7 @@ final class AppDestinationFactory {
         for route: SettingsRoute,
         appearanceController: AppearanceController,
         languageController: AppLanguageController,
-        preferencesController: AppPreferencesController
+        preferencesController: MapPreferencesController
     ) -> some View {
         switch route {
         case .appearance:

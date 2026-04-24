@@ -1,23 +1,18 @@
+import CoreAtlasAppSettings
 import CoreAtlasMap
 import SwiftUI
 
 @main
 struct AtlasOfTimeApp: App {
-    private let appContainer: AppDIContainer
-    private let atlasFeatureContainer: AtlasFeatureDIContainer
-    private let mapViewFactory: any AtlasMapViewFactory
-    private let destinationFactory: AppDestinationFactory
+    private let rootDependencies: AppRootDependencies
     @StateObject private var navigationStore = AppNavigationStore()
     @StateObject private var appearanceController = AppearanceController()
     @StateObject private var languageController = AppLanguageController()
-    @StateObject private var preferencesController = AppPreferencesController()
+    @StateObject private var preferencesController = MapPreferencesController()
 
     init() {
         let appContainer = AppDIContainer()
-        self.appContainer = appContainer
-        self.atlasFeatureContainer = appContainer.makeAtlasFeatureContainer()
-        self.mapViewFactory = appContainer.makeMapViewFactory()
-        self.destinationFactory = appContainer.makeDestinationFactory()
+        self.rootDependencies = appContainer.makeRootDependencies()
     }
 
     var body: some Scene {
@@ -38,12 +33,12 @@ struct AtlasOfTimeApp: App {
     private var rootContent: some View {
         RootTabScreen(
             navigationStore: navigationStore,
-            atlasFeatureContainer: atlasFeatureContainer,
-            mapViewFactory: mapViewFactory,
+            atlasFeatureContainer: rootDependencies.atlasFeatureContainer,
+            mapViewFactory: rootDependencies.mapViewFactory,
             appearanceController: appearanceController,
             languageController: languageController,
             preferencesController: preferencesController,
-            destinationFactory: destinationFactory
+            destinationFactory: rootDependencies.destinationFactory
         )
         .preferredColorScheme(appearanceController.preferredColorScheme)
         .environment(\.atlasAppearance, appearanceController.selectedAppearance)

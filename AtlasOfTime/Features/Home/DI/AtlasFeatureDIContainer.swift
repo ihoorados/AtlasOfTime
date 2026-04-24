@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasDomain
 
 // Atlas feature container: assembles feature-level presentation objects.
 @MainActor

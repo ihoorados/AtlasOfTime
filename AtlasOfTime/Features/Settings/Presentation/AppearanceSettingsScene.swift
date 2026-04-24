@@ -1,3 +1,4 @@
+import CoreAtlasAppSettings
 import SwiftUI
 
 struct AppearanceSettingsScene: View {
@@ -18,7 +19,7 @@ struct AppearanceSettingsScene: View {
     private var appearanceSection: some View {
         Section {
             Picker(AppStrings.Settings.Appearance.appAppearance, selection: $appearanceController.selectedAppearance) {
-                ForEach(AppAppearanceOption.allCases) { option in
+                ForEach(CoreAtlasAppSettings.AppAppearanceOption.allCases) { option in
                     Label(option.title, systemImage: option.systemImage)
                         .tag(option)
                 }
@@ -26,7 +27,7 @@ struct AppearanceSettingsScene: View {
             .accessibilityValue(appearanceSelectionAccessibilityValue)
 
             Picker(AppStrings.Settings.Appearance.appLanguage, selection: $languageController.selectedLanguage) {
-                ForEach(AppLanguageOption.allCases) { option in
+                ForEach(CoreAtlasAppSettings.AppLanguageOption.allCases) { option in
                     Text(option.title)
                         .tag(option)
                 }

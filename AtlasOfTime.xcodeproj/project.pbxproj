@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 70A100032F4A000100572583 /* CoreAtlasNavigation */; };
+		70B5E1012FA3000100572583 /* CoreAtlasAI in Frameworks */ = {isa = PBXBuildFile; productRef = 70B5E1002FA3000100572583 /* CoreAtlasAI */; };
+		70B601012FB4000100572583 /* CoreAtlasAppSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 70B601002FB4000100572583 /* CoreAtlasAppSettings */; };
+		70C3D1012FA2000100572583 /* CoreAtlasData in Frameworks */ = {isa = PBXBuildFile; productRef = 70C3D1002FA2000100572583 /* CoreAtlasData */; };
+		70D1A1012F80000100572583 /* CoreAtlasDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 70D1A1002F80000100572583 /* CoreAtlasDomain */; };
 		70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */ = {isa = PBXBuildFile; productRef = 70EEA5132F6F579B009A91DA /* CoreAtlasMap */; };
 		70F0C2012F71A001009A91DA /* CoreAtlasMapMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70F0C2002F71A001009A91DA /* CoreAtlasMapMapKit */; };
 /* End PBXBuildFile section */
@@ -58,6 +62,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B601012FB4000100572583 /* CoreAtlasAppSettings in Frameworks */,
+				70B5E1012FA3000100572583 /* CoreAtlasAI in Frameworks */,
+				70C3D1012FA2000100572583 /* CoreAtlasData in Frameworks */,
+				70D1A1012F80000100572583 /* CoreAtlasDomain in Frameworks */,
 				70F0C2012F71A001009A91DA /* CoreAtlasMapMapKit in Frameworks */,
 				70EEA5142F6F579B009A91DA /* CoreAtlasMap in Frameworks */,
 				70A100042F4A000100572583 /* CoreAtlasNavigation in Frameworks */,
@@ -121,7 +129,11 @@
 			);
 			name = AtlasOfTime;
 			packageProductDependencies = (
+				70B601002FB4000100572583 /* CoreAtlasAppSettings */,
 				70A100032F4A000100572583 /* CoreAtlasNavigation */,
+				70B5E1002FA3000100572583 /* CoreAtlasAI */,
+				70C3D1002FA2000100572583 /* CoreAtlasData */,
+				70D1A1002F80000100572583 /* CoreAtlasDomain */,
 				70EEA5132F6F579B009A91DA /* CoreAtlasMap */,
 				70F0C2002F71A001009A91DA /* CoreAtlasMapMapKit */,
 			);
@@ -209,7 +221,11 @@
 			mainGroup = 7060DD202F4615C900572583;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */,
 				70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */,
+				70B5E0FF2FA3000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAI" */,
+				70C3D0FF2FA2000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasData" */,
+				70D1A0FF2F80000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasDomain" */,
 				70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -632,6 +648,22 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CoreAtlasNavigation;
 		};
+		70B5E0FF2FA3000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasAI;
+		};
+		70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasAppSettings;
+		};
+		70C3D0FF2FA2000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasData" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasData;
+		};
+		70D1A0FF2F80000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasDomain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAtlasDomain;
+		};
 		70EEA5122F6F579B009A91DA /* XCLocalSwiftPackageReference "Packages/CoreAtlasMap" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CoreAtlasMap;
@@ -643,6 +675,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 70A100022F4A000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasNavigation" */;
 			productName = CoreAtlasNavigation;
+		};
+		70B5E1002FA3000100572583 /* CoreAtlasAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70B5E0FF2FA3000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAI" */;
+			productName = CoreAtlasAI;
+		};
+		70B601002FB4000100572583 /* CoreAtlasAppSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70B600FF2FB4000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasAppSettings" */;
+			productName = CoreAtlasAppSettings;
+		};
+		70C3D1002FA2000100572583 /* CoreAtlasData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70C3D0FF2FA2000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasData" */;
+			productName = CoreAtlasData;
+		};
+		70D1A1002F80000100572583 /* CoreAtlasDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70D1A0FF2F80000100572583 /* XCLocalSwiftPackageReference "Packages/CoreAtlasDomain" */;
+			productName = CoreAtlasDomain;
 		};
 		70EEA5132F6F579B009A91DA /* CoreAtlasMap */ = {
 			isa = XCSwiftPackageProductDependency;

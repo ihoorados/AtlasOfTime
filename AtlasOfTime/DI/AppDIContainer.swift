@@ -1,13 +1,13 @@
+import struct CoreAtlasAI.FoundationModelCountrySummaryGenerator
 import CoreAtlasMap
 import CoreAtlasMapMapKit
 import Foundation
+import CoreAtlasDomain
 
 // App composition root container. Keeps assembly logic out of App entry file.
 @MainActor
 final class AppDIContainer {
     private let mapProvider: MapProvider
-    private let dataContainer: DataDIContainer
-    private let domainContainer: DomainDIContainer
     private let atlasFeatureContainer: AtlasFeatureDIContainer
     private let countryDetailFeatureContainer: CountryDetailFeatureDIContainer
     private let destinationFactory: AppDestinationFactory
@@ -16,12 +16,10 @@ final class AppDIContainer {
         self.mapProvider = mapProvider
 
         let dataContainer = Self.makeDataContainer()
-        self.dataContainer = dataContainer
-
         let domainContainer = Self.makeDomainContainer(dataContainer: dataContainer)
-        self.domainContainer = domainContainer
-
-        let generateCountrySummary = Self.makeGenerateCountrySummary()
+        let generateCountrySummary = domainContainer.makeGenerateCountrySummary(
+            generator: FoundationModelCountrySummaryGenerator()
+        )
 
         let atlasFeatureContainer = Self.makeAtlasFeatureContainer(domainContainer: domainContainer)
         self.atlasFeatureContainer = atlasFeatureContainer
@@ -49,6 +47,14 @@ final class AppDIContainer {
 
     func makeDestinationFactory() -> AppDestinationFactory {
         destinationFactory
+    }
+
+    func makeRootDependencies() -> AppRootDependencies {
+        AppRootDependencies(
+            atlasFeatureContainer: atlasFeatureContainer,
+            mapViewFactory: makeMapViewFactory(),
+            destinationFactory: destinationFactory
+        )
     }
 
     func makeMapViewFactory() -> any AtlasMapViewFactory {
@@ -81,11 +87,5 @@ final class AppDIContainer {
         generateCountrySummary: GenerateCountrySummary
     ) -> CountryDetailFeatureDIContainer {
         CountryDetailFeatureDIContainer(generateCountrySummary: generateCountrySummary)
-    }
-
-    private static func makeGenerateCountrySummary() -> GenerateCountrySummary {
-        GenerateCountrySummary(
-            generator: FoundationModelCountrySummaryGenerator()
-        )
     }
 }

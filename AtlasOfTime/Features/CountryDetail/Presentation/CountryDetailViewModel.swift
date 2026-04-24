@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import CoreAtlasDomain
 
 @MainActor
 final class CountryDetailViewModel: ObservableObject {

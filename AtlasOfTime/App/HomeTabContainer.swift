@@ -2,10 +2,10 @@ import CoreAtlasMap
 import SwiftUI
 
 struct HomeTabContainer: View {
-    @ObservedObject var navigationStore: AppNavigationStore
+    @ObservedObject private var navigationStore: AppNavigationStore
     @StateObject private var viewModel: AtlasViewModel
     private let mapViewFactory: any AtlasMapViewFactory
-    let destinationFactory: AppDestinationFactory
+    private let destinationFactory: AppDestinationFactory
 
     init(
         navigationStore: AppNavigationStore,

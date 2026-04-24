@@ -1,4 +1,6 @@
 import Foundation
+import CoreAtlasData
+import CoreAtlasDomain
 
 enum AppError: Error, LocalizedError, Sendable {
     case resourceNotFound(String)
@@ -14,6 +16,26 @@ enum AppError: Error, LocalizedError, Sendable {
     static func wrap(_ error: Error) -> AppError {
         if let appError = error as? AppError {
             return appError
+        }
+        if let dataError = error as? CoreAtlasData.AtlasDataError {
+            switch dataError {
+            case .resourceNotFound(let path):
+                return .resourceNotFound(path)
+            case .fileReadFailed(let path):
+                return .fileReadFailed(path)
+            case .invalidIndexFormat(let details):
+                return .invalidIndexFormat(details)
+            case .invalidGeoJSON(let details):
+                return .invalidGeoJSON(details)
+            case .decompressionFailed(let reason):
+                return .decompressionFailed(reason: reason)
+            }
+        }
+        if let domainError = error as? AtlasDomainError {
+            switch domainError {
+            case .yearUnavailable(let year):
+                return .yearUnavailable(year)
+            }
         }
         if error is CancellationError {
             return .cancelled

@@ -10,8 +10,8 @@ enum SettingsPreviewFactory {
         AppLanguageController()
     }
 
-    static func makePreferencesController() -> AppPreferencesController {
-        AppPreferencesController()
+    static func makePreferencesController() -> MapPreferencesController {
+        MapPreferencesController()
     }
 
     static func makeSettingsScene() -> SettingsScene {

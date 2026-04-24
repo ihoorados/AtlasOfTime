@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MapSettingsScene: View {
-    @ObservedObject var preferencesController: AppPreferencesController
+    @ObservedObject var preferencesController: MapPreferencesController
 
     var body: some View {
         Form {
