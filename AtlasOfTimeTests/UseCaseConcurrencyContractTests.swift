@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import CoreAtlasDomain
 @testable import AtlasOfTime
 
 struct UseCaseConcurrencyContractTests {
@@ -79,7 +80,7 @@ private actor ConcurrencyContractBorderRepository: BorderRepository {
 
     func snapshot(for year: Int) async throws -> YearSnapshot {
         guard let snapshot = snapshots[year] else {
-            throw AppError.yearUnavailable(year)
+            throw AtlasDomainError.yearUnavailable(year)
         }
 
         return snapshot

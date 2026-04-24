@@ -29,9 +29,13 @@ enum LocalizationTestSupport {
         return String(format: format, locale: locale, arguments: arguments)
     }
 
+    static func normalizedForComparison(_ value: String) -> String {
+        let bidiFormattingScalars = CharacterSet(charactersIn: "\u{200E}\u{200F}\u{061C}\u{2066}\u{2067}\u{2068}\u{2069}")
+        return String(value.unicodeScalars.filter { !bidiFormattingScalars.contains($0) })
+    }
+
     private static func projectRootURL(sourceFilePath: StaticString) -> URL {
         URL(fileURLWithPath: String(describing: sourceFilePath))
-            .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
     }

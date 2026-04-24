@@ -1,5 +1,7 @@
 import Foundation
 import Testing
+import CoreAtlasData
+import CoreAtlasDomain
 @testable import AtlasOfTime
 
 struct BorderRepositoryConcurrencyTests {
@@ -161,7 +163,7 @@ private actor CountingBorderSnapshotLoader: BorderSnapshotLoading {
         }
 
         guard let snapshot = snapshots[year] else {
-            throw AppError.yearUnavailable(year)
+            throw AtlasDomainError.yearUnavailable(year)
         }
 
         return snapshot
@@ -200,7 +202,7 @@ private actor GatedBorderSnapshotLoader: BorderSnapshotLoading {
         try Task.checkCancellation()
 
         guard let snapshot = snapshots[year] else {
-            throw AppError.yearUnavailable(year)
+            throw AtlasDomainError.yearUnavailable(year)
         }
 
         return snapshot
