@@ -1,0 +1,107 @@
+"common.appName" = "Atlas of Time";
+"common.unavailableValue" = "--";
+
+"tabs.home" = "Home";
+"tabs.settings" = "Settings";
+
+"home.selectedCountry.title" = "Selected Country";
+"home.selectedCountry.borderConfidence" = "Border Confidence";
+"home.selectedCountry.sources" = "Sources";
+"home.selectedCountry.sourceCount" = "%1$lld references";
+"home.selectedCountry.confidence.high" = "High";
+"home.selectedCountry.confidence.medium" = "Medium";
+"home.selectedCountry.confidence.low" = "Low";
+"home.selectedCountry.confidence.unknown" = "Unknown";
+"home.countries.title" = "Countries";
+"home.countries.more" = "+ %1$lld more";
+"home.detail.loading.title" = "Generating Summary";
+"home.detail.loading.message" = "The country summary is being prepared from the selected year context.";
+"home.detail.overview.title" = "Overview";
+"home.detail.territorialContext.title" = "Territorial Context";
+"home.detail.politicalContext.title" = "Political Context";
+"home.detail.keyFacts.title" = "Key Facts";
+"home.detail.confidenceNote.title" = "Confidence Note";
+"home.detail.error.title" = "Summary Unavailable";
+"home.detail.retry" = "Try Again";
+"home.detail.empty.title" = "No Summary Yet";
+"home.detail.empty.message" = "No summary content is available for this country.";
+"home.detail.nameConfidence.title" = "Name";
+"home.detail.borderConfidence.title" = "Border";
+
+"appearance.option.system.title" = "System";
+"appearance.option.light.title" = "Light";
+"appearance.option.dark.title" = "Dark";
+"appearance.option.system.summary" = "Follow the device appearance automatically.";
+"appearance.option.light.summary" = "Always use the light interface.";
+"appearance.option.dark.summary" = "Always use the dark interface.";
+
+"language.option.system.title" = "System";
+"language.option.english.title" = "English";
+"language.option.persian.title" = "Persian";
+
+"settings.root.title" = "Settings";
+"settings.root.appearance" = "Appearance";
+"settings.root.map" = "Map";
+"settings.root.data" = "Data";
+
+"settings.appearance.title" = "Appearance";
+"settings.appearance.section.title" = "Appearance";
+"settings.appearance.appAppearance" = "App Appearance";
+"settings.appearance.appLanguage" = "App Language";
+"settings.appearance.language.footer" = "Choose whether the app follows the system language or always uses English or Persian.";
+"settings.appearance.liquidGlass.title" = "Liquid Glass";
+"settings.appearance.liquidGlass.glassSurfaces" = "Glass Surfaces";
+"settings.appearance.liquidGlass.footer" = "The native tab bar uses the system Liquid Glass style automatically. This setting controls custom glass panels inside the app.";
+"settings.appearance.preview.title" = "Preview";
+"settings.appearance.preview.cardTitle" = "Theme Preview";
+"settings.appearance.preview.light" = "Light";
+"settings.appearance.preview.dark" = "Dark";
+"settings.appearance.preview.glass" = "Glass";
+"settings.appearance.preview.glassEnabled" = "glass surfaces on";
+"settings.appearance.preview.glassReduced" = "glass surfaces reduced";
+"settings.appearance.preview.summary" = "%1$@ mode with %2$@.";
+"settings.appearance.reset" = "Reset Appearance Settings";
+
+"settings.map.title" = "Map";
+"settings.map.presentation.title" = "Presentation";
+"settings.map.showYearRangeLabels" = "Show Year Range Labels";
+"settings.map.showLoadingIndicator" = "Show Loading Indicator";
+"settings.map.presentation.footer" = "These controls adjust the map panel and timeline presentation without affecting the underlying historical data.";
+"settings.map.reset" = "Reset Map Settings";
+
+"settings.data.title" = "Data";
+"settings.data.dataset.title" = "Dataset";
+"settings.data.dataset.source" = "Source";
+"settings.data.dataset.bundled" = "Bundled";
+"settings.data.dataset.format" = "Format";
+"settings.data.dataset.geojsonGzip" = "GeoJSON + Gzip";
+"settings.data.dataset.footer" = "Historical border data is currently shipped with the app. There is no external sync or download configuration yet.";
+"settings.data.loading.title" = "Loading";
+"settings.data.loading.caching" = "Caching";
+"settings.data.loading.automatic" = "Automatic";
+"settings.data.loading.yearIndex" = "Year Index";
+"settings.data.loading.cachedInMemory" = "Cached In Memory";
+"settings.data.loading.footer" = "Data loading and caching are managed automatically. When real data preferences exist, they should be added here instead of using placeholder controls.";
+
+"errors.resourceNotFound" = "Resource not found: %1$@";
+"errors.fileReadFailed" = "Unable to read file: %1$@";
+"errors.invalidIndexFormat" = "Invalid index.json format: %1$@";
+"errors.invalidGeoJSON" = "Invalid GeoJSON: %1$@";
+"errors.yearUnavailable" = "No border data available for year %1$lld.";
+"errors.yearIndexNotLoaded" = "Year index is not loaded.";
+"errors.decompressionFailed" = "Gzip decompression failed: %1$@";
+"errors.cancelled" = "Operation cancelled.";
+"errors.unexpectedError" = "Unexpected error: %1$@";
+"errors.loadingMapBorders" = "Something went wrong while loading map borders.";
+"errors.unexpectedFallback" = "An unexpected error occurred.";
+
+"accessibility.common.on" = "On";
+"accessibility.common.off" = "Off";
+"accessibility.timeline.yearSlider.label" = "Year";
+"accessibility.timeline.yearSlider.hint" = "Adjust to change the displayed historical year.";
+"accessibility.timeline.selectedYear" = "Selected year %1$lld";
+"accessibility.appearance.appAppearance.value" = "Current selection: %1$@";
+"accessibility.appearance.appLanguage.value" = "Current language: %1$@";
+"accessibility.appearance.glassSurfaces.value" = "Glass surfaces %1$@";
+"accessibility.map.yearRangeLabels.value" = "Year range labels %1$@";
+"accessibility.map.loadingIndicator.value" = "Loading indicator %1$@";

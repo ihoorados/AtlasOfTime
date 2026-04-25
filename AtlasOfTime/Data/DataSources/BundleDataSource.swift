@@ -1,4 +1,5 @@
 import Foundation
+import CoreAtlasData
 
 struct BundleDataSource {
     private let bundle: Bundle
@@ -27,7 +28,7 @@ struct BundleDataSource {
 
     func readIndexJSON() throws -> Data {
         guard let url = resourceURL(relativePath: "index.json") else {
-            throw AppError.resourceNotFound("index.json (searched AtlasOfTimeData subdirectories and bundle root)")
+            throw CoreAtlasData.AtlasDataError.resourceNotFound("index.json (searched AtlasOfTimeData subdirectories and bundle root)")
         }
 
         return try readData(at: url)
@@ -36,7 +37,7 @@ struct BundleDataSource {
     func readYearFile(relativePath: String) throws -> Data {
         let normalizedPath = relativePath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         guard let url = resourceURL(relativePath: normalizedPath) else {
-            throw AppError.resourceNotFound("\(normalizedPath) (searched AtlasOfTimeData subdirectories and bundle root)")
+            throw CoreAtlasData.AtlasDataError.resourceNotFound("\(normalizedPath) (searched AtlasOfTimeData subdirectories and bundle root)")
         }
 
         return try readData(at: url)
@@ -76,7 +77,9 @@ struct BundleDataSource {
         do {
             return try Data(contentsOf: url, options: .mappedIfSafe)
         } catch {
-            throw AppError.fileReadFailed(url.path)
+            throw CoreAtlasData.AtlasDataError.fileReadFailed(url.path)
         }
     }
 }
+
+extension BundleDataSource: CoreAtlasData.IndexJSONReading, CoreAtlasData.YearFileReading {}

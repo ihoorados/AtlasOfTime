@@ -1,0 +1,107 @@
+"common.appName" = "اطلس زمان";
+"common.unavailableValue" = "--";
+
+"tabs.home" = "خانه";
+"tabs.settings" = "تنظیمات";
+
+"home.selectedCountry.title" = "کشور انتخاب‌شده";
+"home.selectedCountry.borderConfidence" = "اطمینان مرز";
+"home.selectedCountry.sources" = "منابع";
+"home.selectedCountry.sourceCount" = "%1$lld مرجع";
+"home.selectedCountry.confidence.high" = "زیاد";
+"home.selectedCountry.confidence.medium" = "متوسط";
+"home.selectedCountry.confidence.low" = "کم";
+"home.selectedCountry.confidence.unknown" = "نامشخص";
+"home.countries.title" = "کشورها";
+"home.countries.more" = "+ %1$lld مورد دیگر";
+"home.detail.loading.title" = "در حال تولید خلاصه";
+"home.detail.loading.message" = "خلاصه کشور بر اساس اطلاعات سال انتخاب‌شده آماده می‌شود.";
+"home.detail.overview.title" = "نمای کلی";
+"home.detail.territorialContext.title" = "زمینه سرزمینی";
+"home.detail.politicalContext.title" = "زمینه سیاسی";
+"home.detail.keyFacts.title" = "نکات کلیدی";
+"home.detail.confidenceNote.title" = "یادداشت اطمینان";
+"home.detail.error.title" = "خلاصه در دسترس نیست";
+"home.detail.retry" = "تلاش دوباره";
+"home.detail.empty.title" = "هنوز خلاصه‌ای وجود ندارد";
+"home.detail.empty.message" = "برای این کشور محتوای خلاصه‌ای موجود نیست.";
+"home.detail.nameConfidence.title" = "نام";
+"home.detail.borderConfidence.title" = "مرز";
+
+"appearance.option.system.title" = "سیستم";
+"appearance.option.light.title" = "روشن";
+"appearance.option.dark.title" = "تیره";
+"appearance.option.system.summary" = "از حالت ظاهری دستگاه به صورت خودکار پیروی می‌کند.";
+"appearance.option.light.summary" = "همیشه از رابط روشن استفاده می‌کند.";
+"appearance.option.dark.summary" = "همیشه از رابط تیره استفاده می‌کند.";
+
+"language.option.system.title" = "سیستم";
+"language.option.english.title" = "انگلیسی";
+"language.option.persian.title" = "فارسی";
+
+"settings.root.title" = "تنظیمات";
+"settings.root.appearance" = "ظاهر";
+"settings.root.map" = "نقشه";
+"settings.root.data" = "داده";
+
+"settings.appearance.title" = "ظاهر";
+"settings.appearance.section.title" = "ظاهر";
+"settings.appearance.appAppearance" = "ظاهر برنامه";
+"settings.appearance.appLanguage" = "زبان برنامه";
+"settings.appearance.language.footer" = "مشخص می‌کند برنامه از زبان سیستم پیروی کند یا همیشه از انگلیسی یا فارسی استفاده کند.";
+"settings.appearance.liquidGlass.title" = "شیشه مایع";
+"settings.appearance.liquidGlass.glassSurfaces" = "سطوح شیشه‌ای";
+"settings.appearance.liquidGlass.footer" = "نوار تب بومی به صورت خودکار از سبک شیشه مایع سیستم استفاده می‌کند. این تنظیم پنل‌های شیشه‌ای سفارشی داخل برنامه را کنترل می‌کند.";
+"settings.appearance.preview.title" = "پیش‌نمایش";
+"settings.appearance.preview.cardTitle" = "پیش‌نمایش پوسته";
+"settings.appearance.preview.light" = "روشن";
+"settings.appearance.preview.dark" = "تیره";
+"settings.appearance.preview.glass" = "شیشه";
+"settings.appearance.preview.glassEnabled" = "سطوح شیشه‌ای فعال";
+"settings.appearance.preview.glassReduced" = "سطوح شیشه‌ای کاهش‌یافته";
+"settings.appearance.preview.summary" = "حالت %1$@ با %2$@.";
+"settings.appearance.reset" = "بازنشانی تنظیمات ظاهر";
+
+"settings.map.title" = "نقشه";
+"settings.map.presentation.title" = "نمایش";
+"settings.map.showYearRangeLabels" = "نمایش برچسب‌های بازه سال";
+"settings.map.showLoadingIndicator" = "نمایش نشانگر بارگذاری";
+"settings.map.presentation.footer" = "این کنترل‌ها نمایش پنل نقشه و خط زمان را تغییر می‌دهند، بدون اینکه بر داده‌های تاریخی اصلی اثر بگذارند.";
+"settings.map.reset" = "بازنشانی تنظیمات نقشه";
+
+"settings.data.title" = "داده";
+"settings.data.dataset.title" = "مجموعه‌داده";
+"settings.data.dataset.source" = "منبع";
+"settings.data.dataset.bundled" = "همراه برنامه";
+"settings.data.dataset.format" = "قالب";
+"settings.data.dataset.geojsonGzip" = "GeoJSON + Gzip";
+"settings.data.dataset.footer" = "داده‌های مرزهای تاریخی در حال حاضر همراه برنامه ارائه می‌شوند. هنوز تنظیمی برای همگام‌سازی یا دانلود خارجی وجود ندارد.";
+"settings.data.loading.title" = "بارگذاری";
+"settings.data.loading.caching" = "کش";
+"settings.data.loading.automatic" = "خودکار";
+"settings.data.loading.yearIndex" = "فهرست سال‌ها";
+"settings.data.loading.cachedInMemory" = "کش‌شده در حافظه";
+"settings.data.loading.footer" = "بارگذاری و کش داده‌ها به صورت خودکار مدیریت می‌شوند. وقتی تنظیمات واقعی داده اضافه شوند، باید به جای کنترل‌های نمایشی در اینجا قرار بگیرند.";
+
+"errors.resourceNotFound" = "منبع پیدا نشد: %1$@";
+"errors.fileReadFailed" = "خواندن فایل ممکن نشد: %1$@";
+"errors.invalidIndexFormat" = "قالب index.json نامعتبر است: %1$@";
+"errors.invalidGeoJSON" = "GeoJSON نامعتبر است: %1$@";
+"errors.yearUnavailable" = "داده مرز برای سال %1$lld در دسترس نیست.";
+"errors.yearIndexNotLoaded" = "فهرست سال‌ها بارگذاری نشده است.";
+"errors.decompressionFailed" = "فشرده‌گشایی Gzip ناموفق بود: %1$@";
+"errors.cancelled" = "عملیات لغو شد.";
+"errors.unexpectedError" = "خطای غیرمنتظره: %1$@";
+"errors.loadingMapBorders" = "هنگام بارگذاری مرزهای نقشه مشکلی رخ داد.";
+"errors.unexpectedFallback" = "یک خطای غیرمنتظره رخ داد.";
+
+"accessibility.common.on" = "روشن";
+"accessibility.common.off" = "خاموش";
+"accessibility.timeline.yearSlider.label" = "سال";
+"accessibility.timeline.yearSlider.hint" = "برای تغییر سال تاریخی نمایش‌داده‌شده تنظیم کنید.";
+"accessibility.timeline.selectedYear" = "سال انتخاب‌شده %1$lld";
+"accessibility.appearance.appAppearance.value" = "انتخاب فعلی: %1$@";
+"accessibility.appearance.appLanguage.value" = "زبان فعلی: %1$@";
+"accessibility.appearance.glassSurfaces.value" = "سطوح شیشه‌ای %1$@";
+"accessibility.map.yearRangeLabels.value" = "برچسب‌های بازه سال %1$@";
+"accessibility.map.loadingIndicator.value" = "نشانگر بارگذاری %1$@";
