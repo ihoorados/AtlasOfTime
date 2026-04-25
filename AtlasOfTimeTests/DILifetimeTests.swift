@@ -9,11 +9,17 @@ struct DILifetimeTests {
 
         let yearIndexRepositoryA = container.makeYearIndexRepository()
         let yearIndexRepositoryB = container.makeYearIndexRepository()
-        #expect(yearIndexRepositoryA === yearIndexRepositoryB)
+        #expect(
+            ObjectIdentifier(yearIndexRepositoryA as AnyObject) ==
+            ObjectIdentifier(yearIndexRepositoryB as AnyObject)
+        )
 
         let borderRepositoryA = container.makeBorderRepository()
         let borderRepositoryB = container.makeBorderRepository()
-        #expect(borderRepositoryA === borderRepositoryB)
+        #expect(
+            ObjectIdentifier(borderRepositoryA as AnyObject) ==
+            ObjectIdentifier(borderRepositoryB as AnyObject)
+        )
     }
 
     @Test
@@ -26,4 +32,3 @@ struct DILifetimeTests {
         #expect(first !== second)
     }
 }
-

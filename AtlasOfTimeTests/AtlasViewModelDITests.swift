@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import CoreAtlasDomain
 @testable import AtlasOfTime
 
 @MainActor
@@ -140,9 +141,6 @@ private struct TestAppDIContainer {
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
-            generateCountrySummary: GenerateCountrySummary(
-                generator: TestCountrySummaryGenerator()
-            ),
             debounceNanoseconds: 0
         )
     }
@@ -161,26 +159,12 @@ private struct TestAppDIContainer {
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
-            generateCountrySummary: GenerateCountrySummary(
-                generator: TestCountrySummaryGenerator()
-            ),
             debounceNanoseconds: 0
         )
     }
 
     func makeAtlasViewModel() -> AtlasViewModel {
         featureContainer.makeAtlasViewModel()
-    }
-}
-
-private struct TestCountrySummaryGenerator: CountrySummaryGenerating {
-    func generateSummary(for request: CountrySummaryRequest) async throws -> CountrySummaryResult {
-        CountrySummaryResult(
-            title: request.displayName,
-            summary: request.displayName,
-            keyFacts: [],
-            confidenceNote: nil
-        )
     }
 }
 
@@ -211,7 +195,7 @@ private actor MockBorderRepository: BorderRepository {
         }
 
         guard let snapshot = snapshots[year] else {
-            throw AppError.yearUnavailable(year)
+            throw AtlasDomainError.yearUnavailable(year)
         }
         return snapshot
     }
@@ -248,7 +232,7 @@ private actor SignalingBorderRepository: BorderRepository {
             try Task.checkCancellation()
 
             guard let snapshot = snapshots[year] else {
-                throw AppError.yearUnavailable(year)
+                throw AtlasDomainError.yearUnavailable(year)
             }
 
             if let finishSignal = finishSignals[year] {

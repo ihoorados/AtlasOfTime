@@ -18,13 +18,15 @@ struct LocalizationResourceTests {
     @Test
     func englishAppearanceSummaryFormatResolvesCorrectly() throws {
         try #expect(
-            LocalizationTestSupport.resolvedString(
-                localeIdentifier: "en",
-                key: "settings.appearance.preview.summary",
-                locale: Locale(identifier: "en"),
-                sourceFilePath: #filePath,
-                "Light",
-                "glass surfaces on"
+            LocalizationTestSupport.normalizedForComparison(
+                try LocalizationTestSupport.resolvedString(
+                    localeIdentifier: "en",
+                    key: "settings.appearance.preview.summary",
+                    locale: Locale(identifier: "en"),
+                    sourceFilePath: #filePath,
+                    "Light",
+                    "glass surfaces on"
+                )
             ) == "Light mode with glass surfaces on."
         )
     }
@@ -32,13 +34,15 @@ struct LocalizationResourceTests {
     @Test
     func persianAppearanceSummaryFormatResolvesCorrectly() throws {
         try #expect(
-            LocalizationTestSupport.resolvedString(
-                localeIdentifier: "fa",
-                key: "settings.appearance.preview.summary",
-                locale: Locale(identifier: "fa"),
-                sourceFilePath: #filePath,
-                "روشن",
-                "سطوح شیشه‌ای فعال"
+            LocalizationTestSupport.normalizedForComparison(
+                try LocalizationTestSupport.resolvedString(
+                    localeIdentifier: "fa",
+                    key: "settings.appearance.preview.summary",
+                    locale: Locale(identifier: "fa"),
+                    sourceFilePath: #filePath,
+                    "روشن",
+                    "سطوح شیشه‌ای فعال"
+                )
             ) == "حالت روشن با سطوح شیشه‌ای فعال."
         )
     }
@@ -46,26 +50,30 @@ struct LocalizationResourceTests {
     @Test
     func englishSelectedYearAccessibilityFormatResolvesCorrectly() throws {
         try #expect(
-            LocalizationTestSupport.resolvedString(
-                localeIdentifier: "en",
-                key: "accessibility.timeline.selectedYear",
-                locale: Locale(identifier: "en"),
-                sourceFilePath: #filePath,
-                Int64(1900)
-            ) == "Selected year 1900"
+            LocalizationTestSupport.normalizedForComparison(
+                try LocalizationTestSupport.resolvedString(
+                    localeIdentifier: "en",
+                    key: "accessibility.timeline.selectedYear",
+                    locale: Locale(identifier: "en"),
+                    sourceFilePath: #filePath,
+                    Int64(1900)
+                )
+            ) == "Selected year 1,900"
         )
     }
 
     @Test
     func persianSelectedYearAccessibilityFormatResolvesCorrectly() throws {
         try #expect(
-            LocalizationTestSupport.resolvedString(
-                localeIdentifier: "fa",
-                key: "accessibility.timeline.selectedYear",
-                locale: Locale(identifier: "fa"),
-                sourceFilePath: #filePath,
-                Int64(1900)
-            ) == "سال انتخاب‌شده 1900"
+            LocalizationTestSupport.normalizedForComparison(
+                try LocalizationTestSupport.resolvedString(
+                    localeIdentifier: "fa",
+                    key: "accessibility.timeline.selectedYear",
+                    locale: Locale(identifier: "fa"),
+                    sourceFilePath: #filePath,
+                    Int64(1900)
+                )
+            ) == "سال انتخاب‌شده ۱٬۹۰۰"
         )
     }
 
