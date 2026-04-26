@@ -43,6 +43,15 @@ struct BundleDataSource {
         return try readData(at: url)
     }
 
+    func readPOIFile(relativePath: String) throws -> Data {
+        let normalizedPath = relativePath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        guard let url = resourceURL(relativePath: normalizedPath) else {
+            throw CoreAtlasData.AtlasDataError.resourceNotFound("\(normalizedPath) (searched AtlasOfTimeData subdirectories and bundle root)")
+        }
+
+        return try readData(at: url)
+    }
+
     private func resourceURL(relativePath: String) -> URL? {
         let normalizedPath = relativePath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         guard !normalizedPath.isEmpty else { return nil }
@@ -82,4 +91,4 @@ struct BundleDataSource {
     }
 }
 
-extension BundleDataSource: CoreAtlasData.IndexJSONReading, CoreAtlasData.YearFileReading {}
+extension BundleDataSource: CoreAtlasData.IndexJSONReading, CoreAtlasData.YearFileReading, CoreAtlasData.POIFileReading {}
