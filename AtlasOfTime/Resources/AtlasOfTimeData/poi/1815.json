@@ -1,0 +1,89 @@
+{
+  "year": 1815,
+  "pointsOfInterest": [
+    {
+      "id": "final-act-vienna-1815",
+      "year": 1815,
+      "title": "Final Act of Vienna",
+      "summary": "The Final Act of the Congress of Vienna consolidated a broad diplomatic settlement after the Napoleonic Wars.",
+      "latitude": 48.2064,
+      "longitude": 16.3647,
+      "category": "treaty",
+      "confidence": "high",
+      "relatedCountryIDs": [],
+      "sourceReferences": [
+        {
+          "id": "britannica-final-act-vienna",
+          "title": "Encyclopaedia Britannica: Final Act of Vienna",
+          "locator": "Final Act of Vienna, 1815",
+          "url": "https://www.britannica.com/topic/Final-Act-of-Vienna",
+          "note": "Used for event identity and date."
+        },
+        {
+          "id": "wikisource-final-act-vienna",
+          "title": "Wikisource: Final Act of the Congress of Vienna",
+          "locator": "General Treaty signed in Congress at Vienna, June 9, 1815",
+          "url": "https://en.wikisource.org/wiki/Final_Act_of_the_Congress_of_Vienna",
+          "note": "Used for treaty text reference."
+        }
+      ]
+    },
+    {
+      "id": "battle-waterloo-1815",
+      "year": 1815,
+      "title": "Battle of Waterloo",
+      "summary": "The Battle of Waterloo marked Napoleon's final defeat and ended the Hundred Days campaign.",
+      "latitude": 50.6806,
+      "longitude": 4.4120,
+      "category": "battle",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "france",
+        "united-kingdom",
+        "prussia"
+      ],
+      "sourceReferences": [
+        {
+          "id": "britannica-battle-waterloo",
+          "title": "Encyclopaedia Britannica: Battle of Waterloo",
+          "locator": "June 18, 1815",
+          "url": "https://www.britannica.com/event/Battle-of-Waterloo",
+          "note": "Used for event identity, date, and location context."
+        }
+      ]
+    },
+    {
+      "id": "second-treaty-paris-1815",
+      "year": 1815,
+      "title": "Second Treaty of Paris",
+      "summary": "The Second Treaty of Paris imposed a post-Waterloo settlement on France after Napoleon's final defeat.",
+      "latitude": 48.8566,
+      "longitude": 2.3522,
+      "category": "treaty",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "france",
+        "united-kingdom",
+        "austria",
+        "prussia",
+        "russia"
+      ],
+      "sourceReferences": [
+        {
+          "id": "wikisource-treaty-paris-1815",
+          "title": "Wikisource: Treaty of Paris (1815)",
+          "locator": "Signed at Paris, 20 November 1815",
+          "url": "https://en.wikisource.org/wiki/Treaty_of_Paris_(1815)",
+          "note": "Used for treaty identity and signature date."
+        },
+        {
+          "id": "britannica-treaties-paris-1814-1815",
+          "title": "Encyclopaedia Britannica: Treaties of Paris",
+          "locator": "1814-1815",
+          "url": "https://www.britannica.com/event/Treaties-of-Paris-1814-1815",
+          "note": "Used for settlement context."
+        }
+      ]
+    }
+  ]
+}

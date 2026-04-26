@@ -1,0 +1,74 @@
+{
+  "year": 1914,
+  "pointsOfInterest": [
+    {
+      "id": "sarajevo-assassination-1914",
+      "year": 1914,
+      "title": "Assassination in Sarajevo",
+      "summary": "The assassination of Archduke Franz Ferdinand in Sarajevo triggered a diplomatic crisis that preceded the First World War.",
+      "latitude": 43.8563,
+      "longitude": 18.4131,
+      "category": "politicalEvent",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "austria-hungary",
+        "serbia"
+      ],
+      "sourceReferences": [
+        {
+          "id": "wikimedia-sarajevo-assassination-map",
+          "title": "Wikimedia Commons: 1914 Sarajevo assassination map",
+          "locator": "Official report map",
+          "url": "https://commons.wikimedia.org/wiki/File:1914_Sarajevo_assassination_map.jpg",
+          "note": "Used for event location reference."
+        }
+      ]
+    },
+    {
+      "id": "battle-liege-1914",
+      "year": 1914,
+      "title": "Battle of Liege",
+      "summary": "The fighting around Liege was one of the opening major military actions after Germany invaded Belgium.",
+      "latitude": 50.6326,
+      "longitude": 5.5797,
+      "category": "battle",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "belgium",
+        "germany"
+      ],
+      "sourceReferences": [
+        {
+          "id": "britannica-battle-liege",
+          "title": "Encyclopaedia Britannica: Battle of Liege",
+          "locator": "World War I opening campaign",
+          "url": "https://www.britannica.com/event/Battle-of-Liege",
+          "note": "Used for event identity and military context."
+        }
+      ]
+    },
+    {
+      "id": "first-battle-marne-1914",
+      "year": 1914,
+      "title": "First Battle of the Marne",
+      "summary": "The First Battle of the Marne halted the German advance toward Paris and helped shape the Western Front.",
+      "latitude": 48.8167,
+      "longitude": 3.0833,
+      "category": "battle",
+      "confidence": "medium",
+      "relatedCountryIDs": [
+        "france",
+        "germany"
+      ],
+      "sourceReferences": [
+        {
+          "id": "britannica-first-battle-marne",
+          "title": "Encyclopaedia Britannica: First Battle of the Marne",
+          "locator": "September 1914",
+          "url": "https://www.britannica.com/event/First-Battle-of-the-Marne",
+          "note": "Used for event identity and date; coordinate is approximate to the Marne battlefield area."
+        }
+      ]
+    }
+  ]
+}

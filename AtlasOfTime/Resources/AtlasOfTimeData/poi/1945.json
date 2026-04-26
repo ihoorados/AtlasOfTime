@@ -1,0 +1,112 @@
+{
+  "year": 1945,
+  "pointsOfInterest": [
+    {
+      "id": "un-charter-signed-1945",
+      "year": 1945,
+      "title": "UN Charter Signed",
+      "summary": "Representatives signed the United Nations Charter in San Francisco, establishing the framework for the United Nations.",
+      "latitude": 37.7793,
+      "longitude": -122.4202,
+      "category": "treaty",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "united-states"
+      ],
+      "sourceReferences": [
+        {
+          "id": "un-charter-official",
+          "title": "United Nations: UN Charter",
+          "locator": "Signed 26 June 1945 in San Francisco",
+          "url": "https://www.un.org/en/about-us/un-charter/",
+          "note": "Used for event identity, date, and location."
+        },
+        {
+          "id": "us-national-archives-un-charter",
+          "title": "US National Archives: United Nations Charter",
+          "locator": "Milestone Documents",
+          "url": "https://www.archives.gov/milestone-documents/united-nations-charter",
+          "note": "Used for archival context."
+        }
+      ]
+    },
+    {
+      "id": "potsdam-conference-1945",
+      "year": 1945,
+      "title": "Potsdam Conference",
+      "summary": "Allied leaders met at Cecilienhof Palace to negotiate postwar arrangements after Germany's defeat.",
+      "latitude": 52.4194,
+      "longitude": 13.0690,
+      "category": "politicalEvent",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "united-states",
+        "united-kingdom",
+        "soviet-union",
+        "germany"
+      ],
+      "sourceReferences": [
+        {
+          "id": "potsdam-cecilienhof-palace",
+          "title": "City of Potsdam: Cecilienhof Palace",
+          "locator": "Potsdam Conference, 17 July-2 August 1945",
+          "url": "https://www.potsdam.de/en/content/cecilienhof-palace",
+          "note": "Used for event identity and location."
+        }
+      ]
+    },
+    {
+      "id": "hiroshima-bombing-1945",
+      "year": 1945,
+      "title": "Atomic Bombing of Hiroshima",
+      "summary": "The atomic bombing of Hiroshima destroyed much of the city and became a defining event at the end of the Second World War.",
+      "latitude": 34.3947,
+      "longitude": 132.4547,
+      "category": "war",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "japan",
+        "united-states"
+      ],
+      "sourceReferences": [
+        {
+          "id": "hiroshima-hypocenter-coordinates",
+          "title": "Hiroshima Peace Media Center: Hypocenter Coordinates",
+          "locator": "Former Shima Hospital courtyard",
+          "url": "https://www.hiroshimapeacemedia.jp/?p=101616",
+          "note": "Used for hypocenter location context."
+        },
+        {
+          "id": "wikimedia-hiroshima-hypocenter-monument",
+          "title": "Wikimedia Commons: Hiroshima Atomic Bomb Hypocenter monument",
+          "locator": "Object location",
+          "url": "https://commons.wikimedia.org/wiki/Category:Hiroshima_Atomic_Bomb_Hypocenter_monument",
+          "note": "Used for coordinate cross-check."
+        }
+      ]
+    },
+    {
+      "id": "japanese-surrender-missouri-1945",
+      "year": 1945,
+      "title": "Japanese Surrender Signed",
+      "summary": "Japan's formal surrender was signed aboard USS Missouri in Tokyo Bay, ending the Second World War.",
+      "latitude": 35.4500,
+      "longitude": 139.7600,
+      "category": "treaty",
+      "confidence": "medium",
+      "relatedCountryIDs": [
+        "japan",
+        "united-states"
+      ],
+      "sourceReferences": [
+        {
+          "id": "national-wwii-museum-japanese-surrender",
+          "title": "The National WWII Museum: Japanese Surrender",
+          "locator": "USS Missouri, Tokyo Bay",
+          "url": "https://www.nationalww2museum.org/war/articles/japanese-surrender-uss-missouri",
+          "note": "Used for event identity; coordinate is approximate to Tokyo Bay."
+        }
+      ]
+    }
+  ]
+}
