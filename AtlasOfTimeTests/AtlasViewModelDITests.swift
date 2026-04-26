@@ -10,17 +10,20 @@ struct AtlasViewModelDITests {
         let years = [1900, 1914]
         let index = makeIndex(years: years)
         let snapshots = makeSnapshots(years: years)
+        let pois = makePOIs(years: years)
 
-        let container = TestAppDIContainer(index: index, snapshots: snapshots)
+        let container = TestAppDIContainer(index: index, snapshots: snapshots, pois: pois)
         let viewModel = container.makeAtlasViewModel()
 
         viewModel.onAppear()
 
         try await waitUntil { viewModel.renderSnapshot?.year == 1900 }
+        try await waitUntil { viewModel.pointsOfInterest == pois[1900] }
 
         #expect(viewModel.availableYears == years)
         #expect(viewModel.displayYear == 1900)
         #expect(viewModel.renderSnapshot?.year == 1900)
+        #expect(viewModel.pointsOfInterest == pois[1900])
     }
 
     @Test
@@ -40,6 +43,69 @@ struct AtlasViewModelDITests {
 
         try await waitUntil { viewModel.renderSnapshot?.year == 1914 }
         #expect(viewModel.renderSnapshot?.year == 1914)
+    }
+
+    @Test
+    func onYearChangedLoadsPOIsForSelectedYear() async throws {
+        let years = [1900, 1914]
+        let index = makeIndex(years: years)
+        let snapshots = makeSnapshots(years: years)
+        let pois = makePOIs(years: years)
+
+        let container = TestAppDIContainer(index: index, snapshots: snapshots, pois: pois)
+        let viewModel = container.makeAtlasViewModel()
+
+        viewModel.onAppear()
+        try await waitUntil { viewModel.pointsOfInterest == pois[1900] }
+
+        viewModel.onYearChanged(year: 1914)
+
+        #expect(viewModel.pointsOfInterest.isEmpty)
+        try await waitUntil { viewModel.renderSnapshot?.year == 1914 }
+        try await waitUntil { viewModel.pointsOfInterest == pois[1914] }
+        #expect(viewModel.poiErrorMessage == nil)
+    }
+
+    @Test
+    func poiFailureDoesNotClearLoadedSnapshot() async throws {
+        let years = [1900]
+        let index = makeIndex(years: years)
+        let snapshots = makeSnapshots(years: years)
+        let poiRepository = MockPOIRepository(failingYears: [1900])
+        let container = TestAppDIContainer(
+            index: index,
+            borderRepository: MockBorderRepository(snapshots: snapshots, delays: [:]),
+            poiRepository: poiRepository
+        )
+        let viewModel = container.makeAtlasViewModel()
+
+        viewModel.onAppear()
+
+        try await waitUntil { viewModel.renderSnapshot?.year == 1900 }
+        try await waitUntil { viewModel.poiErrorMessage != nil }
+        #expect(viewModel.renderSnapshot?.year == 1900)
+        #expect(viewModel.pointsOfInterest.isEmpty)
+        #expect(viewModel.errorMessage == nil)
+    }
+
+    @Test
+    func selectPOIOnlyAcceptsVisiblePOIs() async throws {
+        let years = [1900]
+        let index = makeIndex(years: years)
+        let snapshots = makeSnapshots(years: years)
+        let pois = makePOIs(years: years)
+
+        let container = TestAppDIContainer(index: index, snapshots: snapshots, pois: pois)
+        let viewModel = container.makeAtlasViewModel()
+
+        viewModel.onAppear()
+        try await waitUntil { viewModel.pointsOfInterest == pois[1900] }
+
+        viewModel.selectPOI(id: pois[1900]?.first?.id)
+        #expect(viewModel.selectedPOI == pois[1900]?.first)
+
+        viewModel.selectPOI(id: "missing-poi")
+        #expect(viewModel.selectedPOI == nil)
     }
 
     @Test
@@ -103,6 +169,25 @@ struct AtlasViewModelDITests {
         })
     }
 
+    private func makePOIs(years: [Int]) -> [Int: [HistoricalPOI]] {
+        Dictionary(uniqueKeysWithValues: years.map { year in
+            (
+                year,
+                [
+                    HistoricalPOI(
+                        id: "poi-\(year)",
+                        year: year,
+                        title: "Event \(year)",
+                        summary: "Important event in \(year).",
+                        coordinate: Coordinate(lat: 1, lon: 1),
+                        category: .politicalEvent,
+                        confidence: .high
+                    )
+                ]
+            )
+        })
+    }
+
     private func waitUntil(
         timeoutNanoseconds: UInt64 = 1_000_000_000,
         pollNanoseconds: UInt64 = 10_000_000,
@@ -128,15 +213,17 @@ private struct TestAppDIContainer {
     init(
         index: YearIndex,
         snapshots: [Int: YearSnapshot],
+        pois: [Int: [HistoricalPOI]] = [:],
         delays: [Int: UInt64] = [:]
     ) {
         let yearIndexRepository = MockYearIndexRepository(index: index)
         let borderRepository = MockBorderRepository(snapshots: snapshots, delays: delays)
+        let poiRepository = MockPOIRepository(pois: pois)
 
         let domainContainer = DomainDIContainer(
             yearIndexRepository: yearIndexRepository,
             borderRepository: borderRepository,
-            poiRepository: MockPOIRepository()
+            poiRepository: poiRepository
         )
 
         self.featureContainer = AtlasFeatureDIContainer(
@@ -149,14 +236,15 @@ private struct TestAppDIContainer {
 
     init(
         index: YearIndex,
-        borderRepository: any BorderRepository
+        borderRepository: any BorderRepository,
+        poiRepository: any POIRepository = MockPOIRepository()
     ) {
         let yearIndexRepository = MockYearIndexRepository(index: index)
 
         let domainContainer = DomainDIContainer(
             yearIndexRepository: yearIndexRepository,
             borderRepository: borderRepository,
-            poiRepository: MockPOIRepository()
+            poiRepository: poiRepository
         )
 
         self.featureContainer = AtlasFeatureDIContainer(
@@ -206,8 +294,23 @@ private actor MockBorderRepository: BorderRepository {
 }
 
 private actor MockPOIRepository: POIRepository {
+    private let pois: [Int: [HistoricalPOI]]
+    private let failingYears: Set<Int>
+
+    init(
+        pois: [Int: [HistoricalPOI]] = [:],
+        failingYears: Set<Int> = []
+    ) {
+        self.pois = pois
+        self.failingYears = failingYears
+    }
+
     func pointsOfInterest(for year: Int) async throws -> [HistoricalPOI] {
-        []
+        if failingYears.contains(year) {
+            throw AtlasDomainError.yearUnavailable(year)
+        }
+
+        return pois[year] ?? []
     }
 }
 

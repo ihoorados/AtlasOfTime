@@ -8,8 +8,11 @@ final class AtlasViewModel: ObservableObject {
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
     @Published private(set) var visibleSnapshots: [HistoricalCountrySnapshot] = []
+    @Published private(set) var pointsOfInterest: [HistoricalPOI] = []
     @Published private(set) var selectedCountryID: String?
+    @Published private(set) var selectedPOIID: String?
     @Published var errorMessage: String?
+    @Published private(set) var poiErrorMessage: String?
     @Published var isLoading: Bool = false
 
     private let yearLoader: AtlasYearLoader
@@ -41,6 +44,9 @@ final class AtlasViewModel: ObservableObject {
         let snappedYear = nearestAvailableYear(to: year)
         displayYear = snappedYear
         selectedCountryID = nil
+        selectedPOIID = nil
+        pointsOfInterest = []
+        poiErrorMessage = nil
         yearLoader.requestYear(snappedYear)
     }
 
@@ -51,6 +57,11 @@ final class AtlasViewModel: ObservableObject {
 
     var selectedPrimaryExtent: HistoricalExtent? {
         selectedCountrySnapshot?.extents.first
+    }
+
+    var selectedPOI: HistoricalPOI? {
+        guard let selectedPOIID else { return nil }
+        return pointsOfInterest.first { $0.id == selectedPOIID }
     }
 
     var selectedCountryBorderConfidenceText: LocalizedStringResource {
@@ -81,6 +92,15 @@ final class AtlasViewModel: ObservableObject {
         selectedCountryID = visibleSnapshots.contains(where: { $0.id == id }) ? id : nil
     }
 
+    func selectPOI(id: String?) {
+        guard let id else {
+            selectedPOIID = nil
+            return
+        }
+
+        selectedPOIID = pointsOfInterest.contains(where: { $0.id == id }) ? id : nil
+    }
+
     private func nearestAvailableYear(to year: Int) -> Int {
         guard let first = availableYears.first else { return year }
 
@@ -104,6 +124,8 @@ private protocol AtlasYearLoadingOutput: AnyObject {
     func setLoading(_ isLoading: Bool)
     func applyIndex(_ index: YearIndex, initialYear: Int)
     func applySnapshot(_ snapshot: YearSnapshot)
+    func applyPOIs(_ pointsOfInterest: [HistoricalPOI])
+    func applyPOIFailure(_ error: AppError)
     func applyBootstrapFailure(_ error: AppError)
     func applySnapshotFailure(_ error: AppError)
 }
@@ -119,8 +141,11 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
         displayYear = initialYear
         renderSnapshot = nil
         visibleSnapshots = []
+        pointsOfInterest = []
         selectedCountryID = nil
+        selectedPOIID = nil
         errorMessage = nil
+        poiErrorMessage = nil
     }
 
     fileprivate func applySnapshot(_ snapshot: YearSnapshot) {
@@ -135,18 +160,41 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
         errorMessage = nil
     }
 
+    fileprivate func applyPOIs(_ pointsOfInterest: [HistoricalPOI]) {
+        self.pointsOfInterest = pointsOfInterest
+        if let selectedPOIID,
+           pointsOfInterest.contains(where: { $0.id == selectedPOIID }) {
+            self.selectedPOIID = selectedPOIID
+        } else {
+            selectedPOIID = nil
+        }
+        poiErrorMessage = nil
+    }
+
+    fileprivate func applyPOIFailure(_ error: AppError) {
+        pointsOfInterest = []
+        selectedPOIID = nil
+        poiErrorMessage = error.userMessage
+    }
+
     fileprivate func applyBootstrapFailure(_ error: AppError) {
         renderSnapshot = nil
         visibleSnapshots = []
+        pointsOfInterest = []
         selectedCountryID = nil
+        selectedPOIID = nil
         errorMessage = error.userMessage
+        poiErrorMessage = nil
     }
 
     fileprivate func applySnapshotFailure(_ error: AppError) {
         renderSnapshot = nil
         visibleSnapshots = []
+        pointsOfInterest = []
         selectedCountryID = nil
+        selectedPOIID = nil
         errorMessage = error.userMessage
+        poiErrorMessage = nil
     }
 }
 
@@ -251,20 +299,44 @@ private final class AtlasYearLoader {
         output?.setLoading(true)
 
         do {
+            async let poiResult = loadPOIsResult(for: year)
             let snapshot = try await loadBordersForYear.execute(year: year)
             try Task.checkCancellation()
 
             guard token == latestRequestToken else { return }
             output?.applySnapshot(snapshot)
+            output?.setLoading(false)
+
+            let loadedPOIs = await poiResult
+            guard token == latestRequestToken else { return }
+            switch loadedPOIs {
+            case .success(let pointsOfInterest):
+                output?.applyPOIs(pointsOfInterest)
+            case .failure(let error):
+                output?.applyPOIFailure(error)
+            }
         } catch is CancellationError {
             // Newer request replaced this one.
         } catch {
             guard token == latestRequestToken else { return }
             output?.applySnapshotFailure(AppError.wrap(error))
+            output?.setLoading(false)
         }
 
         if token == latestRequestToken {
             output?.setLoading(false)
+        }
+    }
+
+    private func loadPOIsResult(for year: Int) async -> Result<[HistoricalPOI], AppError> {
+        do {
+            let pointsOfInterest = try await loadPOIsForYear.execute(year: year)
+            try Task.checkCancellation()
+            return .success(pointsOfInterest)
+        } catch is CancellationError {
+            return .failure(.unknown("POI loading was cancelled."))
+        } catch {
+            return .failure(AppError.wrap(error))
         }
     }
 
