@@ -17,12 +17,14 @@ final class AtlasViewModel: ObservableObject {
     init(
         loadYearIndex: LoadYearIndex,
         loadBordersForYear: LoadBordersForYear,
+        loadPOIsForYear: LoadPOIsForYear,
         debouncer: Debouncer,
         debounceNanoseconds: UInt64 = 150_000_000
     ) {
         self.yearLoader = AtlasYearLoader(
             loadYearIndex: loadYearIndex,
             loadBordersForYear: loadBordersForYear,
+            loadPOIsForYear: loadPOIsForYear,
             debouncer: debouncer,
             debounceNanoseconds: debounceNanoseconds
         )
@@ -154,6 +156,7 @@ private final class AtlasYearLoader {
 
     private let loadYearIndex: LoadYearIndex
     private let loadBordersForYear: LoadBordersForYear
+    private let loadPOIsForYear: LoadPOIsForYear
     private let debouncer: Debouncer
     private let debounceNanoseconds: UInt64
 
@@ -166,11 +169,13 @@ private final class AtlasYearLoader {
     init(
         loadYearIndex: LoadYearIndex,
         loadBordersForYear: LoadBordersForYear,
+        loadPOIsForYear: LoadPOIsForYear,
         debouncer: Debouncer,
         debounceNanoseconds: UInt64
     ) {
         self.loadYearIndex = loadYearIndex
         self.loadBordersForYear = loadBordersForYear
+        self.loadPOIsForYear = loadPOIsForYear
         self.debouncer = debouncer
         self.debounceNanoseconds = debounceNanoseconds
     }

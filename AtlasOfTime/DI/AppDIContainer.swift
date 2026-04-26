@@ -72,14 +72,16 @@ final class AppDIContainer {
     private static func makeDomainContainer(dataContainer: DataDIContainer) -> DomainDIContainer {
         DomainDIContainer(
             yearIndexRepository: dataContainer.makeYearIndexRepository(),
-            borderRepository: dataContainer.makeBorderRepository()
+            borderRepository: dataContainer.makeBorderRepository(),
+            poiRepository: dataContainer.makePOIRepository()
         )
     }
 
     private static func makeAtlasFeatureContainer(domainContainer: DomainDIContainer) -> AtlasFeatureDIContainer {
         AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
-            loadBordersForYear: domainContainer.makeLoadBordersForYear()
+            loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            loadPOIsForYear: domainContainer.makeLoadPOIsForYear()
         )
     }
 

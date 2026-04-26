@@ -135,12 +135,14 @@ private struct TestAppDIContainer {
 
         let domainContainer = DomainDIContainer(
             yearIndexRepository: yearIndexRepository,
-            borderRepository: borderRepository
+            borderRepository: borderRepository,
+            poiRepository: MockPOIRepository()
         )
 
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            loadPOIsForYear: domainContainer.makeLoadPOIsForYear(),
             debounceNanoseconds: 0
         )
     }
@@ -153,12 +155,14 @@ private struct TestAppDIContainer {
 
         let domainContainer = DomainDIContainer(
             yearIndexRepository: yearIndexRepository,
-            borderRepository: borderRepository
+            borderRepository: borderRepository,
+            poiRepository: MockPOIRepository()
         )
 
         self.featureContainer = AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            loadPOIsForYear: domainContainer.makeLoadPOIsForYear(),
             debounceNanoseconds: 0
         )
     }
@@ -198,6 +202,12 @@ private actor MockBorderRepository: BorderRepository {
             throw AtlasDomainError.yearUnavailable(year)
         }
         return snapshot
+    }
+}
+
+private actor MockPOIRepository: POIRepository {
+    func pointsOfInterest(for year: Int) async throws -> [HistoricalPOI] {
+        []
     }
 }
 
