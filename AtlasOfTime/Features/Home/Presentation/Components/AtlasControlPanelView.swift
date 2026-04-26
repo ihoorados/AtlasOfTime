@@ -9,11 +9,15 @@ struct AtlasControlPanelView: View {
     let selectedCountrySnapshot: HistoricalCountrySnapshot?
     let selectedCountryBorderConfidenceText: LocalizedStringResource
     let selectedCountrySourceCount: Int
+    let selectedPOI: HistoricalPOI?
+    let selectedPOIConfidenceText: LocalizedStringResource
+    let selectedPOISourceCount: Int
     let visibleSnapshots: [HistoricalCountrySnapshot]
     let selectedCountryID: String?
     let errorMessage: String?
     let onYearChanged: (Int) -> Void
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
+    let onSelectedPOIDismissed: () -> Void
 
     @Environment(\.atlasTheme) private var theme
     @Environment(\.atlasGlassEnabled) private var glassEnabled
@@ -29,6 +33,10 @@ struct AtlasControlPanelView: View {
                 ),
                 availableYears: availableYears
             )
+
+            if selectedPOI != nil {
+                selectedPOISection
+            }
 
             if selectedCountrySnapshot != nil || !visibleSnapshots.isEmpty {
                 countrySummarySection
@@ -157,6 +165,72 @@ struct AtlasControlPanelView: View {
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var selectedPOISection: some View {
+        if let selectedPOI {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(AppStrings.Home.selectedPOITitle)
+                        .font(.caption)
+                        .foregroundStyle(theme.secondaryText)
+
+                    Spacer()
+
+                    Button(action: onSelectedPOIDismissed) {
+                        Image(systemName: "xmark")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(theme.secondaryText)
+                            .padding(6)
+                            .contentShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(AppStrings.Home.selectedPOIDismissAccessibilityLabel)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(selectedPOI.title)
+                        .font(.headline)
+                        .foregroundStyle(theme.primaryText)
+                        .lineLimit(2)
+
+                    Text(selectedPOI.summary)
+                        .font(.subheadline)
+                        .foregroundStyle(theme.secondaryText)
+                        .lineLimit(3)
+                }
+
+                HStack(spacing: 12) {
+                    LabeledContent {
+                        Text(selectedPOIConfidenceText)
+                            .foregroundStyle(theme.primaryText)
+                    } label: {
+                        Text(AppStrings.Home.selectedPOIConfidenceTitle)
+                            .foregroundStyle(theme.secondaryText)
+                    }
+
+                    if selectedPOISourceCount > 0 {
+                        LabeledContent {
+                            Text(
+                                LocalizedStringFormat.resolve(
+                                    AppStrings.Home.sourceCountFormat,
+                                    locale: .current,
+                                    selectedPOISourceCount
+                                )
+                            )
+                            .foregroundStyle(theme.primaryText)
+                        } label: {
+                            Text(AppStrings.Home.selectedPOISourcesTitle)
+                                .foregroundStyle(theme.secondaryText)
+                        }
+                    }
+                }
+                .font(.caption)
+            }
+            .padding(12)
+            .background(theme.selectionFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 

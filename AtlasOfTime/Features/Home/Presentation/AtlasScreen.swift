@@ -44,11 +44,15 @@ struct AtlasScreen: View {
                 selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
                 selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
                 selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
+                selectedPOI: viewModel.selectedPOI,
+                selectedPOIConfidenceText: viewModel.selectedPOIConfidenceText,
+                selectedPOISourceCount: viewModel.selectedPOISourceCount,
                 visibleSnapshots: viewModel.visibleSnapshots,
                 selectedCountryID: viewModel.selectedCountryID,
                 errorMessage: viewModel.errorMessage,
                 onYearChanged: viewModel.onYearChanged(year:),
-                onSelectedCountryTapped: onSelectedCountryTapped
+                onSelectedCountryTapped: onSelectedCountryTapped,
+                onSelectedPOIDismissed: { viewModel.selectPOI(id: nil) }
             )
         }
         .onAppear {

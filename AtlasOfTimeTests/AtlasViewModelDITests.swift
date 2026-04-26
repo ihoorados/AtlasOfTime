@@ -106,6 +106,7 @@ struct AtlasViewModelDITests {
 
         viewModel.selectPOI(id: pois[1900]?.first?.id)
         #expect(viewModel.selectedPOI == pois[1900]?.first)
+        #expect(viewModel.selectedPOISourceCount == 1)
         #expect(viewModel.selectedCountryID == nil)
 
         viewModel.selectPOI(id: "missing-poi")
@@ -190,7 +191,13 @@ struct AtlasViewModelDITests {
                         summary: "Important event in \(year).",
                         coordinate: Coordinate(lat: 1, lon: 1),
                         category: .politicalEvent,
-                        confidence: .high
+                        confidence: .high,
+                        sourceReferences: [
+                            HistoricalSourceReference(
+                                id: "source-\(year)",
+                                title: "Source \(year)"
+                            )
+                        ]
                     )
                 ]
             )

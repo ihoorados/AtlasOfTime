@@ -64,6 +64,23 @@ final class AtlasViewModel: ObservableObject {
         return pointsOfInterest.first { $0.id == selectedPOIID }
     }
 
+    var selectedPOIConfidenceText: LocalizedStringResource {
+        switch selectedPOI?.confidence ?? .unknown {
+        case .high:
+            AppStrings.Home.confidenceHigh
+        case .medium:
+            AppStrings.Home.confidenceMedium
+        case .low:
+            AppStrings.Home.confidenceLow
+        case .unknown:
+            AppStrings.Home.confidenceUnknown
+        }
+    }
+
+    var selectedPOISourceCount: Int {
+        selectedPOI?.sourceReferences.count ?? 0
+    }
+
     var selectedCountryBorderConfidenceText: LocalizedStringResource {
         switch selectedPrimaryExtent?.borderConfidence ?? .unknown {
         case .high:
