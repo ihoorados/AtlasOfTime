@@ -6,6 +6,7 @@ struct AtlasControlPanelView: View {
     let availableYears: [Int]
     let isLoading: Bool
     let showLoadingIndicator: Bool
+    @Binding var showsPointsOfInterest: Bool
     let selectedCountrySnapshot: HistoricalCountrySnapshot?
     let selectedCountryBorderConfidenceText: LocalizedStringResource
     let selectedCountrySourceCount: Int
@@ -33,6 +34,8 @@ struct AtlasControlPanelView: View {
                 ),
                 availableYears: availableYears
             )
+
+            poiToggleRow
 
             if selectedPOI != nil {
                 selectedPOISection
@@ -79,6 +82,16 @@ struct AtlasControlPanelView: View {
                     .controlSize(.small)
             }
         }
+    }
+
+    private var poiToggleRow: some View {
+        Toggle(isOn: $showsPointsOfInterest) {
+            Label(AppStrings.Home.showPOIsTitle, systemImage: "mappin.and.ellipse")
+                .font(.subheadline)
+                .foregroundStyle(theme.primaryText)
+        }
+        .toggleStyle(.switch)
+        .tint(theme.selectionFill)
     }
 
     private var countrySummarySection: some View {

@@ -119,6 +119,31 @@ struct AtlasViewModelDITests {
     }
 
     @Test
+    func disablingPOIsClearsSelectionWithoutDroppingLoadedData() async throws {
+        let years = [1900]
+        let index = makeIndex(years: years)
+        let snapshots = makeSnapshots(years: years)
+        let pois = makePOIs(years: years)
+
+        let container = TestAppDIContainer(index: index, snapshots: snapshots, pois: pois)
+        let viewModel = container.makeAtlasViewModel()
+
+        viewModel.onAppear()
+        try await waitUntil { viewModel.pointsOfInterest == pois[1900] }
+
+        viewModel.selectPOI(id: pois[1900]?.first?.id)
+        #expect(viewModel.selectedPOI != nil)
+
+        viewModel.showsPointsOfInterest = false
+
+        #expect(viewModel.selectedPOI == nil)
+        #expect(viewModel.pointsOfInterest == pois[1900])
+
+        viewModel.showsPointsOfInterest = true
+        #expect(viewModel.pointsOfInterest == pois[1900])
+    }
+
+    @Test
     func latestYearRequestWinsDuringScrubbing() async throws {
         let years = [1900, 1914, 1920]
         let index = makeIndex(years: years)

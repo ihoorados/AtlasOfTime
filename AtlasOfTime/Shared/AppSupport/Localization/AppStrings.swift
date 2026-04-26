@@ -26,6 +26,7 @@ enum AppStrings {
         static let selectedPOIConfidenceTitle: LocalizedStringResource = "home.selectedPOI.confidence"
         static let selectedPOISourcesTitle: LocalizedStringResource = "home.selectedPOI.sources"
         static let selectedPOIDismissAccessibilityLabel: LocalizedStringResource = "home.selectedPOI.dismiss"
+        static let showPOIsTitle: LocalizedStringResource = "home.poi.toggle.title"
 
         enum Detail {
             static let loadingTitle: LocalizedStringResource = "home.detail.loading.title"

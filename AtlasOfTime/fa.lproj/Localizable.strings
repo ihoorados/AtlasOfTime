@@ -16,6 +16,7 @@
 "home.selectedPOI.confidence" = "اطمینان";
 "home.selectedPOI.sources" = "منابع";
 "home.selectedPOI.dismiss" = "بستن رویداد انتخاب‌شده";
+"home.poi.toggle.title" = "رویدادهای تاریخی";
 "home.countries.title" = "کشورها";
 "home.countries.more" = "+ %1$lld مورد دیگر";
 "home.detail.loading.title" = "در حال تولید خلاصه";

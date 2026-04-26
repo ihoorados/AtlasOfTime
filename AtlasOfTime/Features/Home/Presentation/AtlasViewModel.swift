@@ -14,6 +14,13 @@ final class AtlasViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published private(set) var poiErrorMessage: String?
     @Published var isLoading: Bool = false
+    @Published var showsPointsOfInterest: Bool = true {
+        didSet {
+            if !showsPointsOfInterest {
+                selectedPOIID = nil
+            }
+        }
+    }
 
     private let yearLoader: AtlasYearLoader
 

@@ -16,6 +16,7 @@
 "home.selectedPOI.confidence" = "Confidence";
 "home.selectedPOI.sources" = "Sources";
 "home.selectedPOI.dismiss" = "Dismiss selected event";
+"home.poi.toggle.title" = "Historical Events";
 "home.countries.title" = "Countries";
 "home.countries.more" = "+ %1$lld more";
 "home.detail.loading.title" = "Generating Summary";

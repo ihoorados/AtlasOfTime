@@ -16,6 +16,7 @@ enum LocalizationKeyCatalog {
         "home.selectedPOI.confidence",
         "home.selectedPOI.sources",
         "home.selectedPOI.dismiss",
+        "home.poi.toggle.title",
         "home.countries.title",
         "home.countries.more",
         "home.detail.loading.title",

@@ -15,14 +15,14 @@ struct AtlasScreen: View {
                 state: AtlasMapViewState(
                     snapshot: mapSnapshotMapper.makeSnapshot(
                         from: viewModel.renderSnapshot,
-                        pointsOfInterest: viewModel.pointsOfInterest,
+                        pointsOfInterest: viewModel.showsPointsOfInterest ? viewModel.pointsOfInterest : [],
                         selectedCountryID: viewModel.selectedCountryID,
-                        selectedPOIID: viewModel.selectedPOIID
+                        selectedPOIID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
                     ),
                     camera: .world,
                     selection: AtlasMapSelectionState(
                         selectedFeatureID: viewModel.selectedCountryID,
-                        selectedPointAnnotationID: viewModel.selectedPOIID
+                        selectedPointAnnotationID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
                     ),
                     options: AtlasMapViewOptions(
                         showsLabels: true,
@@ -41,10 +41,14 @@ struct AtlasScreen: View {
                 availableYears: viewModel.availableYears,
                 isLoading: viewModel.isLoading,
                 showLoadingIndicator: showLoadingIndicator,
+                showsPointsOfInterest: Binding(
+                    get: { viewModel.showsPointsOfInterest },
+                    set: { viewModel.showsPointsOfInterest = $0 }
+                ),
                 selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
                 selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
                 selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
-                selectedPOI: viewModel.selectedPOI,
+                selectedPOI: viewModel.showsPointsOfInterest ? viewModel.selectedPOI : nil,
                 selectedPOIConfidenceText: viewModel.selectedPOIConfidenceText,
                 selectedPOISourceCount: viewModel.selectedPOISourceCount,
                 visibleSnapshots: viewModel.visibleSnapshots,
