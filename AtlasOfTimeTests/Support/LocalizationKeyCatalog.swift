@@ -80,6 +80,7 @@ enum LocalizationKeyCatalog {
         "errors.fileReadFailed",
         "errors.invalidIndexFormat",
         "errors.invalidGeoJSON",
+        "errors.invalidPOIFormat",
         "errors.yearUnavailable",
         "errors.yearIndexNotLoaded",
         "errors.decompressionFailed",

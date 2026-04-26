@@ -5,5 +5,6 @@ public enum AtlasDataError: Error, Sendable {
     case fileReadFailed(String)
     case invalidIndexFormat(String)
     case invalidGeoJSON(String)
+    case invalidPOIFormat(String)
     case decompressionFailed(reason: String)
 }

@@ -114,6 +114,7 @@ enum AppStrings {
         static let fileReadFailedFormat: String = "errors.fileReadFailed"
         static let invalidIndexFormatFormat: String = "errors.invalidIndexFormat"
         static let invalidGeoJSONFormat: String = "errors.invalidGeoJSON"
+        static let invalidPOIFormatFormat: String = "errors.invalidPOIFormat"
         static let yearUnavailableFormat: String = "errors.yearUnavailable"
         static let yearIndexNotLoaded: LocalizedStringResource = "errors.yearIndexNotLoaded"
         static let decompressionFailedFormat: String = "errors.decompressionFailed"

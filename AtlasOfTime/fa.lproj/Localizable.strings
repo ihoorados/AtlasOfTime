@@ -87,6 +87,7 @@
 "errors.fileReadFailed" = "خواندن فایل ممکن نشد: %1$@";
 "errors.invalidIndexFormat" = "قالب index.json نامعتبر است: %1$@";
 "errors.invalidGeoJSON" = "GeoJSON نامعتبر است: %1$@";
+"errors.invalidPOIFormat" = "داده POI نامعتبر است: %1$@";
 "errors.yearUnavailable" = "داده مرز برای سال %1$lld در دسترس نیست.";
 "errors.yearIndexNotLoaded" = "فهرست سال‌ها بارگذاری نشده است.";
 "errors.decompressionFailed" = "فشرده‌گشایی Gzip ناموفق بود: %1$@";
