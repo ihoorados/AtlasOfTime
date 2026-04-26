@@ -7,10 +7,14 @@ public struct AtlasMapSnapshotBuilder: Sendable {
         self.labelPlacement = labelPlacement
     }
 
-    public func makeSnapshot(features: [AtlasMapFeature]) -> AtlasMapSnapshot {
+    public func makeSnapshot(
+        features: [AtlasMapFeature],
+        pointAnnotations: [AtlasMapPointAnnotation] = []
+    ) -> AtlasMapSnapshot {
         AtlasMapSnapshot(
             features: features,
-            labels: features.compactMap(labelPlacement.makeLabel(for:))
+            labels: features.compactMap(labelPlacement.makeLabel(for:)),
+            pointAnnotations: pointAnnotations
         )
     }
 }

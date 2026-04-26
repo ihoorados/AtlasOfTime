@@ -90,6 +90,9 @@ final class AtlasViewModel: ObservableObject {
         }
 
         selectedCountryID = visibleSnapshots.contains(where: { $0.id == id }) ? id : nil
+        if selectedCountryID != nil {
+            selectedPOIID = nil
+        }
     }
 
     func selectPOI(id: String?) {
@@ -99,6 +102,9 @@ final class AtlasViewModel: ObservableObject {
         }
 
         selectedPOIID = pointsOfInterest.contains(where: { $0.id == id }) ? id : nil
+        if selectedPOIID != nil {
+            selectedCountryID = nil
+        }
     }
 
     private func nearestAvailableYear(to year: Int) -> Int {

@@ -15,11 +15,14 @@ struct AtlasScreen: View {
                 state: AtlasMapViewState(
                     snapshot: mapSnapshotMapper.makeSnapshot(
                         from: viewModel.renderSnapshot,
-                        selectedCountryID: viewModel.selectedCountryID
+                        pointsOfInterest: viewModel.pointsOfInterest,
+                        selectedCountryID: viewModel.selectedCountryID,
+                        selectedPOIID: viewModel.selectedPOIID
                     ),
                     camera: .world,
                     selection: AtlasMapSelectionState(
-                        selectedFeatureID: viewModel.selectedCountryID
+                        selectedFeatureID: viewModel.selectedCountryID,
+                        selectedPointAnnotationID: viewModel.selectedPOIID
                     ),
                     options: AtlasMapViewOptions(
                         showsLabels: true,
@@ -28,7 +31,8 @@ struct AtlasScreen: View {
                         allowsPan: true
                     )
                 ),
-                onSelectionChanged: viewModel.selectCountry(id:)
+                onSelectionChanged: viewModel.selectCountry(id:),
+                onPointAnnotationSelectionChanged: viewModel.selectPOI(id:)
             )
                 .ignoresSafeArea()
 

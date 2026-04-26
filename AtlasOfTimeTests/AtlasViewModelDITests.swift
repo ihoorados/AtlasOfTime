@@ -101,11 +101,20 @@ struct AtlasViewModelDITests {
         viewModel.onAppear()
         try await waitUntil { viewModel.pointsOfInterest == pois[1900] }
 
+        viewModel.selectCountry(id: "year-1900-unattributed")
+        #expect(viewModel.selectedCountryID == "year-1900-unattributed")
+
         viewModel.selectPOI(id: pois[1900]?.first?.id)
         #expect(viewModel.selectedPOI == pois[1900]?.first)
+        #expect(viewModel.selectedCountryID == nil)
 
         viewModel.selectPOI(id: "missing-poi")
         #expect(viewModel.selectedPOI == nil)
+
+        viewModel.selectPOI(id: pois[1900]?.first?.id)
+        viewModel.selectCountry(id: "year-1900-unattributed")
+        #expect(viewModel.selectedPOI == nil)
+        #expect(viewModel.selectedCountryID == "year-1900-unattributed")
     }
 
     @Test
