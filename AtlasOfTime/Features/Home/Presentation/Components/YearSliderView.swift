@@ -23,6 +23,7 @@ struct YearSliderView: View {
                 .accessibilityLabel(AppStrings.Accessibility.Timeline.yearSliderLabel)
                 .accessibilityValue(selectedYearAccessibilityValue)
                 .accessibilityHint(AppStrings.Accessibility.Timeline.yearSliderHint)
+                .accessibilityIdentifier(AtlasAccessibilityID.Home.yearSlider)
 
             if showYearRangeLabels {
                 HStack {

@@ -92,6 +92,7 @@ struct AtlasControlPanelView: View {
         }
         .toggleStyle(.switch)
         .tint(theme.selectionFill)
+        .accessibilityIdentifier(AtlasAccessibilityID.Home.poiToggle)
     }
 
     private var countrySummarySection: some View {
@@ -120,6 +121,7 @@ struct AtlasControlPanelView: View {
                         .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier(AtlasAccessibilityID.Home.selectedCountryButton)
 
                     HStack(spacing: 12) {
                         LabeledContent {
@@ -201,6 +203,7 @@ struct AtlasControlPanelView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(AppStrings.Home.selectedPOIDismissAccessibilityLabel)
+                    .accessibilityIdentifier(AtlasAccessibilityID.Home.selectedPOIDismissButton)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {

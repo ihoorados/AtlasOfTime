@@ -38,6 +38,7 @@ struct RootTabScreen: View {
                     mapViewFactory: mapViewFactory,
                     destinationFactory: destinationFactory
                 )
+                .accessibilityIdentifier(AtlasAccessibilityID.Home.screen)
             }
 
             Tab(AppStrings.Tabs.settings, systemImage: "gearshape", value: AppTab.settings) {
@@ -48,6 +49,7 @@ struct RootTabScreen: View {
                     preferencesController: preferencesController,
                     destinationFactory: destinationFactory
                 )
+                .accessibilityIdentifier(AtlasAccessibilityID.Settings.screen)
             }
         }
         .atlasTabBarMinimizeOnScrollDown()

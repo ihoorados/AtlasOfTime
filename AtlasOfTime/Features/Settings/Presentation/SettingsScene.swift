@@ -9,19 +9,22 @@ struct SettingsScene: View {
                 settingsButton(
                     title: AppStrings.Settings.Root.appearance,
                     systemImage: "circle.lefthalf.filled",
-                    route: .appearance
+                    route: .appearance,
+                    accessibilityIdentifier: AtlasAccessibilityID.Settings.appearanceRow
                 )
 
                 settingsButton(
                     title: AppStrings.Settings.Root.map,
                     systemImage: "map",
-                    route: .map
+                    route: .map,
+                    accessibilityIdentifier: AtlasAccessibilityID.Settings.mapRow
                 )
 
                 settingsButton(
                     title: AppStrings.Settings.Root.data,
                     systemImage: "internaldrive",
-                    route: .data
+                    route: .data,
+                    accessibilityIdentifier: AtlasAccessibilityID.Settings.dataRow
                 )
             }
         }
@@ -32,7 +35,8 @@ struct SettingsScene: View {
     private func settingsButton(
         title: LocalizedStringResource,
         systemImage: String,
-        route: SettingsRoute
+        route: SettingsRoute,
+        accessibilityIdentifier: String
     ) -> some View {
         Button {
             onRouteSelected(route)
@@ -40,6 +44,7 @@ struct SettingsScene: View {
             settingsRow(title: title, systemImage: systemImage)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 
     private func settingsRow(
