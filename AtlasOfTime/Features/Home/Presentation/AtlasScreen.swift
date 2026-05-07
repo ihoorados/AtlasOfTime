@@ -15,11 +15,14 @@ struct AtlasScreen: View {
                 state: AtlasMapViewState(
                     snapshot: mapSnapshotMapper.makeSnapshot(
                         from: viewModel.renderSnapshot,
-                        selectedCountryID: viewModel.selectedCountryID
+                        pointsOfInterest: viewModel.showsPointsOfInterest ? viewModel.pointsOfInterest : [],
+                        selectedCountryID: viewModel.selectedCountryID,
+                        selectedPOIID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
                     ),
                     camera: .world,
                     selection: AtlasMapSelectionState(
-                        selectedFeatureID: viewModel.selectedCountryID
+                        selectedFeatureID: viewModel.selectedCountryID,
+                        selectedPointAnnotationID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
                     ),
                     options: AtlasMapViewOptions(
                         showsLabels: true,
@@ -28,28 +31,50 @@ struct AtlasScreen: View {
                         allowsPan: true
                     )
                 ),
-                onSelectionChanged: viewModel.selectCountry(id:)
+                onSelectionChanged: viewModel.selectCountry(id:),
+                onPointAnnotationSelectionChanged: viewModel.selectPOI(id:)
             )
                 .ignoresSafeArea()
 
-            AtlasControlPanelView(
-                displayYear: viewModel.displayYear,
-                availableYears: viewModel.availableYears,
-                isLoading: viewModel.isLoading,
-                showLoadingIndicator: showLoadingIndicator,
-                selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
-                selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
-                selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
-                visibleSnapshots: viewModel.visibleSnapshots,
-                selectedCountryID: viewModel.selectedCountryID,
-                errorMessage: viewModel.errorMessage,
-                onYearChanged: viewModel.onYearChanged(year:),
-                onSelectedCountryTapped: onSelectedCountryTapped
-            )
+            controlPanel
+                .frame(maxWidth: controlPanelMaxWidth, alignment: .bottom)
         }
         .onAppear {
             viewModel.onAppear()
         }
+    }
+
+    private var controlPanel: some View {
+        AtlasControlPanelView(
+            displayYear: viewModel.displayYear,
+            availableYears: viewModel.availableYears,
+            isLoading: viewModel.isLoading,
+            showLoadingIndicator: showLoadingIndicator,
+            showsPointsOfInterest: Binding(
+                get: { viewModel.showsPointsOfInterest },
+                set: { viewModel.showsPointsOfInterest = $0 }
+            ),
+            selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
+            selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
+            selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
+            selectedPOI: viewModel.showsPointsOfInterest ? viewModel.selectedPOI : nil,
+            selectedPOIConfidenceText: viewModel.selectedPOIConfidenceText,
+            selectedPOISourceCount: viewModel.selectedPOISourceCount,
+            visibleSnapshots: viewModel.visibleSnapshots,
+            selectedCountryID: viewModel.selectedCountryID,
+            errorMessage: viewModel.errorMessage,
+            onYearChanged: viewModel.onYearChanged(year:),
+            onSelectedCountryTapped: onSelectedCountryTapped,
+            onSelectedPOIDismissed: { viewModel.selectPOI(id: nil) }
+        )
+    }
+
+    private var controlPanelMaxWidth: CGFloat? {
+        #if os(macOS)
+        680
+        #else
+        nil
+        #endif
     }
 }
 

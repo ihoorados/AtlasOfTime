@@ -25,10 +25,11 @@ struct CountryDetailScene: View {
                 }
             }
             .padding(16)
+            .atlasMacReadableContentWidth()
         }
         .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(viewModel.snapshot.displayName)
-        .navigationBarTitleDisplayMode(.inline)
+        .atlasInlineNavigationTitle()
         .onAppear {
             viewModel.loadIfNeeded()
         }
@@ -222,6 +223,27 @@ struct CountryDetailScene: View {
         case .unknown:
             String(localized: AppStrings.Home.confidenceUnknown)
         }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func atlasInlineNavigationTitle() -> some View {
+        #if os(iOS)
+        navigationBarTitleDisplayMode(.inline)
+        #else
+        self
+        #endif
+    }
+
+    @ViewBuilder
+    func atlasMacReadableContentWidth() -> some View {
+        #if os(macOS)
+        frame(maxWidth: 760, alignment: .topLeading)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+        #else
+        self
+        #endif
     }
 }
 

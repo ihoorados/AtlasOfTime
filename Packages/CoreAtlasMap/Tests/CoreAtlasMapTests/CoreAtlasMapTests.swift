@@ -30,4 +30,20 @@ struct CoreAtlasMapTests {
         #expect(snapshot.labels.count == 1)
         #expect(snapshot.labels.first?.title == "Example")
     }
+
+    @Test
+    func snapshotBuilderPreservesPointAnnotations() {
+        let point = AtlasMapPointAnnotation(
+            id: "point:waterloo",
+            title: "Battle of Waterloo",
+            coordinate: AtlasMapCoordinate(latitude: 50.6806, longitude: 4.4125)
+        )
+
+        let snapshot = AtlasMapSnapshotBuilder().makeSnapshot(
+            features: [],
+            pointAnnotations: [point]
+        )
+
+        #expect(snapshot.pointAnnotations == [point])
+    }
 }

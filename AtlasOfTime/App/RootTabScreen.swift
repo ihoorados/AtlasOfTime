@@ -38,6 +38,7 @@ struct RootTabScreen: View {
                     mapViewFactory: mapViewFactory,
                     destinationFactory: destinationFactory
                 )
+                .accessibilityIdentifier(AtlasAccessibilityID.Home.screen)
             }
 
             Tab(AppStrings.Tabs.settings, systemImage: "gearshape", value: AppTab.settings) {
@@ -48,9 +49,10 @@ struct RootTabScreen: View {
                     preferencesController: preferencesController,
                     destinationFactory: destinationFactory
                 )
+                .accessibilityIdentifier(AtlasAccessibilityID.Settings.screen)
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        .atlasTabBarMinimizeOnScrollDown()
         .environment(
             \.atlasTheme,
             AtlasTheme.resolve(
@@ -58,6 +60,27 @@ struct RootTabScreen: View {
                 glassEnabled: appearanceController.glassEnabled
             )
         )
+        .atlasMacWindowMinimumSize()
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func atlasTabBarMinimizeOnScrollDown() -> some View {
+        #if os(iOS)
+        tabBarMinimizeBehavior(.onScrollDown)
+        #else
+        self
+        #endif
+    }
+
+    @ViewBuilder
+    func atlasMacWindowMinimumSize() -> some View {
+        #if os(macOS)
+        frame(minWidth: 760, minHeight: 560)
+        #else
+        self
+        #endif
     }
 }
 

@@ -5,13 +5,16 @@ import CoreAtlasDomain
 struct DomainDIContainer {
     private let yearIndexRepository: any YearIndexRepository
     private let borderRepository: any BorderRepository
+    private let poiRepository: any POIRepository
 
     init(
         yearIndexRepository: any YearIndexRepository,
-        borderRepository: any BorderRepository
+        borderRepository: any BorderRepository,
+        poiRepository: any POIRepository
     ) {
         self.yearIndexRepository = yearIndexRepository
         self.borderRepository = borderRepository
+        self.poiRepository = poiRepository
     }
 
     func makeLoadYearIndex() -> LoadYearIndex {
@@ -20,6 +23,10 @@ struct DomainDIContainer {
 
     func makeLoadBordersForYear() -> LoadBordersForYear {
         LoadBordersForYear(repository: borderRepository)
+    }
+
+    func makeLoadPOIsForYear() -> LoadPOIsForYear {
+        LoadPOIsForYear(repository: poiRepository)
     }
 
     func makeGenerateCountrySummary(

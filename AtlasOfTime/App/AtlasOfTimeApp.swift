@@ -16,16 +16,27 @@ struct AtlasOfTimeApp: App {
     }
 
     var body: some Scene {
+        #if os(macOS)
         WindowGroup {
-            Group {
-                if let localeIdentifier = languageController.selectedLanguage.localeIdentifier,
-                   let isRightToLeft = languageController.selectedLanguage.isRightToLeft {
-                    rootContent
-                        .environment(\.locale, Locale(identifier: localeIdentifier))
-                        .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
-                } else {
-                    rootContent
-                }
+            appWindowContent
+        }
+        .defaultSize(width: 1180, height: 760)
+        #else
+        WindowGroup {
+            appWindowContent
+        }
+        #endif
+    }
+
+    private var appWindowContent: some View {
+        Group {
+            if let localeIdentifier = languageController.selectedLanguage.localeIdentifier,
+               let isRightToLeft = languageController.selectedLanguage.isRightToLeft {
+                rootContent
+                    .environment(\.locale, Locale(identifier: localeIdentifier))
+                    .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
+            } else {
+                rootContent
             }
         }
     }

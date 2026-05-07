@@ -1,10 +1,25 @@
-.derivedData/
-docs/
+# macOS
+.DS_Store
 
-/.build/
-**/.build/
-/.swiftpm/
-**/.swiftpm/
+# Xcode user/workspace state
 xcuserdata/
 *.xcuserdatad/
 *.xcuserstate
+*.moved-aside
+DerivedData/
+.derivedData/
+.derivedData-*/
+
+# Swift Package Manager generated state
+.build/
+**/.build/
+.swiftpm/
+**/.swiftpm/
+
+# Local/private project notes
+docs/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp

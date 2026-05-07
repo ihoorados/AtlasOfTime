@@ -11,7 +11,9 @@ struct AtlasMapSnapshotMapper {
 
     func makeSnapshot(
         from snapshot: YearSnapshot?,
-        selectedCountryID: String?
+        pointsOfInterest: [HistoricalPOI] = [],
+        selectedCountryID: String?,
+        selectedPOIID: String? = nil
     ) -> AtlasMapSnapshot? {
         guard let snapshot else { return nil }
 
@@ -22,7 +24,17 @@ struct AtlasMapSnapshotMapper {
             )
         }
 
-        return snapshotBuilder.makeSnapshot(features: features)
+        let pointAnnotations = pointsOfInterest.map { pointOfInterest in
+            makePointAnnotation(
+                from: pointOfInterest,
+                selectedPOIID: selectedPOIID
+            )
+        }
+
+        return snapshotBuilder.makeSnapshot(
+            features: features,
+            pointAnnotations: pointAnnotations
+        )
     }
 
     private func makeFeature(
@@ -85,6 +97,19 @@ struct AtlasMapSnapshotMapper {
         AtlasMapCoordinate(
             latitude: coordinate.lat,
             longitude: coordinate.lon
+        )
+    }
+
+    private func makePointAnnotation(
+        from pointOfInterest: HistoricalPOI,
+        selectedPOIID: String?
+    ) -> AtlasMapPointAnnotation {
+        AtlasMapPointAnnotation(
+            id: pointOfInterest.id,
+            title: pointOfInterest.title,
+            subtitle: pointOfInterest.summary,
+            coordinate: makeCoordinate(from: pointOfInterest.coordinate),
+            emphasis: pointOfInterest.id == selectedPOIID ? .selected : .normal
         )
     }
 }

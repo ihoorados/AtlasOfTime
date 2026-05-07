@@ -17,11 +17,13 @@ struct MapSettingsScene: View {
                 Label(AppStrings.Settings.Map.showYearRangeLabels, systemImage: "textformat.123")
             }
             .accessibilityValue(yearRangeLabelsAccessibilityValue)
+            .accessibilityIdentifier(AtlasAccessibilityID.Settings.yearRangeLabelsToggle)
 
             Toggle(isOn: $preferencesController.showLoadingIndicator) {
                 Label(AppStrings.Settings.Map.showLoadingIndicator, systemImage: "progress.indicator")
             }
             .accessibilityValue(loadingIndicatorAccessibilityValue)
+            .accessibilityIdentifier(AtlasAccessibilityID.Settings.loadingIndicatorToggle)
         } header: {
             Text(AppStrings.Settings.Map.presentationTitle)
         } footer: {

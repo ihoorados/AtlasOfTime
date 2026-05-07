@@ -22,6 +22,10 @@ final class DataDIContainer {
         )
     }()
 
+    private lazy var poiRepository: any POIRepository = {
+        CoreAtlasData.DefaultPOIRepository(fileReader: dataSource)
+    }()
+
     init(
         dataSource: BundleDataSource = BundleDataSource(),
         borderCache: any CoreAtlasData.YearSnapshotCaching = LRUCache<Int, YearSnapshot>(capacity: 4),
@@ -45,5 +49,9 @@ final class DataDIContainer {
 
     func makeBorderRepository() -> any BorderRepository {
         borderRepository
+    }
+
+    func makePOIRepository() -> any POIRepository {
+        poiRepository
     }
 }

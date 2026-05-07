@@ -2,14 +2,20 @@ import CoreAtlasMap
 import MapKit
 import SwiftUI
 
+#if os(iOS)
 public struct MapKitAtlasMapView: UIViewRepresentable {
     private static let featureLabelReuseIdentifier = "MapKitAtlasFeatureLabel"
+    private static let pointAnnotationReuseIdentifier = "MapKitAtlasPointAnnotation"
 
     let state: AtlasMapViewState
     let onSelectionChanged: @MainActor @Sendable (String?) -> Void
+    let onPointAnnotationSelectionChanged: @MainActor @Sendable (String?) -> Void
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator(onSelectionChanged: onSelectionChanged)
+        Coordinator(
+            onSelectionChanged: onSelectionChanged,
+            onPointAnnotationSelectionChanged: onPointAnnotationSelectionChanged
+        )
     }
 
     public func makeUIView(context: Context) -> MKMapView {
@@ -47,6 +53,7 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         context.coordinator.render(
             snapshot: state.snapshot,
             selectedFeatureID: state.selection.selectedFeatureID,
+            selectedPointAnnotationID: state.selection.selectedPointAnnotationID,
             showsLabels: state.options.showsLabels,
             on: mapView
         )
@@ -92,17 +99,50 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         }
     }
 
+    final class PointAnnotation: NSObject, MKAnnotation {
+        let pointID: String
+        let pointTitle: String
+        let pointSubtitle: String?
+        let emphasis: AtlasMapPointAnnotation.Emphasis
+        let coordinate: CLLocationCoordinate2D
+
+        init(point: AtlasMapPointAnnotation) {
+            self.pointID = point.id
+            self.pointTitle = point.title
+            self.pointSubtitle = point.subtitle
+            self.emphasis = point.emphasis
+            self.coordinate = CLLocationCoordinate2D(
+                latitude: point.coordinate.latitude,
+                longitude: point.coordinate.longitude
+            )
+        }
+
+        var title: String? {
+            pointTitle
+        }
+
+        var subtitle: String? {
+            pointSubtitle
+        }
+    }
+
     public final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastRenderIdentifier: String?
         private var lastAppliedCamera: AtlasMapCameraState?
         private var selectedFeatureID: String?
+        private var selectedPointAnnotationID: String?
         private let onSelectionChanged: @MainActor @Sendable (String?) -> Void
+        private let onPointAnnotationSelectionChanged: @MainActor @Sendable (String?) -> Void
 
         weak var mapView: MKMapView?
         weak var tapGestureRecognizer: UITapGestureRecognizer?
 
-        init(onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void) {
+        init(
+            onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void,
+            onPointAnnotationSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void
+        ) {
             self.onSelectionChanged = onSelectionChanged
+            self.onPointAnnotationSelectionChanged = onPointAnnotationSelectionChanged
         }
 
         func applyCameraIfNeeded(
@@ -118,26 +158,34 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         func render(
             snapshot: AtlasMapSnapshot?,
             selectedFeatureID: String?,
+            selectedPointAnnotationID: String?,
             showsLabels: Bool,
             on mapView: MKMapView
         ) {
             self.selectedFeatureID = selectedFeatureID
+            self.selectedPointAnnotationID = selectedPointAnnotationID
             let identifier = renderIdentifier(
                 for: snapshot,
                 selectedFeatureID: selectedFeatureID,
+                selectedPointAnnotationID: selectedPointAnnotationID,
                 showsLabels: showsLabels
             )
             guard identifier != lastRenderIdentifier else { return }
 
             mapView.removeOverlays(mapView.overlays)
-            mapView.removeAnnotations(mapView.annotations.filter { $0 is FeatureLabelAnnotation })
+            mapView.removeAnnotations(
+                mapView.annotations.filter { annotation in
+                    annotation is FeatureLabelAnnotation || annotation is PointAnnotation
+                }
+            )
 
             let overlays = MapKitFeatureOverlayAdapter.makeOverlays(from: snapshot)
-            let annotations = showsLabels
+            let labelAnnotations = showsLabels
                 ? MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeFeatureLabelAnnotation)
                 : []
+            let pointAnnotations = snapshot?.pointAnnotations.map(PointAnnotation.init(point:)) ?? []
             mapView.addOverlays(overlays)
-            mapView.addAnnotations(annotations)
+            mapView.addAnnotations(labelAnnotations + pointAnnotations)
             lastRenderIdentifier = identifier
         }
 
@@ -160,11 +208,13 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
                 let rendererPoint = renderer.point(for: mapPoint)
                 if path.contains(rendererPoint) {
                     onSelectionChanged(featureID == selectedFeatureID ? nil : featureID)
+                    onPointAnnotationSelectionChanged(nil)
                     return
                 }
             }
 
             onSelectionChanged(nil)
+            onPointAnnotationSelectionChanged(nil)
         }
 
         public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -182,6 +232,10 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         }
 
         public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if let pointAnnotation = annotation as? PointAnnotation {
+                return makePointAnnotationView(for: pointAnnotation, on: mapView)
+            }
+
             guard let featureAnnotation = annotation as? FeatureLabelAnnotation else {
                 return nil
             }
@@ -235,13 +289,80 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
             return annotationView
         }
 
+        public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            guard let annotation = view.annotation as? PointAnnotation else { return }
+            onSelectionChanged(nil)
+            onPointAnnotationSelectionChanged(
+                annotation.pointID == selectedPointAnnotationID ? nil : annotation.pointID
+            )
+            mapView.deselectAnnotation(annotation, animated: false)
+        }
+
+        private func makePointAnnotationView(
+            for annotation: PointAnnotation,
+            on mapView: MKMapView
+        ) -> MKAnnotationView {
+            let annotationView = mapView.dequeueReusableAnnotationView(
+                withIdentifier: MapKitAtlasMapView.pointAnnotationReuseIdentifier
+            ) ?? MKAnnotationView(
+                annotation: annotation,
+                reuseIdentifier: MapKitAtlasMapView.pointAnnotationReuseIdentifier
+            )
+
+            let isSelected = annotation.pointID == selectedPointAnnotationID || annotation.emphasis == .selected
+            annotationView.annotation = annotation
+            annotationView.canShowCallout = false
+            annotationView.isEnabled = true
+            annotationView.centerOffset = CGPoint(x: 0, y: -11)
+            annotationView.bounds = CGRect(x: 0, y: 0, width: isSelected ? 24 : 20, height: isSelected ? 24 : 20)
+            annotationView.backgroundColor = .clear
+            annotationView.layer.shadowColor = pointShadowColor.cgColor
+            annotationView.layer.shadowOpacity = isSelected ? 0.34 : 0.24
+            annotationView.layer.shadowRadius = isSelected ? 5 : 4
+            annotationView.layer.shadowOffset = CGSize(width: 0, height: 2)
+
+            let marker = pointMarkerView(in: annotationView)
+            marker.backgroundColor = isSelected ? selectedPointColor : pointColor
+            marker.layer.cornerRadius = isSelected ? 12 : 10
+            marker.layer.borderWidth = isSelected ? 3 : 2
+            marker.layer.borderColor = pointBorderColor.cgColor
+            marker.frame = annotationView.bounds
+
+            return annotationView
+        }
+
+        private func pointMarkerView(in annotationView: MKAnnotationView) -> UIView {
+            if let marker = annotationView.subviews.first(where: { $0.tag == 31_815 }) {
+                return marker
+            }
+
+            let marker = UIView()
+            marker.tag = 31_815
+            marker.isUserInteractionEnabled = false
+            annotationView.addSubview(marker)
+            return marker
+        }
+
         private func renderIdentifier(
             for snapshot: AtlasMapSnapshot?,
             selectedFeatureID: String?,
+            selectedPointAnnotationID: String?,
             showsLabels: Bool
         ) -> String {
             guard let snapshot else { return "nil" }
-            return "\(snapshot.features.count)-\(showsLabels ? snapshot.labels.count : 0)-\(selectedFeatureID ?? "none")"
+            let pointFingerprint = snapshot.pointAnnotations
+                .map { point in
+                    "\(point.id):\(point.title):\(point.coordinate.latitude):\(point.coordinate.longitude)"
+                }
+                .joined(separator: ",")
+            return [
+                "\(snapshot.features.count)",
+                "\(showsLabels ? snapshot.labels.count : 0)",
+                "\(snapshot.pointAnnotations.count)",
+                pointFingerprint,
+                selectedFeatureID ?? "none",
+                selectedPointAnnotationID ?? "none"
+            ].joined(separator: "-")
         }
 
         private func makeFeatureLabelAnnotation(from point: MapKitFeatureLabelPoint) -> FeatureLabelAnnotation {
@@ -309,6 +430,37 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
                 return UIColor(red: 0.46, green: 0.31, blue: 0.12, alpha: 0.34)
             }
         }
+
+        private var pointColor: UIColor {
+            UIColor { traits in
+                if traits.userInterfaceStyle == .dark {
+                    return UIColor(red: 0.83, green: 0.39, blue: 0.21, alpha: 0.92)
+                }
+                return UIColor(red: 0.70, green: 0.22, blue: 0.12, alpha: 0.92)
+            }
+        }
+
+        private var selectedPointColor: UIColor {
+            UIColor { traits in
+                if traits.userInterfaceStyle == .dark {
+                    return UIColor(red: 1.00, green: 0.66, blue: 0.29, alpha: 0.98)
+                }
+                return UIColor(red: 0.92, green: 0.40, blue: 0.10, alpha: 0.98)
+            }
+        }
+
+        private var pointBorderColor: UIColor {
+            UIColor { traits in
+                if traits.userInterfaceStyle == .dark {
+                    return UIColor(red: 0.12, green: 0.09, blue: 0.06, alpha: 0.94)
+                }
+                return UIColor(red: 0.98, green: 0.92, blue: 0.78, alpha: 0.96)
+            }
+        }
+
+        private var pointShadowColor: UIColor {
+            UIColor.black.withAlphaComponent(0.5)
+        }
     }
 }
 
@@ -326,3 +478,4 @@ private extension AtlasMapCameraState {
         )
     }
 }
+#endif

@@ -7,12 +7,14 @@ public struct MapKitAtlasMapViewFactory: AtlasMapViewFactory {
 
     public func makeMapView(
         state: AtlasMapViewState,
-        onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void
+        onSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void,
+        onPointAnnotationSelectionChanged: @escaping @MainActor @Sendable (String?) -> Void
     ) -> AnyView {
         AnyView(
             MapKitAtlasMapView(
                 state: state,
-                onSelectionChanged: onSelectionChanged
+                onSelectionChanged: onSelectionChanged,
+                onPointAnnotationSelectionChanged: onPointAnnotationSelectionChanged
             )
         )
     }
