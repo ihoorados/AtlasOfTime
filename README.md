@@ -1,17 +1,17 @@
 # AtlasOfTime
 
-[![Platform](https://img.shields.io/badge/platform-iOS-blue)](#)
+[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20macOS-blue)](#)
 [![Swift](https://img.shields.io/badge/swift-6-orange)](#)
 [![SwiftUI](https://img.shields.io/badge/ui-SwiftUI-0A84FF)](#)
 [![Status](https://img.shields.io/badge/status-active%20development-yellow)](#)
 
-AtlasOfTime is an iOS historical atlas that lets users explore country borders and political context across time.
+AtlasOfTime is an iOS and macOS historical atlas that lets users explore country borders and political context across time.
 
 ## Overview
 
-AtlasOfTime is a SwiftUI iOS app built around explicit architectural boundaries. Domain logic, data access, map rendering, settings, and navigation are separated into local packages so the app target stays focused on composition and feature delivery.
+AtlasOfTime is a SwiftUI Apple-platform app built around explicit architectural boundaries. Domain logic, data access, map rendering, settings, and navigation are separated into local packages so the app target stays focused on composition and feature delivery.
 
-From a product perspective, the app is a timeline-driven historical atlas. From an engineering perspective, it is a modular iOS codebase designed for maintainability, testability, and clear dependency direction.
+From a product perspective, the app is a timeline-driven historical atlas. From an engineering perspective, it is a modular Apple-platform codebase designed for maintainability, testability, and clear dependency direction.
 
 ## Current Product Scope
 
@@ -128,7 +128,7 @@ AtlasOfTime/
 │   └── CoreAtlasAppSettings/
 ├── AtlasOfTimeTests/
 ├── AtlasOfTimeUITests/
-└── docs/
+└── Scripts/
 ```
 
 ## Package Structure
