@@ -2,6 +2,7 @@ import Testing
 @testable import CoreAtlasNavigation
 
 @Test
+@MainActor
 func navigationPathStatePushAndPop() {
     var state = NavigationPathState<String>()
 

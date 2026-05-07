@@ -2,6 +2,7 @@ import CoreAtlasMap
 import MapKit
 import SwiftUI
 
+#if os(iOS)
 public struct MapKitAtlasMapView: UIViewRepresentable {
     private static let featureLabelReuseIdentifier = "MapKitAtlasFeatureLabel"
     private static let pointAnnotationReuseIdentifier = "MapKitAtlasPointAnnotation"
@@ -477,3 +478,4 @@ private extension AtlasMapCameraState {
         )
     }
 }
+#endif
