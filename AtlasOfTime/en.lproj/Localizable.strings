@@ -12,6 +12,11 @@
 "home.selectedCountry.confidence.medium" = "Medium";
 "home.selectedCountry.confidence.low" = "Low";
 "home.selectedCountry.confidence.unknown" = "Unknown";
+"home.selectedPOI.title" = "Selected Event";
+"home.selectedPOI.confidence" = "Confidence";
+"home.selectedPOI.sources" = "Sources";
+"home.selectedPOI.dismiss" = "Dismiss selected event";
+"home.poi.toggle.title" = "Historical Events";
 "home.countries.title" = "Countries";
 "home.countries.more" = "+ %1$lld more";
 "home.detail.loading.title" = "Generating Summary";
@@ -87,6 +92,7 @@
 "errors.fileReadFailed" = "Unable to read file: %1$@";
 "errors.invalidIndexFormat" = "Invalid index.json format: %1$@";
 "errors.invalidGeoJSON" = "Invalid GeoJSON: %1$@";
+"errors.invalidPOIFormat" = "Invalid POI data: %1$@";
 "errors.yearUnavailable" = "No border data available for year %1$lld.";
 "errors.yearIndexNotLoaded" = "Year index is not loaded.";
 "errors.decompressionFailed" = "Gzip decompression failed: %1$@";

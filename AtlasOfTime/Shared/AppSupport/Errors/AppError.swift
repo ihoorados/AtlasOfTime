@@ -7,6 +7,7 @@ enum AppError: Error, LocalizedError, Sendable {
     case fileReadFailed(String)
     case invalidIndexFormat(String)
     case invalidGeoJSON(String)
+    case invalidPOIFormat(String)
     case yearUnavailable(Int)
     case yearIndexNotLoaded
     case decompressionFailed(reason: String)
@@ -27,6 +28,8 @@ enum AppError: Error, LocalizedError, Sendable {
                 return .invalidIndexFormat(details)
             case .invalidGeoJSON(let details):
                 return .invalidGeoJSON(details)
+            case .invalidPOIFormat(let details):
+                return .invalidPOIFormat(details)
             case .decompressionFailed(let reason):
                 return .decompressionFailed(reason: reason)
             }
@@ -53,6 +56,8 @@ enum AppError: Error, LocalizedError, Sendable {
             return LocalizedStringFormat.resolve(AppStrings.Errors.invalidIndexFormatFormat, locale: .current, details)
         case .invalidGeoJSON(let details):
             return LocalizedStringFormat.resolve(AppStrings.Errors.invalidGeoJSONFormat, locale: .current, details)
+        case .invalidPOIFormat(let details):
+            return LocalizedStringFormat.resolve(AppStrings.Errors.invalidPOIFormatFormat, locale: .current, details)
         case .yearUnavailable(let year):
             return LocalizedStringFormat.resolve(AppStrings.Errors.yearUnavailableFormat, locale: .current, year)
         case .yearIndexNotLoaded:

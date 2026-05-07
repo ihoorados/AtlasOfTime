@@ -12,6 +12,11 @@
 "home.selectedCountry.confidence.medium" = "متوسط";
 "home.selectedCountry.confidence.low" = "کم";
 "home.selectedCountry.confidence.unknown" = "نامشخص";
+"home.selectedPOI.title" = "رویداد انتخاب‌شده";
+"home.selectedPOI.confidence" = "اطمینان";
+"home.selectedPOI.sources" = "منابع";
+"home.selectedPOI.dismiss" = "بستن رویداد انتخاب‌شده";
+"home.poi.toggle.title" = "رویدادهای تاریخی";
 "home.countries.title" = "کشورها";
 "home.countries.more" = "+ %1$lld مورد دیگر";
 "home.detail.loading.title" = "در حال تولید خلاصه";
@@ -87,6 +92,7 @@
 "errors.fileReadFailed" = "خواندن فایل ممکن نشد: %1$@";
 "errors.invalidIndexFormat" = "قالب index.json نامعتبر است: %1$@";
 "errors.invalidGeoJSON" = "GeoJSON نامعتبر است: %1$@";
+"errors.invalidPOIFormat" = "داده POI نامعتبر است: %1$@";
 "errors.yearUnavailable" = "داده مرز برای سال %1$lld در دسترس نیست.";
 "errors.yearIndexNotLoaded" = "فهرست سال‌ها بارگذاری نشده است.";
 "errors.decompressionFailed" = "فشرده‌گشایی Gzip ناموفق بود: %1$@";

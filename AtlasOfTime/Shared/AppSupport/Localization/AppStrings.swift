@@ -22,6 +22,11 @@ enum AppStrings {
         static let confidenceMedium: LocalizedStringResource = "home.selectedCountry.confidence.medium"
         static let confidenceLow: LocalizedStringResource = "home.selectedCountry.confidence.low"
         static let confidenceUnknown: LocalizedStringResource = "home.selectedCountry.confidence.unknown"
+        static let selectedPOITitle: LocalizedStringResource = "home.selectedPOI.title"
+        static let selectedPOIConfidenceTitle: LocalizedStringResource = "home.selectedPOI.confidence"
+        static let selectedPOISourcesTitle: LocalizedStringResource = "home.selectedPOI.sources"
+        static let selectedPOIDismissAccessibilityLabel: LocalizedStringResource = "home.selectedPOI.dismiss"
+        static let showPOIsTitle: LocalizedStringResource = "home.poi.toggle.title"
 
         enum Detail {
             static let loadingTitle: LocalizedStringResource = "home.detail.loading.title"
@@ -114,6 +119,7 @@ enum AppStrings {
         static let fileReadFailedFormat: String = "errors.fileReadFailed"
         static let invalidIndexFormatFormat: String = "errors.invalidIndexFormat"
         static let invalidGeoJSONFormat: String = "errors.invalidGeoJSON"
+        static let invalidPOIFormatFormat: String = "errors.invalidPOIFormat"
         static let yearUnavailableFormat: String = "errors.yearUnavailable"
         static let yearIndexNotLoaded: LocalizedStringResource = "errors.yearIndexNotLoaded"
         static let decompressionFailedFormat: String = "errors.decompressionFailed"

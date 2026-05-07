@@ -52,12 +52,14 @@ enum HomePreviewFactory {
 
         let domainContainer = DomainDIContainer(
             yearIndexRepository: PreviewYearIndexRepository(index: index),
-            borderRepository: PreviewBorderRepository(snapshots: snapshots)
+            borderRepository: PreviewBorderRepository(snapshots: snapshots),
+            poiRepository: PreviewPOIRepository()
         )
 
         return AtlasFeatureDIContainer(
             loadYearIndex: domainContainer.makeLoadYearIndex(),
             loadBordersForYear: domainContainer.makeLoadBordersForYear(),
+            loadPOIsForYear: domainContainer.makeLoadPOIsForYear(),
             debounceNanoseconds: 50_000_000
         )
     }
@@ -87,5 +89,11 @@ private actor PreviewBorderRepository: BorderRepository {
             throw AtlasDomainError.yearUnavailable(year)
         }
         return snapshot
+    }
+}
+
+private actor PreviewPOIRepository: POIRepository {
+    func pointsOfInterest(for year: Int) async throws -> [HistoricalPOI] {
+        []
     }
 }

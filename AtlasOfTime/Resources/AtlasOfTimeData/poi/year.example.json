@@ -1,0 +1,51 @@
+{
+  "year": 1914,
+  "pointsOfInterest": [
+    {
+      "id": "sarajevo-assassination-1914",
+      "year": 1914,
+      "title": "Assassination in Sarajevo",
+      "summary": "A political assassination in Sarajevo triggered a wider diplomatic crisis in Europe.",
+      "latitude": 43.8563,
+      "longitude": 18.4131,
+      "category": "politicalEvent",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "austria-hungary",
+        "serbia"
+      ],
+      "sourceReferences": [
+        {
+          "id": "example-source-sarajevo-1914",
+          "title": "Example Historical Reference",
+          "locator": "p. 12",
+          "url": null,
+          "note": "Used here only as a schema example."
+        }
+      ]
+    },
+    {
+      "id": "liege-opening-battles-1914",
+      "year": 1914,
+      "title": "Opening Battles at Liege",
+      "summary": "Early fighting around Liege marked one of the opening major military actions on the Western Front.",
+      "latitude": 50.6326,
+      "longitude": 5.5797,
+      "category": "battle",
+      "confidence": "high",
+      "relatedCountryIDs": [
+        "germany",
+        "belgium"
+      ],
+      "sourceReferences": [
+        {
+          "id": "example-source-liege-1914",
+          "title": "Example Historical Reference",
+          "locator": "pp. 44-46",
+          "url": null,
+          "note": "Used here only as a schema example."
+        }
+      ]
+    }
+  ]
+}
