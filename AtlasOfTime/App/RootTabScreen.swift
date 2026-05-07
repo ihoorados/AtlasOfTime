@@ -50,7 +50,7 @@ struct RootTabScreen: View {
                 )
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        .atlasTabBarMinimizeOnScrollDown()
         .environment(
             \.atlasTheme,
             AtlasTheme.resolve(
@@ -58,6 +58,17 @@ struct RootTabScreen: View {
                 glassEnabled: appearanceController.glassEnabled
             )
         )
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func atlasTabBarMinimizeOnScrollDown() -> some View {
+        #if os(iOS)
+        tabBarMinimizeBehavior(.onScrollDown)
+        #else
+        self
+        #endif
     }
 }
 

@@ -28,7 +28,7 @@ struct CountryDetailScene: View {
         }
         .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(viewModel.snapshot.displayName)
-        .navigationBarTitleDisplayMode(.inline)
+        .atlasInlineNavigationTitle()
         .onAppear {
             viewModel.loadIfNeeded()
         }
@@ -222,6 +222,17 @@ struct CountryDetailScene: View {
         case .unknown:
             String(localized: AppStrings.Home.confidenceUnknown)
         }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func atlasInlineNavigationTitle() -> some View {
+        #if os(iOS)
+        navigationBarTitleDisplayMode(.inline)
+        #else
+        self
+        #endif
     }
 }
 
