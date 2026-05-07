@@ -36,32 +36,45 @@ struct AtlasScreen: View {
             )
                 .ignoresSafeArea()
 
-            AtlasControlPanelView(
-                displayYear: viewModel.displayYear,
-                availableYears: viewModel.availableYears,
-                isLoading: viewModel.isLoading,
-                showLoadingIndicator: showLoadingIndicator,
-                showsPointsOfInterest: Binding(
-                    get: { viewModel.showsPointsOfInterest },
-                    set: { viewModel.showsPointsOfInterest = $0 }
-                ),
-                selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
-                selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
-                selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
-                selectedPOI: viewModel.showsPointsOfInterest ? viewModel.selectedPOI : nil,
-                selectedPOIConfidenceText: viewModel.selectedPOIConfidenceText,
-                selectedPOISourceCount: viewModel.selectedPOISourceCount,
-                visibleSnapshots: viewModel.visibleSnapshots,
-                selectedCountryID: viewModel.selectedCountryID,
-                errorMessage: viewModel.errorMessage,
-                onYearChanged: viewModel.onYearChanged(year:),
-                onSelectedCountryTapped: onSelectedCountryTapped,
-                onSelectedPOIDismissed: { viewModel.selectPOI(id: nil) }
-            )
+            controlPanel
+                .frame(maxWidth: controlPanelMaxWidth, alignment: .bottom)
         }
         .onAppear {
             viewModel.onAppear()
         }
+    }
+
+    private var controlPanel: some View {
+        AtlasControlPanelView(
+            displayYear: viewModel.displayYear,
+            availableYears: viewModel.availableYears,
+            isLoading: viewModel.isLoading,
+            showLoadingIndicator: showLoadingIndicator,
+            showsPointsOfInterest: Binding(
+                get: { viewModel.showsPointsOfInterest },
+                set: { viewModel.showsPointsOfInterest = $0 }
+            ),
+            selectedCountrySnapshot: viewModel.selectedCountrySnapshot,
+            selectedCountryBorderConfidenceText: viewModel.selectedCountryBorderConfidenceText,
+            selectedCountrySourceCount: viewModel.selectedCountrySourceCount,
+            selectedPOI: viewModel.showsPointsOfInterest ? viewModel.selectedPOI : nil,
+            selectedPOIConfidenceText: viewModel.selectedPOIConfidenceText,
+            selectedPOISourceCount: viewModel.selectedPOISourceCount,
+            visibleSnapshots: viewModel.visibleSnapshots,
+            selectedCountryID: viewModel.selectedCountryID,
+            errorMessage: viewModel.errorMessage,
+            onYearChanged: viewModel.onYearChanged(year:),
+            onSelectedCountryTapped: onSelectedCountryTapped,
+            onSelectedPOIDismissed: { viewModel.selectPOI(id: nil) }
+        )
+    }
+
+    private var controlPanelMaxWidth: CGFloat? {
+        #if os(macOS)
+        680
+        #else
+        nil
+        #endif
     }
 }
 

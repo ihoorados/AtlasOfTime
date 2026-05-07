@@ -26,6 +26,7 @@ struct SettingsScene: View {
             }
         }
         .navigationTitle(AppStrings.Settings.Root.title)
+        .atlasMacSettingsContentWidth()
     }
 
     private func settingsButton(
@@ -56,6 +57,18 @@ struct SettingsScene: View {
                 .foregroundStyle(.secondary)
         }
         .contentShape(Rectangle())
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func atlasMacSettingsContentWidth() -> some View {
+        #if os(macOS)
+        frame(maxWidth: 640, alignment: .topLeading)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+        #else
+        self
+        #endif
     }
 }
 

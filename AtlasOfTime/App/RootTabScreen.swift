@@ -58,6 +58,7 @@ struct RootTabScreen: View {
                 glassEnabled: appearanceController.glassEnabled
             )
         )
+        .atlasMacWindowMinimumSize()
     }
 }
 
@@ -66,6 +67,15 @@ private extension View {
     func atlasTabBarMinimizeOnScrollDown() -> some View {
         #if os(iOS)
         tabBarMinimizeBehavior(.onScrollDown)
+        #else
+        self
+        #endif
+    }
+
+    @ViewBuilder
+    func atlasMacWindowMinimumSize() -> some View {
+        #if os(macOS)
+        frame(minWidth: 760, minHeight: 560)
         #else
         self
         #endif

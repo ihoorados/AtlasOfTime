@@ -25,6 +25,7 @@ struct CountryDetailScene: View {
                 }
             }
             .padding(16)
+            .atlasMacReadableContentWidth()
         }
         .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(viewModel.snapshot.displayName)
@@ -230,6 +231,16 @@ private extension View {
     func atlasInlineNavigationTitle() -> some View {
         #if os(iOS)
         navigationBarTitleDisplayMode(.inline)
+        #else
+        self
+        #endif
+    }
+
+    @ViewBuilder
+    func atlasMacReadableContentWidth() -> some View {
+        #if os(macOS)
+        frame(maxWidth: 760, alignment: .topLeading)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         #else
         self
         #endif
