@@ -220,6 +220,21 @@ Coverage includes:
 - localization/resource tests
 - repository behavior tests
 
+## Validation and CI
+
+The repository includes a project-owned validation script so local checks and GitHub Actions use the same command path:
+
+```bash
+Scripts/validate-platforms.sh
+```
+
+The script runs:
+
+- macOS test suite through `xcodebuild test`
+- iOS Simulator validation through `xcodebuild build-for-testing`
+
+GitHub Actions runs the same validation for pull requests and direct pushes targeting `dev` and `master`. The workflow uses a pinned macOS runner, read-only repository permissions, concurrency cancellation, and Xcode log upload on failure.
+
 ## Status
 
 AtlasOfTime is in active development.
