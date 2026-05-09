@@ -5,7 +5,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DERIVED_DATA_PATH="${ROOT_DIR}/.derivedData-platform-validation"
 
 cleanup() {
-  rm -rf "${DERIVED_DATA_PATH}"
+  if [[ "${KEEP_DERIVED_DATA:-0}" != "1" ]]; then
+    rm -rf "${DERIVED_DATA_PATH}"
+  fi
 }
 
 trap cleanup EXIT
