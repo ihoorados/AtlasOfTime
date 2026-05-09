@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - master
+  push:
+    branches:
+      - dev
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  platform-validation:
+    name: Platform Validation
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          sw_vers
+          xcodebuild -version
+          xcode-select -p
+
+      - name: Validate iOS and macOS
+        env:
+          KEEP_DERIVED_DATA: "1"
+        run: Scripts/validate-platforms.sh
+
+      - name: Upload Xcode logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-logs
+          path: .derivedData-platform-validation/**/Logs
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Clean validation artifacts
+        if: always()
+        run: rm -rf .derivedData-platform-validation
