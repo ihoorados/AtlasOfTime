@@ -233,7 +233,7 @@ The script runs:
 - macOS test suite through `xcodebuild test`
 - iOS Simulator validation through `xcodebuild build-for-testing`
 
-GitHub Actions runs the same validation for pull requests and direct pushes targeting `dev` and `master`. The workflow uses a pinned macOS runner, read-only repository permissions, concurrency cancellation, and Xcode log upload on failure.
+GitHub Actions runs the same validation for pull requests and direct pushes targeting `develop` and `master`. The workflow uses a pinned macOS runner, read-only repository permissions, concurrency cancellation, and Xcode log upload on failure.
 
 ## Status
 
