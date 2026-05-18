@@ -156,9 +156,27 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             showsLabels: Bool,
             on mapView: MKMapView
         ) {
+            let previousFeatureID = self.selectedFeatureID
+            let previousPointAnnotationID = self.selectedPointAnnotationID
+            let contentChanged = snapshot != lastSnapshot || showsLabels != lastShowsLabels
+            let selectionChanged = previousFeatureID != selectedFeatureID ||
+                previousPointAnnotationID != selectedPointAnnotationID
+
             self.selectedFeatureID = selectedFeatureID
             self.selectedPointAnnotationID = selectedPointAnnotationID
-            guard snapshot != lastSnapshot || showsLabels != lastShowsLabels else { return }
+
+            guard contentChanged else {
+                if selectionChanged {
+                    refreshSelection(
+                        on: mapView,
+                        previousFeatureID: previousFeatureID,
+                        currentFeatureID: selectedFeatureID,
+                        previousPointAnnotationID: previousPointAnnotationID,
+                        currentPointAnnotationID: selectedPointAnnotationID
+                    )
+                }
+                return
+            }
 
             mapView.removeOverlays(mapView.overlays)
             mapView.removeAnnotations(
@@ -176,6 +194,74 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             mapView.addAnnotations(labelAnnotations + pointAnnotations)
             lastSnapshot = snapshot
             lastShowsLabels = showsLabels
+        }
+
+        private func refreshSelection(
+            on mapView: MKMapView,
+            previousFeatureID: String?,
+            currentFeatureID: String?,
+            previousPointAnnotationID: String?,
+            currentPointAnnotationID: String?
+        ) {
+            if previousFeatureID != currentFeatureID {
+                refreshFeatureSelection(previousFeatureID, isSelected: false, on: mapView)
+                refreshFeatureSelection(currentFeatureID, isSelected: true, on: mapView)
+            }
+
+            if previousPointAnnotationID != currentPointAnnotationID {
+                refreshPointAnnotationSelection(previousPointAnnotationID, on: mapView)
+                refreshPointAnnotationSelection(currentPointAnnotationID, on: mapView)
+            }
+        }
+
+        private func refreshFeatureSelection(
+            _ featureID: String?,
+            isSelected: Bool,
+            on mapView: MKMapView
+        ) {
+            guard let featureID else { return }
+
+            for overlay in mapView.overlays {
+                guard let polygon = overlay as? MKPolygon,
+                      polygon.atlasFeatureID == featureID,
+                      let renderer = mapView.renderer(for: polygon) as? MapKitFeatureRenderer else {
+                    continue
+                }
+                renderer.applySelection(isSelected)
+            }
+
+            for annotation in mapView.annotations {
+                guard let featureAnnotation = annotation as? FeatureLabelAnnotation,
+                      featureAnnotation.featureID == featureID,
+                      let annotationView = mapView.view(for: featureAnnotation) else {
+                    continue
+                }
+                configureFeatureLabelAnnotationView(
+                    annotationView,
+                    annotation: featureAnnotation,
+                    isSelected: isSelected
+                )
+            }
+        }
+
+        private func refreshPointAnnotationSelection(
+            _ pointAnnotationID: String?,
+            on mapView: MKMapView
+        ) {
+            guard let pointAnnotationID else { return }
+
+            for annotation in mapView.annotations {
+                guard let pointAnnotation = annotation as? PointAnnotation,
+                      pointAnnotation.pointID == pointAnnotationID,
+                      let annotationView = mapView.view(for: pointAnnotation) else {
+                    continue
+                }
+                configurePointAnnotationView(
+                    annotationView,
+                    annotation: pointAnnotation,
+                    isSelected: pointAnnotation.pointID == selectedPointAnnotationID
+                )
+            }
         }
 
         @objc
@@ -237,6 +323,20 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
                 reuseIdentifier: MapKitAtlasMapView.featureLabelReuseIdentifier
             )
 
+            configureFeatureLabelAnnotationView(
+                annotationView,
+                annotation: featureAnnotation,
+                isSelected: isSelected
+            )
+
+            return annotationView
+        }
+
+        private func configureFeatureLabelAnnotationView(
+            _ annotationView: MKAnnotationView,
+            annotation featureAnnotation: FeatureLabelAnnotation,
+            isSelected: Bool
+        ) {
             annotationView.annotation = featureAnnotation
             annotationView.canShowCallout = false
             annotationView.isEnabled = false
@@ -255,8 +355,6 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             label.sizeToFit()
             annotationView.frame = label.bounds.insetBy(dx: isSelected ? -7 : -6, dy: isSelected ? -4 : -3)
             label.frame = annotationView.bounds
-
-            return annotationView
         }
 
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -297,6 +395,20 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             )
 
             let isSelected = annotation.pointID == selectedPointAnnotationID || annotation.emphasis == .selected
+            configurePointAnnotationView(
+                annotationView,
+                annotation: annotation,
+                isSelected: isSelected
+            )
+
+            return annotationView
+        }
+
+        private func configurePointAnnotationView(
+            _ annotationView: MKAnnotationView,
+            annotation: PointAnnotation,
+            isSelected: Bool
+        ) {
             annotationView.annotation = annotation
             annotationView.canShowCallout = false
             annotationView.isEnabled = true
@@ -313,8 +425,6 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             marker.layer?.borderWidth = isSelected ? 3 : 2
             marker.layer?.borderColor = pointBorderColor.cgColor
             marker.frame = annotationView.bounds
-
-            return annotationView
         }
 
         private func pointMarkerView(in annotationView: MKAnnotationView) -> NSView {

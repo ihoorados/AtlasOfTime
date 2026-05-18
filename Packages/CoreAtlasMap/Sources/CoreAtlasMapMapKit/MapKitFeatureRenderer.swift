@@ -18,13 +18,18 @@ final class MapKitFeatureRenderer: MKPolygonRenderer {
         self.style = style
         super.init(polygon: polygon)
 
+        applySelection(isSelected)
+        lineJoin = .round
+        lineCap = .round
+        lineDashPattern = dashPatternForStrokeKind(style.strokeKind)
+    }
+
+    func applySelection(_ isSelected: Bool) {
         fillColor = isSelected ? selectedFillColor : atlasFillColor
         strokeColor = isSelected ? selectedStrokeColor : atlasStrokeColor
         lineWidth = isSelected ? 2.6 : lineWidthForStrokeKind(style.strokeKind)
-        lineJoin = .round
-        lineCap = .round
         alpha = isSelected ? 1.0 : alphaForStrokeKind(style.strokeKind)
-        lineDashPattern = dashPatternForStrokeKind(style.strokeKind)
+        setNeedsDisplay()
     }
 
     @available(*, unavailable)
