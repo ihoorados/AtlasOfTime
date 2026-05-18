@@ -79,12 +79,14 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         }
     }
 
+    @MainActor
     public final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastSnapshot: AtlasMapSnapshot?
         private var lastShowsLabels: Bool?
         private var lastAppliedCamera: AtlasMapCameraState?
         private var selectedFeatureID: String?
         private var selectedPointAnnotationID: String?
+        private var renderIndex = MapKitAtlasRenderIndex()
         private let onSelectionChanged: @MainActor @Sendable (String?) -> Void
         private let onPointAnnotationSelectionChanged: @MainActor @Sendable (String?) -> Void
 
@@ -150,6 +152,11 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
                 ? MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeMapKitFeatureLabelAnnotation)
                 : []
             let pointAnnotations = snapshot?.pointAnnotations.map(MapKitPointAnnotation.init(point:)) ?? []
+            renderIndex = MapKitAtlasRenderIndex(
+                overlays: overlays,
+                labelAnnotations: labelAnnotations,
+                pointAnnotations: pointAnnotations
+            )
             mapView.addOverlays(overlays)
             mapView.addAnnotations(labelAnnotations + pointAnnotations)
             lastSnapshot = snapshot
@@ -181,19 +188,15 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         ) {
             guard let featureID else { return }
 
-            for overlay in mapView.overlays {
-                guard let polygon = overlay as? MKPolygon,
-                      polygon.atlasFeatureID == featureID,
-                      let renderer = mapView.renderer(for: polygon) as? MapKitFeatureRenderer else {
+            for polygon in renderIndex.featureOverlaysByID[featureID] ?? [] {
+                guard let renderer = mapView.renderer(for: polygon) as? MapKitFeatureRenderer else {
                     continue
                 }
                 renderer.applySelection(isSelected)
             }
 
-            for annotation in mapView.annotations {
-                guard let featureAnnotation = annotation as? MapKitFeatureLabelAnnotation,
-                      featureAnnotation.featureID == featureID,
-                      let annotationView = mapView.view(for: featureAnnotation) else {
+            for featureAnnotation in renderIndex.featureLabelAnnotationsByID[featureID] ?? [] {
+                guard let annotationView = mapView.view(for: featureAnnotation) else {
                     continue
                 }
                 configureMapKitFeatureLabelAnnotationView(
@@ -208,20 +211,15 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
             _ pointAnnotationID: String?,
             on mapView: MKMapView
         ) {
-            guard let pointAnnotationID else { return }
+            guard let pointAnnotationID,
+                  let pointAnnotation = renderIndex.pointAnnotationsByID[pointAnnotationID],
+                  let annotationView = mapView.view(for: pointAnnotation) else { return }
 
-            for annotation in mapView.annotations {
-                guard let pointAnnotation = annotation as? MapKitPointAnnotation,
-                      pointAnnotation.pointID == pointAnnotationID,
-                      let annotationView = mapView.view(for: pointAnnotation) else {
-                    continue
-                }
-                configurePointAnnotationView(
-                    annotationView,
-                    annotation: pointAnnotation,
-                    isSelected: pointAnnotation.pointID == selectedPointAnnotationID
-                )
-            }
+            configurePointAnnotationView(
+                annotationView,
+                annotation: pointAnnotation,
+                isSelected: pointAnnotation.pointID == selectedPointAnnotationID
+            )
         }
 
         @objc
