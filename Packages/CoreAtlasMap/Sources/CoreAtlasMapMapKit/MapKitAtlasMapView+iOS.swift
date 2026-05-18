@@ -127,7 +127,8 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
     }
 
     public final class Coordinator: NSObject, MKMapViewDelegate {
-        private var lastRenderIdentifier: String?
+        private var lastSnapshot: AtlasMapSnapshot?
+        private var lastShowsLabels: Bool?
         private var lastAppliedCamera: AtlasMapCameraState?
         private var selectedFeatureID: String?
         private var selectedPointAnnotationID: String?
@@ -164,13 +165,7 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
         ) {
             self.selectedFeatureID = selectedFeatureID
             self.selectedPointAnnotationID = selectedPointAnnotationID
-            let identifier = renderIdentifier(
-                for: snapshot,
-                selectedFeatureID: selectedFeatureID,
-                selectedPointAnnotationID: selectedPointAnnotationID,
-                showsLabels: showsLabels
-            )
-            guard identifier != lastRenderIdentifier else { return }
+            guard snapshot != lastSnapshot || showsLabels != lastShowsLabels else { return }
 
             mapView.removeOverlays(mapView.overlays)
             mapView.removeAnnotations(
@@ -186,7 +181,8 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
             let pointAnnotations = snapshot?.pointAnnotations.map(PointAnnotation.init(point:)) ?? []
             mapView.addOverlays(overlays)
             mapView.addAnnotations(labelAnnotations + pointAnnotations)
-            lastRenderIdentifier = identifier
+            lastSnapshot = snapshot
+            lastShowsLabels = showsLabels
         }
 
         @objc
@@ -341,28 +337,6 @@ public struct MapKitAtlasMapView: UIViewRepresentable {
             marker.isUserInteractionEnabled = false
             annotationView.addSubview(marker)
             return marker
-        }
-
-        private func renderIdentifier(
-            for snapshot: AtlasMapSnapshot?,
-            selectedFeatureID: String?,
-            selectedPointAnnotationID: String?,
-            showsLabels: Bool
-        ) -> String {
-            guard let snapshot else { return "nil" }
-            let pointFingerprint = snapshot.pointAnnotations
-                .map { point in
-                    "\(point.id):\(point.title):\(point.coordinate.latitude):\(point.coordinate.longitude)"
-                }
-                .joined(separator: ",")
-            return [
-                "\(snapshot.features.count)",
-                "\(showsLabels ? snapshot.labels.count : 0)",
-                "\(snapshot.pointAnnotations.count)",
-                pointFingerprint,
-                selectedFeatureID ?? "none",
-                selectedPointAnnotationID ?? "none"
-            ].joined(separator: "-")
         }
 
         private func makeFeatureLabelAnnotation(from point: MapKitFeatureLabelPoint) -> FeatureLabelAnnotation {
