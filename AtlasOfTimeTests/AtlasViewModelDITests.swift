@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 import CoreAtlasDomain
+import CoreAtlasMap
 @testable import AtlasOfTime
 
 @MainActor
@@ -23,6 +24,8 @@ struct AtlasViewModelDITests {
         #expect(viewModel.availableYears == years)
         #expect(viewModel.displayYear == 1900)
         #expect(viewModel.renderSnapshot?.year == 1900)
+        #expect(viewModel.mapSnapshot?.features.count == 1)
+        #expect(viewModel.mapSnapshot?.pointAnnotations.count == 1)
         #expect(viewModel.pointsOfInterest == pois[1900])
     }
 
@@ -138,9 +141,11 @@ struct AtlasViewModelDITests {
 
         #expect(viewModel.selectedPOI == nil)
         #expect(viewModel.pointsOfInterest == pois[1900])
+        #expect(viewModel.mapSnapshot?.pointAnnotations.isEmpty == true)
 
         viewModel.showsPointsOfInterest = true
         #expect(viewModel.pointsOfInterest == pois[1900])
+        #expect(viewModel.mapSnapshot?.pointAnnotations.count == 1)
     }
 
     @Test

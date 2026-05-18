@@ -7,18 +7,12 @@ struct AtlasScreen: View {
     let mapViewFactory: any AtlasMapViewFactory
     let onSelectedCountryTapped: (HistoricalCountrySnapshot) -> Void
     @Environment(\.atlasShowLoadingIndicator) private var showLoadingIndicator
-    private let mapSnapshotMapper = AtlasMapSnapshotMapper()
 
     var body: some View {
         ZStack(alignment: .bottom) {
             mapViewFactory.makeMapView(
                 state: AtlasMapViewState(
-                    snapshot: mapSnapshotMapper.makeSnapshot(
-                        from: viewModel.renderSnapshot,
-                        pointsOfInterest: viewModel.showsPointsOfInterest ? viewModel.pointsOfInterest : [],
-                        selectedCountryID: viewModel.selectedCountryID,
-                        selectedPOIID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
-                    ),
+                    snapshot: viewModel.mapSnapshot,
                     camera: .world,
                     selection: AtlasMapSelectionState(
                         selectedFeatureID: viewModel.selectedCountryID,

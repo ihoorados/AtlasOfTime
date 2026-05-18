@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import CoreAtlasMap
 import CoreAtlasDomain
 
 @MainActor
@@ -7,6 +8,7 @@ final class AtlasViewModel: ObservableObject {
     @Published var availableYears: [Int] = []
     @Published var displayYear: Int = 0
     @Published var renderSnapshot: YearSnapshot?
+    @Published private(set) var mapSnapshot: AtlasMapSnapshot?
     @Published private(set) var visibleSnapshots: [HistoricalCountrySnapshot] = []
     @Published private(set) var pointsOfInterest: [HistoricalPOI] = []
     @Published private(set) var selectedCountryID: String?
@@ -16,20 +18,24 @@ final class AtlasViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var showsPointsOfInterest: Bool = true {
         didSet {
+            guard oldValue != showsPointsOfInterest else { return }
             if !showsPointsOfInterest {
                 selectedPOIID = nil
             }
+            refreshMapSnapshot()
         }
     }
 
     private let yearLoader: AtlasYearLoader
+    private let mapSnapshotMapper: AtlasMapSnapshotMapper
 
     init(
         loadYearIndex: LoadYearIndex,
         loadBordersForYear: LoadBordersForYear,
         loadPOIsForYear: LoadPOIsForYear,
         debouncer: Debouncer,
-        debounceNanoseconds: UInt64 = 150_000_000
+        debounceNanoseconds: UInt64 = 150_000_000,
+        mapSnapshotMapper: AtlasMapSnapshotMapper = AtlasMapSnapshotMapper()
     ) {
         self.yearLoader = AtlasYearLoader(
             loadYearIndex: loadYearIndex,
@@ -38,6 +44,7 @@ final class AtlasViewModel: ObservableObject {
             debouncer: debouncer,
             debounceNanoseconds: debounceNanoseconds
         )
+        self.mapSnapshotMapper = mapSnapshotMapper
         self.yearLoader.bind(self)
     }
 
@@ -53,6 +60,7 @@ final class AtlasViewModel: ObservableObject {
         selectedCountryID = nil
         selectedPOIID = nil
         pointsOfInterest = []
+        refreshMapSnapshot()
         poiErrorMessage = nil
         yearLoader.requestYear(snappedYear)
     }
@@ -147,6 +155,16 @@ final class AtlasViewModel: ObservableObject {
 
         return nearest
     }
+
+    private func refreshMapSnapshot() {
+        let nextSnapshot = mapSnapshotMapper.makeSnapshot(
+            from: renderSnapshot,
+            pointsOfInterest: showsPointsOfInterest ? pointsOfInterest : []
+        )
+        if mapSnapshot != nextSnapshot {
+            mapSnapshot = nextSnapshot
+        }
+    }
 }
 
 @MainActor
@@ -170,6 +188,7 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
         availableYears = index.availableYears.sorted()
         displayYear = initialYear
         renderSnapshot = nil
+        mapSnapshot = nil
         visibleSnapshots = []
         pointsOfInterest = []
         selectedCountryID = nil
@@ -181,6 +200,7 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
     fileprivate func applySnapshot(_ snapshot: YearSnapshot) {
         renderSnapshot = snapshot
         visibleSnapshots = snapshot.snapshots
+        refreshMapSnapshot()
         if let selectedCountryID,
            snapshot.snapshots.contains(where: { $0.id == selectedCountryID }) {
             self.selectedCountryID = selectedCountryID
@@ -192,6 +212,7 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
 
     fileprivate func applyPOIs(_ pointsOfInterest: [HistoricalPOI]) {
         self.pointsOfInterest = pointsOfInterest
+        refreshMapSnapshot()
         if let selectedPOIID,
            pointsOfInterest.contains(where: { $0.id == selectedPOIID }) {
             self.selectedPOIID = selectedPOIID
@@ -204,11 +225,13 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
     fileprivate func applyPOIFailure(_ error: AppError) {
         pointsOfInterest = []
         selectedPOIID = nil
+        refreshMapSnapshot()
         poiErrorMessage = error.userMessage
     }
 
     fileprivate func applyBootstrapFailure(_ error: AppError) {
         renderSnapshot = nil
+        mapSnapshot = nil
         visibleSnapshots = []
         pointsOfInterest = []
         selectedCountryID = nil
@@ -219,6 +242,7 @@ extension AtlasViewModel: AtlasYearLoadingOutput {
 
     fileprivate func applySnapshotFailure(_ error: AppError) {
         renderSnapshot = nil
+        mapSnapshot = nil
         visibleSnapshots = []
         pointsOfInterest = []
         selectedCountryID = nil
