@@ -11,24 +11,16 @@ struct AtlasMapSnapshotMapper {
 
     func makeSnapshot(
         from snapshot: YearSnapshot?,
-        pointsOfInterest: [HistoricalPOI] = [],
-        selectedCountryID: String?,
-        selectedPOIID: String? = nil
+        pointsOfInterest: [HistoricalPOI] = []
     ) -> AtlasMapSnapshot? {
         guard let snapshot else { return nil }
 
         let features = snapshot.snapshots.compactMap { countrySnapshot in
-            makeFeature(
-                from: countrySnapshot,
-                selectedCountryID: selectedCountryID
-            )
+            makeFeature(from: countrySnapshot)
         }
 
         let pointAnnotations = pointsOfInterest.map { pointOfInterest in
-            makePointAnnotation(
-                from: pointOfInterest,
-                selectedPOIID: selectedPOIID
-            )
+            makePointAnnotation(from: pointOfInterest)
         }
 
         return snapshotBuilder.makeSnapshot(
@@ -37,10 +29,7 @@ struct AtlasMapSnapshotMapper {
         )
     }
 
-    private func makeFeature(
-        from snapshot: HistoricalCountrySnapshot,
-        selectedCountryID: String?
-    ) -> AtlasMapFeature? {
+    private func makeFeature(from snapshot: HistoricalCountrySnapshot) -> AtlasMapFeature? {
         let polygons = snapshot.extents.flatMap(\.polygons).map(makePolygon)
         guard !polygons.isEmpty else { return nil }
 
@@ -51,23 +40,17 @@ struct AtlasMapSnapshotMapper {
             id: snapshot.id,
             title: snapshot.displayName,
             polygons: polygons,
-            style: makeFeatureStyle(
-                from: snapshot.extents,
-                isSelected: snapshot.id == selectedCountryID
-            )
+            style: makeFeatureStyle(from: snapshot.extents)
         )
     }
 
-    private func makeFeatureStyle(
-        from extents: [HistoricalExtent],
-        isSelected: Bool
-    ) -> AtlasMapFeatureStyle {
+    private func makeFeatureStyle(from extents: [HistoricalExtent]) -> AtlasMapFeatureStyle {
         let dominantBorderModel = extents.first?.borderModel ?? .approximateLine
 
         return AtlasMapFeatureStyle(
             strokeKind: makeStrokeKind(from: dominantBorderModel),
-            fillKind: isSelected ? .strong : .subtle,
-            emphasis: isSelected ? .selected : .normal
+            fillKind: .subtle,
+            emphasis: .normal
         )
     }
 
@@ -100,16 +83,13 @@ struct AtlasMapSnapshotMapper {
         )
     }
 
-    private func makePointAnnotation(
-        from pointOfInterest: HistoricalPOI,
-        selectedPOIID: String?
-    ) -> AtlasMapPointAnnotation {
+    private func makePointAnnotation(from pointOfInterest: HistoricalPOI) -> AtlasMapPointAnnotation {
         AtlasMapPointAnnotation(
             id: pointOfInterest.id,
             title: pointOfInterest.title,
             subtitle: pointOfInterest.summary,
             coordinate: makeCoordinate(from: pointOfInterest.coordinate),
-            emphasis: pointOfInterest.id == selectedPOIID ? .selected : .normal
+            emphasis: .normal
         )
     }
 }

@@ -19,9 +19,7 @@ struct AtlasMapSnapshotMapperTests {
         let snapshot = try #require(
             AtlasMapSnapshotMapper().makeSnapshot(
                 from: YearSnapshot(year: 1815, polygons: [samplePolygon]),
-                pointsOfInterest: [poi],
-                selectedCountryID: nil,
-                selectedPOIID: poi.id
+                pointsOfInterest: [poi]
             )
         )
 
@@ -31,7 +29,7 @@ struct AtlasMapSnapshotMapperTests {
         #expect(point.title == poi.title)
         #expect(point.subtitle == poi.summary)
         #expect(point.coordinate == AtlasMapCoordinate(latitude: 50.6806, longitude: 4.4125))
-        #expect(point.emphasis == .selected)
+        #expect(point.emphasis == .normal)
     }
 
     private var samplePolygon: GeoPolygon {

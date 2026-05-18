@@ -15,9 +15,7 @@ struct AtlasScreen: View {
                 state: AtlasMapViewState(
                     snapshot: mapSnapshotMapper.makeSnapshot(
                         from: viewModel.renderSnapshot,
-                        pointsOfInterest: viewModel.showsPointsOfInterest ? viewModel.pointsOfInterest : [],
-                        selectedCountryID: viewModel.selectedCountryID,
-                        selectedPOIID: viewModel.showsPointsOfInterest ? viewModel.selectedPOIID : nil
+                        pointsOfInterest: viewModel.showsPointsOfInterest ? viewModel.pointsOfInterest : []
                     ),
                     camera: .world,
                     selection: AtlasMapSelectionState(
