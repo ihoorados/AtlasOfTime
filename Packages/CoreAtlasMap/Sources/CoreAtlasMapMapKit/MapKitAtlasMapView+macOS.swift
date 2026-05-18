@@ -275,6 +275,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             for overlay in mapView.overlays.reversed() {
                 guard let polygon = overlay as? MKPolygon,
                       let featureID = polygon.atlasFeatureID,
+                      polygon.boundingMapRect.contains(mapPoint),
                       let renderer = mapView.renderer(for: polygon) as? MKPolygonRenderer,
                       let path = renderer.path else {
                     continue
