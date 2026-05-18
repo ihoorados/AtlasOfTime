@@ -72,53 +72,6 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
         mapView.preferredConfiguration = configuration
     }
 
-    final class FeatureLabelAnnotation: NSObject, MKAnnotation {
-        let featureID: String
-        let featureName: String
-        let coordinate: CLLocationCoordinate2D
-
-        init(
-            featureID: String,
-            featureName: String,
-            coordinate: CLLocationCoordinate2D
-        ) {
-            self.featureID = featureID
-            self.featureName = featureName
-            self.coordinate = coordinate
-        }
-
-        var title: String? {
-            featureName
-        }
-    }
-
-    final class PointAnnotation: NSObject, MKAnnotation {
-        let pointID: String
-        let pointTitle: String
-        let pointSubtitle: String?
-        let emphasis: AtlasMapPointAnnotation.Emphasis
-        let coordinate: CLLocationCoordinate2D
-
-        init(point: AtlasMapPointAnnotation) {
-            self.pointID = point.id
-            self.pointTitle = point.title
-            self.pointSubtitle = point.subtitle
-            self.emphasis = point.emphasis
-            self.coordinate = CLLocationCoordinate2D(
-                latitude: point.coordinate.latitude,
-                longitude: point.coordinate.longitude
-            )
-        }
-
-        var title: String? {
-            pointTitle
-        }
-
-        var subtitle: String? {
-            pointSubtitle
-        }
-    }
-
     public final class Coordinator: NSObject, MKMapViewDelegate {
         private var lastSnapshot: AtlasMapSnapshot?
         private var lastShowsLabels: Bool?
@@ -181,15 +134,15 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             mapView.removeOverlays(mapView.overlays)
             mapView.removeAnnotations(
                 mapView.annotations.filter { annotation in
-                    annotation is FeatureLabelAnnotation || annotation is PointAnnotation
+                    annotation is MapKitFeatureLabelAnnotation || annotation is MapKitPointAnnotation
                 }
             )
 
             let overlays = MapKitFeatureOverlayAdapter.makeOverlays(from: snapshot)
             let labelAnnotations = showsLabels
-                ? MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeFeatureLabelAnnotation)
+                ? MapKitFeatureOverlayAdapter.makeLabelPoints(from: snapshot).map(makeMapKitFeatureLabelAnnotation)
                 : []
-            let pointAnnotations = snapshot?.pointAnnotations.map(PointAnnotation.init(point:)) ?? []
+            let pointAnnotations = snapshot?.pointAnnotations.map(MapKitPointAnnotation.init(point:)) ?? []
             mapView.addOverlays(overlays)
             mapView.addAnnotations(labelAnnotations + pointAnnotations)
             lastSnapshot = snapshot
@@ -231,12 +184,12 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             }
 
             for annotation in mapView.annotations {
-                guard let featureAnnotation = annotation as? FeatureLabelAnnotation,
+                guard let featureAnnotation = annotation as? MapKitFeatureLabelAnnotation,
                       featureAnnotation.featureID == featureID,
                       let annotationView = mapView.view(for: featureAnnotation) else {
                     continue
                 }
-                configureFeatureLabelAnnotationView(
+                configureMapKitFeatureLabelAnnotationView(
                     annotationView,
                     annotation: featureAnnotation,
                     isSelected: isSelected
@@ -251,7 +204,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             guard let pointAnnotationID else { return }
 
             for annotation in mapView.annotations {
-                guard let pointAnnotation = annotation as? PointAnnotation,
+                guard let pointAnnotation = annotation as? MapKitPointAnnotation,
                       pointAnnotation.pointID == pointAnnotationID,
                       let annotationView = mapView.view(for: pointAnnotation) else {
                     continue
@@ -272,21 +225,10 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             let mapCoordinate = mapView.convert(point, toCoordinateFrom: mapView)
             let mapPoint = MKMapPoint(mapCoordinate)
 
-            for overlay in mapView.overlays.reversed() {
-                guard let polygon = overlay as? MKPolygon,
-                      let featureID = polygon.atlasFeatureID,
-                      polygon.boundingMapRect.contains(mapPoint),
-                      let renderer = mapView.renderer(for: polygon) as? MKPolygonRenderer,
-                      let path = renderer.path else {
-                    continue
-                }
-
-                let rendererPoint = renderer.point(for: mapPoint)
-                if path.contains(rendererPoint) {
-                    onSelectionChanged(featureID == selectedFeatureID ? nil : featureID)
-                    onPointAnnotationSelectionChanged(nil)
-                    return
-                }
+            if let featureID = mapView.atlasFeatureID(containing: mapPoint) {
+                onSelectionChanged(featureID == selectedFeatureID ? nil : featureID)
+                onPointAnnotationSelectionChanged(nil)
+                return
             }
 
             onSelectionChanged(nil)
@@ -308,11 +250,11 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
         }
 
         public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-            if let pointAnnotation = annotation as? PointAnnotation {
+            if let pointAnnotation = annotation as? MapKitPointAnnotation {
                 return makePointAnnotationView(for: pointAnnotation, on: mapView)
             }
 
-            guard let featureAnnotation = annotation as? FeatureLabelAnnotation else {
+            guard let featureAnnotation = annotation as? MapKitFeatureLabelAnnotation else {
                 return nil
             }
 
@@ -324,7 +266,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
                 reuseIdentifier: MapKitAtlasMapView.featureLabelReuseIdentifier
             )
 
-            configureFeatureLabelAnnotationView(
+            configureMapKitFeatureLabelAnnotationView(
                 annotationView,
                 annotation: featureAnnotation,
                 isSelected: isSelected
@@ -333,9 +275,9 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             return annotationView
         }
 
-        private func configureFeatureLabelAnnotationView(
+        private func configureMapKitFeatureLabelAnnotationView(
             _ annotationView: MKAnnotationView,
-            annotation featureAnnotation: FeatureLabelAnnotation,
+            annotation featureAnnotation: MapKitFeatureLabelAnnotation,
             isSelected: Bool
         ) {
             annotationView.annotation = featureAnnotation
@@ -359,7 +301,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
         }
 
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            guard let annotation = view.annotation as? PointAnnotation else { return }
+            guard let annotation = view.annotation as? MapKitPointAnnotation else { return }
             onSelectionChanged(nil)
             onPointAnnotationSelectionChanged(
                 annotation.pointID == selectedPointAnnotationID ? nil : annotation.pointID
@@ -385,7 +327,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
         }
 
         private func makePointAnnotationView(
-            for annotation: PointAnnotation,
+            for annotation: MapKitPointAnnotation,
             on mapView: MKMapView
         ) -> MKAnnotationView {
             let annotationView = mapView.dequeueReusableAnnotationView(
@@ -407,7 +349,7 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
 
         private func configurePointAnnotationView(
             _ annotationView: MKAnnotationView,
-            annotation: PointAnnotation,
+            annotation: MapKitPointAnnotation,
             isSelected: Bool
         ) {
             annotationView.annotation = annotation
@@ -448,8 +390,8 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
             return shadow
         }
 
-        private func makeFeatureLabelAnnotation(from point: MapKitFeatureLabelPoint) -> FeatureLabelAnnotation {
-            FeatureLabelAnnotation(
+        private func makeMapKitFeatureLabelAnnotation(from point: MapKitFeatureLabelPoint) -> MapKitFeatureLabelAnnotation {
+            MapKitFeatureLabelAnnotation(
                 featureID: point.featureID,
                 featureName: point.featureName,
                 coordinate: point.coordinate
@@ -499,21 +441,6 @@ public struct MapKitAtlasMapView: NSViewRepresentable {
         private var pointShadowColor: NSColor {
             NSColor.black
         }
-    }
-}
-
-private extension AtlasMapCameraState {
-    var mkCoordinateRegion: MKCoordinateRegion {
-        MKCoordinateRegion(
-            center: CLLocationCoordinate2D(
-                latitude: center.latitude,
-                longitude: center.longitude
-            ),
-            span: MKCoordinateSpan(
-                latitudeDelta: latitudeDelta,
-                longitudeDelta: longitudeDelta
-            )
-        )
     }
 }
 #endif
